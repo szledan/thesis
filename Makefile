@@ -3,7 +3,7 @@
 all: thesis
 
 thesis:
-	./scripts/build.sh <nev>
+	./scripts/build.sh ledanszilard
 
 hunspell:
 	hunspell -d hu_HU -i utf-8 -t -p paper/hunspell/words paper/src/szakdolgozat.tex
@@ -23,7 +23,7 @@ dist.clean:
 ### code
 
 code.fetch:
-	./scripts/fetch-code.sh <repository> [<tag>]
+	./scripts/fetch-code.sh git@github.com:szledan/gepard.git thesis-dev
 
 code.remove:
-	rm -rf code/<dir>
+	rm -rf code/gepard

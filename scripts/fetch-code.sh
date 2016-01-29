@@ -7,7 +7,7 @@ if [[ "${1}" == "--help" || "${1}" == "-h" ]] ; then
 fi
 
 # Get git tag name.
-gitTag=master
+gitTag=thesis-dev
 if [ "${2}" != "" ] ; then
   gitTag=${2}
 fi

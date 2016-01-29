@@ -12,6 +12,7 @@
 %Magyar nyelvi támogatás (Babel 3.7 vagy későbbi kell!)
 \def\magyarOptions{defaults=hu-min}
 \usepackage[magyar]{babel}
+\usepackage{cite}
 
 %Az ékezetes betűk használatához:
 \usepackage{t1enc}% ékezetes szavak automatikus elválasztásához
@@ -45,49 +46,13 @@
     urlcolor=black
 }
 
-\usepackage{cite}
-
 %\usepackage{enumitem}
 \usepackage{enumerate}
 
-% Színek
-\usepackage{color}
-\definecolor{myCommentColorGreen}{RGB}{0,128,0}
-\definecolor{myLineNumberGray}{RGB}{128,128,128}
-
 % Forráskódhoz
 \usepackage{listings}
-\lstset{ %
-    %backgroundcolor=\color{white},   % choose the background color; you must add  \usepackage{color} or \usepackage{xcolor}
-    basicstyle=\footnotesize,         % the size of the fonts that are used for    the code
-    %breakatwhitespace=false,         % sets if automatic breaks should only      happen at whitespace
-    breaklines=true,                  % sets automatic line breaking          captionpos=b,                    % sets the caption-position to          bottom
-    commentstyle=\color{myCommentColorGreen},    % comment style
-    %deletekeywords={...},            % if you want to delete keywords              from the given language
-    %escapeinside={\%*}{*)},          % if you want to add LaTeX                within your code
-    %extendedchars=true,              % lets you use non-ASCII                  characters; for 8-bits encodings only, does not work with                  UTF-8
-    frame=leftline,                   % adds a frame around the                    code
-    %keepspaces=true,                 % keeps spaces in text,                      useful for keeping indentation of code (possibly needs                      columns=flexible)
-    inputpath=../../../code/gepard,
-    keywordstyle=\color{blue},        % keyword style
-    language=C++,                     % the language of                          the code
-    %morekeywords={*,...},            % if you want to                            add more keywords to the set
-    numberfirstline=true,
-    numbers=left,                     % where to put                              the line-numbers; possible values are (none, left, right)
-    numbersep=10pt,                   % how far theline-numbers are from the code
-    numberstyle=\tiny\color{myLineNumberGray}, % the stylethat is used for the line-numbers
-    %name=\thelstnumber,              %
-    %rulecolor=\color{black},         % if notset, the frame-color may be changed online-breaks within not-black text (e.g.comments (green here))
-    %showspaces=false,                % showspaces everywhere adding particularunderscores; it overrides'showstringspaces'
-    %showstringspaces=false,          % underline spaces within strings only
-    %showtabs=false,                  % show tabs within strings addingparticular underscores
-    %stepnumber=2,                    % the step between two line-numbers.If it's 1, each line will benumbered
-    %stringstyle=\color{mymauve},     % string literal style
-    tabsize=4,                        % sets default tabsize to 2    spaces
-    %title=\lstname                   % show the filename of     files included with     \lstinputlisting; also try     caption instead of title
-}
 
-% Kép mellett folyó íráshoz
+% Képmellé íráshoz
 \usepackage{wrapfig}
 
 %Tételszerű környezetek definiálhatók, ezek most fejezetenként együtt számozódnak, pl.
@@ -440,7 +405,7 @@ az értéket. Az általunk tervezett API azonban csak a Canvas 2D
 Contextre koncentrál, így a CSS elemeket nem kívánjuk támogatni.
     \begin{wrapfigure}{l}{0.5\textwidth}
     \begin{center}
-      \includegraphics[scale=0.6]{img/dataflow_canvas_api_eps}
+      \includegraphics[scale=0.6]{dataflow_canvas_api.eps}
     \end{center}
       \caption{\label{dataflow-canvas-API-diagram}
       A Gepard Context 2D API}
@@ -520,7 +485,7 @@ visszavezetéseket, közelítéseket.
 
     \begin{wrapfigure}{l}{0.5\textwidth}
     \begin{center}
-      \includegraphics[scale=0.6]{img/dataflow_path_api_eps}
+      \includegraphics[scale=0.6]{dataflow_path_api.eps}
     \end{center}
       \caption{\label{dataflow-path-API-diagram} A belső Path API
       részei és a szakaszokra bontás fázisai}
@@ -530,7 +495,7 @@ visszavezetéseket, közelítéseket.
     \begin{figure}[h]
     \centering
     \psfrag{t}[c][c]{$q_0$}
-    \includegraphics[scale=0.6]{img/dataflow_eps}
+    \includegraphics[scale=0.6]{dataflow.eps}
     \caption{\label{dataflow-diagram} A rajzolás folyamata}
     \end{figure}
 
@@ -547,8 +512,8 @@ visszavezetéseket, közelítéseket.
 %%   Irodalomjegyzék                                                %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    \bibliography{bib/cites}{}
-    \bibliographystyle{bib/huplain}
+    \bibliography{cites}{}
+    \bibliographystyle{huplain}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Nyilatkozat                                                    %%
