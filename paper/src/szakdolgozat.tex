@@ -368,6 +368,31 @@ alakzatszerkesztő eljáráson alapul. Az eljárás lényege, hogy bizonyos alap
 eszközökkel definiálunk egy bonyolultabb formát. Ezt a folyamatot hívjuk
 alakzat építésnek (\inenglish{path building}).
 
+
+    \begin{figure}[h]
+    \centering
+    \psfrag{e}[b][B][0.8]{\bf{E}}
+    \psfrag{r}[b][B][0.8]{e\bf{R}}
+    \psfrag{d}[b][B][0.8]{e\bf{D}}
+    \psfrag{é}[b][B][0.8]{\bf{É}}
+    \psfrag{ly}[b][B][0.8]{e\bf{LY}}
+    \psfrag{R}[b][B][0.8]{e\bf{RD}}
+    \psfrag{L}[b][B][0.8]{\bf{ÉLY}}
+    \psfrag{A}[c][c][0.8]{\it{a.}}
+    \psfrag{B}[c][c][0.8]{\it{b.}}
+    \psfrag{C}[c][c][0.8]{\it{c.}}
+    \includegraphics[scale=0.6]{img/w3c_erdely_eps}
+    \caption{\label{erdely}
+%    \item Az ,,Erdély'' szó \emph{székely
+%    írással}~\cite{Saandor:2014:szeekely}. Fent minden graféma külön áll, míg lent összevonva
+%    ligatúraképzéssel.
+%    \item Sematikusan Az ,,e'' graféma felépítésének
+%    folyamata a Path elemeivel. Valamint
+%    \end{enumerate}
+    }
+    \end{figure}
+
+
   Nézzük meg, milyen eszközöket biztosít a Path API.
 
 
@@ -376,6 +401,7 @@ különböző elemek segítségével történik. Két fő részre bontható. Az 
 tulajdonképpen nem is az építésre, mint inkább a definiálásra és a rajzolásra
 vonatkozik. Míg a második rész tartalmazza a path építéséhet szükséges
 parancsokat, elemeket. Ezek a parancsok vagy elemek a következők:
+
 
 \begin{enumerate}[I.]
   \item Rajzoló parancsok:
@@ -543,7 +569,6 @@ visszavezetéseket, közelítéseket.
 
     \begin{figure}[h]
     \centering
-    \psfrag{t}[c][c]{$q_0$}
     \includegraphics[scale=0.6]{img/dataflow_eps}
     \caption{\label{dataflow-diagram} A rajzolás folyamata}
     \end{figure}
