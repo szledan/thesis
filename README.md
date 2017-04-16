@@ -19,7 +19,7 @@ Department of Software Enginering, University of Szeged
 #### 2. Step: Install dependencies
 
 ```bash
-./scripts/install-deps.sh
+./scripts/install-deps.sh # --dev
 ```
 
 #### 3. Step: Build code and paper
@@ -27,6 +27,5 @@ Department of Software Enginering, University of Szeged
 Build `pdf` and `code`.
 ```bash
 cmake -H. -Bbuild
-cd build
-make
+make -C build
 ```
