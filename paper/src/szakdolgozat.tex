@@ -90,6 +90,11 @@
 % Kép mellett folyó íráshoz
 \usepackage{wrapfig}
 
+\usepackage[labelfont=it,justification=centering]{caption}
+
+\usepackage{epigraph}
+%\epigraphfontsize{\small\itshape}
+
 %Tételszerű környezetek definiálhatók, ezek most fejezetenként együtt számozódnak, pl.
 \newtheorem{tét}{Tétel}[chapter]
 \newtheorem{defi}[tét]{Definíció}
@@ -276,6 +281,12 @@ grafika, path, canvas-2D-context, OpenGL-ES 2.0
     \chapter*{Bevezetés}
     \label{Bevezetés}
     \addcontentsline{toc}{section}{Bevezetés}
+
+    {
+    \setlength\epigraphrule{0pt}
+    \linespread{1.0}\epigraph{\small\emph{,,A világ csak híd, menj át rajta,
+    de ne építs rajta házat."}}{\small(IHS)}
+    }
 
   A környezetünkben található számítástechnikai eszközök
 legtöbbjének van grafikus kijelzője, és ezen eszközök mindegyike használ
