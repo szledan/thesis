@@ -5,7 +5,7 @@
 
 # Set default values.
 repository="git@github.com:szledan/gepard.git"
-gitTag=master
+gitTag=thesis
 helpMsg="usage "`basename $0`" --repo=<git-repository> --tag=<tag>"
 
 # Show help.
