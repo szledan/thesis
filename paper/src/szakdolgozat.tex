@@ -71,6 +71,25 @@
     inputpath=../../../code/gepard,
     keywordstyle=\color{blue},        % keyword style
     language=C++,                     % the language of                          the code
+    literate=%
+        {á}{{\'a}}1
+        {é}{{\'e}}1
+        {í}{{\'i}}1
+        {ó}{{\'o}}1
+        {ö}{{\"o}}1
+        {ő}{{\H{o}}}1
+        {ú}{{\'u}}1
+        {ü}{{\"u}}1
+        {ű}{{\H{u}}}1
+        {Á}{{\'A}}1
+        {É}{{\'E}}1
+        {Í}{{\'I}}1
+        {Ó}{{\'O}}1
+        {Ö}{{\"O}}1
+        {Ő}{{\H{O}}}1
+        {Ú}{{\'U}}1
+        {Ü}{{\"U}}1
+        {Ű}{{\H{U}}}1,
     %morekeywords={*,...},            % if you want to                            add more keywords to the set
     numberfirstline=true,
     numbers=left,                     % where to put                              the line-numbers; possible values are (none, left, right)
@@ -202,6 +221,19 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Mottó                                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \clearpage
+    \thispagestyle{empty}
+    {
+    \setlength\epigraphrule{0pt}
+    \linespread{1.0}\epigraph{\small\emph{,,A világ csak híd, menj át rajta,
+    de ne építs rajta házat."}}{\small(IHS)}
+    }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Tartalomjegyzék                                                %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -244,28 +276,25 @@ megvalósítása \emph{OpenGL-ES 2.0} alapokon.
     \subsubsection*{A megadott feladat megfogalmazása}
 
   Az előbb említett \emph{Canvas} egy grafikus API~\footnote{Az
-alkalmazásprogramozási felület/interfész (Application Programming
-Interface) kifejezésre a továbbiakban mint \emph{API}
-hivatkozunk.}.
+alkalmazásprogramozási felület/interfész (Application Programming Interface)
+kifejezésre a továbbiakban mint \emph{API} hivatkozunk.}.
   Ez az API több grafikus függvényt definiál (ld. később).
   Jelen dolgozat témája ezek közül az úgynevezett \emph{path} részének
-leprogramozása~úgy, hogy a lehető legtöbb feladatot a grafikus
-processzor (\textit{GPU}) lássa el.
+leprogramozása~úgy, hogy a lehető legtöbb feladatot a grafikus processzor
+(\textit{GPU}) lássa el.
 
     \subsubsection*{A megoldásmód}
 
   Több megoldás közül (ld. a Háttér részt) mi az alakzatok trapézokra
 bontását választottuk. Hiszen minden trapéz felbontható további két
 háromszögre, mely megkötésre a GLES2 grafikus renderelő~\footnote{Az
-előállítás--megjelenítés (\emph{rendering}) kifejezésre a
-továbbiakban \emph{renderelés}ként hívatkozunk.} API miatt van
-szükség.
+előállítás--megjelenítés (\emph{rendering}) kifejezésre a továbbiakban
+\emph{renderelés}ként hívatkozunk.} API miatt van szükség.
 
     \subsubsection*{Alkalmazott eszközök, módszerek}
 
-  Az API \emph{c++11} programozási nyelven készült, használva a
-következő eszközöket, technológiákat: \emph{gcc}, \emph{git},
-\textit{OpenGL ES 2.0}, \emph{\LaTeX},
+  Az API \emph{c++11} programozási nyelven készült, használva a következő
+eszközöket, technológiákat: \emph{gcc}, \emph{git}, \textit{OpenGL~ES~2.0}, \emph{\LaTeX},
 
     \subsubsection*{Elért eredmények}
 
@@ -282,50 +311,43 @@ grafika, path, canvas-2D-context, OpenGL-ES 2.0
     \label{Bevezetés}
     \addcontentsline{toc}{section}{Bevezetés}
 
-    {
-    \setlength\epigraphrule{0pt}
-    \linespread{1.0}\epigraph{\small\emph{,,A világ csak híd, menj át rajta,
-    de ne építs rajta házat."}}{\small(IHS)}
-    }
-
   A környezetünkben található számítástechnikai eszközök
 legtöbbjének van grafikus kijelzője, és ezen eszközök mindegyike használ
 valamilyen megjelenítő~\footnote{A számítógépes grafikában egy modell
 megjelenítését végző folyamatot \emph{renderelés}nek (\inenglishfn{rendering}),
 a renderelést végző programrészt pedig \emph{motor}nak (\inenglishfn{engine})
 hívnak} (a továbbiakban renderelő) függvénykönyvtárat. Ilyen például a Skia, a
-Cairo, az OpenGL, és ilyen tervezését tűzte ki célul a Gepard Graphics is. A
-\emph{Gepard} a tervek szerint egy \emph{C++11}-es nyelven írt, és több
-(OpenGL, \mbox{OpenGL-ES 2.0\cite{Munshi:2008:OEP:1481069}} és Vulkan) grafikus
-renderelő motort támogató függvénykönyvtár lesz.
+Cairo, az OpenGL, és ilyen kíván lenni a \emph{Gepard} is. A cél egy
+\emph{C++11}-es nyelven írt és több (\mbox{OpenGL~ES~2.0
+\cite{Munshi:2008:OEP:1481069}}, Vulkan) grafikus renderelő motort támogató
+függvénykönyvtár.
 
   A tervek szerint idővel a Gepard több interfésszel is rendelkezik.
 Így alkot majd egy komplex grafikus alkalmazásprogramozási felületet
 (\inenglish{Application Programming Interface}, a továbbiakban API). Az elsőnek
 választott ilyen ismertebb interfész amit támogatni kíván az a \emph{W3C} által
-készített \emph{Canvas 2D Context}~\cite{Cabanier:14:HCC} nevű ajánlás.
+készített \emph{Canvas 2D Context}~\cite{Cabanier:14:HCC} ajánlás.
 
   A \emph{Canvas 2D Context} (a továbbiakban \emph{Canvas}) ajánlás
 2015-ös kiadása több elkülönített részből állítja össze az API-t. Ezen részek
-egyike az úgynevezett \emph{path}. Az említett 2015-ös ajánlás az 5., 8. és 11.
-fejezetekben részletezi a pathszal szembeni elvárásokat. A path maga a
+egyike az úgynevezett \emph{Path}. Az említett 2015-ös ajánlás az 5., 8. és 11.
+fejezetekben részletezi a Path-szal szembeni elvárásokat. A Path maga a
 definiált grafikus alakzatokhoz képest bonyolultabbak leírását biztosító
-eszköz. A Háttér (\ref{Háttér}.) fejezetben részletesebben kifejtjük a patht
+eszköz. A Háttér (\ref{Háttér}.) fejezetben részletesebben kifejtjük a path-t
 építő eszköz lehetőségeit és szabályait. Itt most csak annyiban kell kitérjünk
 rá, hogy alapvetően két nagyobb részből áll ez is. A \emph{körvonalból}
 (\inenglish{stroke}) és a \emph{kitöltésből} (\inenglish{fill}).
 
-  Jelen dolgozat a kitöltést megvalósító részt kívánja bemutatni.
-Azt, hogy milyen szabályoknak kellett megfelelni, milyen lehetőségeket
-biztosított a választott OpenGL-ES 2.0 (a továbbiakban GLES2) szabvány, és azt,
-hogy hogyan alkot köztes réteget ezek között a Gepard path kitöltését biztosító
+  Jelen dolgozat az említett \emph{Path} rész megvalósítását kívánja bemutatni.
+Azt, hogy milyen szabályoknak kellett megfelelni, illetve milyen lehetőségeket
+biztosított a választott OpenGL~ES~2.0 (a továbbiakban GLES2) szabvány, és azt,
+hogy hogyan alkot köztes réteget ezek között a Gepard Path-t rajzoló, renderelő
 része.
 
-  Első körben nem volt cél a ,,leggyorsabban futó'' és ,,legkisebb
-méretű'' patht kitöltő renderelő API elkészítése. Célunk egy út megtalálása és
-e mentén egy olyan eszköz megalkotása volt, amely képes a választott ajánlás
-(Canvas) elvárásait teljesíteni. Valamint ezáltal megismerhetünk bizonyos
-módszereket és technológiákat.
+  Első körben nem volt cél a ,,leggyorsabban futó'' és ,,legkisebb méretű''
+Path-t rajzoló API elkészítése. Célunk egy lehetséges megvalósítás megtalálása,
+és ez alapján egy olyan eszköz megalkotása volt, amely képes a választott
+ajánlás (Canvas) elvárásait teljesíteni.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -354,11 +376,11 @@ megközelítést (\inenglish{approximation}) alkalmaztunk. Ezekről a lépésekr
   A Canvas API egy közel tíz éves, kiforrott technológia~\footnote {A W3C első
 HTML5 szabvány-vázlata:\\ \footnotesize{
 \url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. Az ajánlás leír
-egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{canvas}nek
-neveznek. A canvas definició szerint nem más mint egy adott \emph{szélesség}gel
-és \emph{hosszúság}gal meghatározott terület, ahova különböző alakzatokat,
+egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{canvas}-nek
+neveznek. A canvas definició szerint nem más mint egy adott \emph{szélességgel}
+és \emph{hosszúsággal} meghatározott terület, ahova különböző alakzatokat,
 képeket, szövegeket és egyéb nem dinamikus grafikai elemeket rakhatunk fel. Az
-elemeket a canvashez tartozó \emph{context} gyűjti, és bizonyos parancsok
+elemeket a canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
 (pl.~\emph{fill}) esetén az addig összegyűjtötteket kirajzolja a megadott
 sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
 pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
@@ -366,34 +388,72 @@ pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
   Az ajánláson belül definiált Path API rész amúgy egy régebbi, elterjedt
 alakzatszerkesztő eljáráson alapul. Az eljárás lényege, hogy bizonyos alap
 eszközökkel definiálunk egy bonyolultabb formát. Ezt a folyamatot hívjuk
-alakzat építésnek (\inenglish{path building}).
+alakzat építésnek (\inenglish{shape/path building}). Az építés fázis után
+különböző parancsokkal rajzolhatjuk ki a definiált alakzatot, akár kitöltve
+(\emph{fill}), akár körvonalként (\emph{stroke}), de lehetőségünk van az adott
+alakzattal kivágni (\emph{clip}) is a canvas-on már meglévő képből.
 
+  A szabvány előír néhány megkötést. Ezekről látni fogjuk, hogy természetes
+korlátok. Hiszen józan ésszel felfogható, hogy egy egyenes szakaszból definiált
+alakzatra értelmetlen a kitöltés, azaz a fill parancsot meghívni. Hasonlóan nem
+mond semmit a nulla vastagságú vonal a stroke parancs esetén. Érdekes
+belegondolni abba is, hogy mi legyen egy definiált alakzat sorsa, ha már
+kirajzoltuk. Vessük el, vagy tartsuk meg. A szabvány megalkotói -- amúgy
+programozási szempontból jól indokolható módon -- a megtartás mellett
+döntöttek. Így viszont az a fontos megkötés is megjelent, hogy mindig
+egyértelműen jelezni kell, ha új alakzatot akarunk definiálni.
 
-    \begin{figure}[h]
-    \centering
-    \psfrag{e}[b][B][0.8]{\bf{E}}
-    \psfrag{r}[b][B][0.8]{e\bf{R}}
-    \psfrag{d}[b][B][0.8]{e\bf{D}}
-    \psfrag{é}[b][B][0.8]{\bf{É}}
-    \psfrag{ly}[b][B][0.8]{e\bf{LY}}
-    \psfrag{R}[b][B][0.8]{e\bf{RD}}
-    \psfrag{L}[b][B][0.8]{\bf{ÉLY}}
-    \psfrag{A}[c][c][0.8]{\it{a.}}
-    \psfrag{B}[c][c][0.8]{\it{b.}}
-    \psfrag{C}[c][c][0.8]{\it{c.}}
-    \includegraphics[scale=0.6]{img/w3c_erdely_eps}
-    \caption{\label{erdely}
-%    \item Az ,,Erdély'' szó \emph{székely
-%    írással}~\cite{Saandor:2014:szeekely}. Fent minden graféma külön áll, míg lent összevonva
-%    ligatúraképzéssel.
-%    \item Sematikusan Az ,,e'' graféma felépítésének
-%    folyamata a Path elemeivel. Valamint
-%    \end{enumerate}
-    }
-    \end{figure}
+  A W3C-féle Canvas felfogható egy állapotgépnek. Ami ebben a esetben azt
+jelenti, hogy bizonyos beállítások (kitöltőszín, betűméret, vonalvastagság,
+transzformációk, stb.) érvényben maradnak mindaddig, amíg meg nem változtatjuk
+azokat. Ezt már az előbb említett felépített vonal esetén is érezhettük. Mint
+később látni fogjuk, ez erősen megköti a kezünket, hogy milyen rajzoló program
+is lehet a Gepard. Persze a Gepard idővel kibővülhet további funkcionalitásokkal
+(pl. \emph{flush}, \emph{finish}, stb.), amik egy sokkal kötetlenebb rajzoló
+eszközhöz vezethetnek; ez viszont most még csak a jövő.
 
+  Térjünk vissza a Path építéséhez, vagy ahogyan a szaknyelv hívja: path
+building. Feltételezzük, hogy a kedvünkre beállítottuk a rajzolás
+színét, a méreteket és minden szükséges módon felkészítettük a
+vásznunkat, hogy arra felvigyük a kívánt alakzatot. Ez most legyen egy
+háromszög, mint az egyik legegyszerűbb, ám a szabványban külön nem
+definiált forma, ellentétben a téglalappal (\emph{rect}, \emph{fillRect},
+\emph{strokeRect}).
 
-  Nézzük meg, milyen eszközöket biztosít a Path API.
+\begin{wrapfigure}[8]{l}{.5\textwidth}
+\begin{lstlisting}
+gepard::Gepard ctx(surface);
+ctx.beginPath();  // szükséges?
+ctx.moveTo(50, 10);
+ctx.lineTo(60, 60);
+ctx.lineTo(10, 40);
+ctx.closePath();  // szükséges?
+ctx.fill();
+\end{lstlisting}
+\end{wrapfigure}
+
+%    \begin{figure}[h]
+%    \centering
+%    \psfrag{e}[b][B][0.8]{\bf{E}}
+%    \psfrag{r}[b][B][0.8]{e\bf{R}}
+%    \psfrag{d}[b][B][0.8]{e\bf{D}}
+%    \psfrag{é}[b][B][0.8]{\bf{É}}
+%    \psfrag{ly}[b][B][0.8]{e\bf{LY}}
+%    \psfrag{R}[b][B][0.8]{e\bf{RD}}
+%    \psfrag{L}[b][B][0.8]{\bf{ÉLY}}
+%    \psfrag{A}[c][c][0.8]{\it{a.}}
+%    \psfrag{B}[c][c][0.8]{\it{b.}}
+%    \psfrag{C}[c][c][0.8]{\it{c.}}
+%    \includegraphics[scale=0.6]{img/w3c_erdely_eps}
+%    \caption{\label{erdely}
+%%    \item Az ,,Erdély'' szó \emph{székely
+%%    írással}~\cite{Saandor:2014:szeekely}. Fent minden graféma külön áll, míg lent összevonva
+%%    ligatúraképzéssel.
+%%    \item Sematikusan Az ,,e'' graféma felépítésének
+%%    folyamata a Path elemeivel. Valamint
+%%    \end{enumerate}
+%    }
+%    \end{figure}
 
 
 A path építés
