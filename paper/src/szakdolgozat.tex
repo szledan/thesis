@@ -59,9 +59,10 @@
 \usepackage{listings}
 \lstset{ %
     %backgroundcolor=\color{white},   % choose the background color; you must add  \usepackage{color} or \usepackage{xcolor}
-    basicstyle=\footnotesize,         % the size of the fonts that are used for    the code
+    basicstyle=\scriptsize, %\footnotesize,         % the size of the fonts that are used for    the code
     %breakatwhitespace=false,         % sets if automatic breaks should only      happen at whitespace
-    breaklines=true,                  % sets automatic line breaking          captionpos=b,                    % sets the caption-position to          bottom
+    breaklines=true,                  % sets automatic line breaking
+    captionpos=b,                    % sets the caption-position to          bottom
     commentstyle=\color{myCommentColorGreen},    % comment style
     %deletekeywords={...},            % if you want to delete keywords              from the given language
     %escapeinside={\%*}{*)},          % if you want to add LaTeX                within your code
@@ -111,6 +112,7 @@
 
 \usepackage[labelfont=it,justification=centering]{caption}
 
+\usepackage{graphicx}
 \usepackage{epigraph}
 %\epigraphfontsize{\small\itshape}
 
@@ -326,16 +328,16 @@ függvénykönyvtár.
 Így alkot majd egy komplex grafikus alkalmazásprogramozási felületet
 (\inenglish{Application Programming Interface}, a továbbiakban API). Az elsőnek
 választott ilyen ismertebb interfész amit támogatni kíván az a \emph{W3C} által
-készített \emph{Canvas 2D Context}~\cite{Cabanier:14:HCC} ajánlás.
+készített \emph{Canvas 2D Context}~\cite{Cabanier:14:HCC} előírás.
 
-  A \emph{Canvas 2D Context} (a továbbiakban \emph{Canvas}) ajánlás
+  A \emph{Canvas 2D Context} (a továbbiakban \emph{Canvas}) előírás
 2015-ös kiadása több elkülönített részből állítja össze az API-t. Ezen részek
-egyike az úgynevezett \emph{Path}. Az említett 2015-ös ajánlás az 5., 8. és 11.
+egyike az úgynevezett \emph{Path}. Az említett 2015-ös előírás az 5., 8. és 11.
 fejezetekben részletezi a Path-szal szembeni elvárásokat. A Path maga a
 definiált grafikus alakzatokhoz képest bonyolultabbak leírását biztosító
 eszköz. A Háttér (\ref{Háttér}.) fejezetben részletesebben kifejtjük a path-t
 építő eszköz lehetőségeit és szabályait. Itt most csak annyiban kell kitérjünk
-rá, hogy alapvetően két nagyobb részből áll ez is. A \emph{körvonalból}
+rá, hogy alapvetően két nagyobb részből áll. A \emph{körvonalból}
 (\inenglish{stroke}) és a \emph{kitöltésből} (\inenglish{fill}).
 
   Jelen dolgozat az említett \emph{Path} rész megvalósítását kívánja bemutatni.
@@ -347,7 +349,7 @@ része.
   Első körben nem volt cél a ,,leggyorsabban futó'' és ,,legkisebb méretű''
 Path-t rajzoló API elkészítése. Célunk egy lehetséges megvalósítás megtalálása,
 és ez alapján egy olyan eszköz megalkotása volt, amely képes a választott
-ajánlás (Canvas) elvárásait teljesíteni.
+előírás (Canvas) elvárásait teljesíteni.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -359,7 +361,7 @@ ajánlás (Canvas) elvárásait teljesíteni.
 
   Ebben a fejezetben tárgyaljuk azokat a technológiákat és kihívásokat,
 amelyek keretet szabtak a feladatunknak. Beszélni kell magáról a Canvas
-ajánlásról, a GLES2 szabvány nyújtotta lehetőségekről, azokról a matematikai
+előírásról, a GLES2 szabvány nyújtotta lehetőségekről, azokról a matematikai
 módszerekről, amelyek biztosítják számunkra, hogy tetszőlegesen bonyolult --
 szerencsénkre zárt -- alakzatok kitöltését helyesen elvégezhessük. Össze
 kellett kapcsolni a választott GLES2 szabta megkötést~\footnote { Az OpenGL 2.0
@@ -369,13 +371,13 @@ Elvárás a tetszőleges számú körcikk, szakasz és Bézier-görbe alkotta --
 megközelítést (\inenglish{approximation}) alkalmaztunk. Ezekről a lépésekről is
 érdemes lesz beszélni.
 
-    \section[A Canvas ajánlás]{A W3C Canvas 2D Context ajánlása}
-    \label{A Canvas ajánlás}
-%    \addcontentsline{toc}{subsection}{az ajánlás}
+    \section[A Canvas előírás]{A W3C Canvas 2D Context előírás}
+    \label{A Canvas előírás}
+%    \addcontentsline{toc}{subsection}{az előírás}
 
   A Canvas API egy közel tíz éves, kiforrott technológia~\footnote {A W3C első
 HTML5 szabvány-vázlata:\\ \footnotesize{
-\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. Az ajánlás leír
+\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. Az előírás leír
 egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{canvas}-nek
 neveznek. A canvas definició szerint nem más mint egy adott \emph{szélességgel}
 és \emph{hosszúsággal} meghatározott terület, ahova különböző alakzatokat,
@@ -385,7 +387,7 @@ elemeket a canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
 sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
 pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
 
-  Az ajánláson belül definiált Path API rész amúgy egy régebbi, elterjedt
+  Az előíráson belül definiált Path API rész amúgy egy régebbi, elterjedt
 alakzatszerkesztő eljáráson alapul. Az eljárás lényege, hogy bizonyos alap
 eszközökkel definiálunk egy bonyolultabb formát. Ezt a folyamatot hívjuk
 alakzat építésnek (\inenglish{shape/path building}). Az építés fázis után
@@ -412,49 +414,45 @@ is lehet a Gepard. Persze a Gepard idővel kibővülhet további funkcionalitás
 (pl. \emph{flush}, \emph{finish}, stb.), amik egy sokkal kötetlenebb rajzoló
 eszközhöz vezethetnek; ez viszont most még csak a jövő.
 
-  Térjünk vissza a Path építéséhez, vagy ahogyan a szaknyelv hívja: path
-building. Feltételezzük, hogy a kedvünkre beállítottuk a rajzolás
-színét, a méreteket és minden szükséges módon felkészítettük a
-vásznunkat, hogy arra felvigyük a kívánt alakzatot. Ez most legyen egy
-háromszög, mint az egyik legegyszerűbb, ám a szabványban külön nem
-definiált forma, ellentétben a téglalappal (\emph{rect}, \emph{fillRect},
-\emph{strokeRect}).
+  Térjünk vissza a Path építéséhez (\inenglish{path
+building}). Feltételezzük, hogy a kedvünkre beállítottuk a rajzolás színét, a
+méreteket és minden szükséges módon felkészítettük a vásznunkat, hogy arra
+felvigyük a kívánt alakzatot. Ez most legyen egy háromszög, mint az egyik
+legegyszerűbb, ám a szabványban külön nem definiált forma. Ellentétben a
+téglalappal: \emph{rect}, \emph{fillRect}, \emph{strokeRect}.
 
-\begin{wrapfigure}[8]{l}{.5\textwidth}
-\begin{lstlisting}
-gepard::Gepard ctx(surface);
-ctx.beginPath();  // szükséges?
+  \begin{figure}[!htb]
+    \hspace{0.1\textwidth}
+    \minipage{0.5\textwidth}
+      \centering
+      \begin{lstlisting}
+gepard::Gepard ctx(&surface);
+ctx.beginPath();
 ctx.moveTo(50, 10);
 ctx.lineTo(60, 60);
 ctx.lineTo(10, 40);
-ctx.closePath();  // szükséges?
-ctx.fill();
-\end{lstlisting}
-\end{wrapfigure}
+ctx.closePath();  // felső sor
+ctx.fill();  // utolsó két oszlop
+ctx.stroke();  // első két oszlop
+      \end{lstlisting}
+    \endminipage
+    \hfill
+    \minipage{0.5\textwidth}
+      \includegraphics[width=.5\textwidth]{img/triangle}
+    \endminipage
+    \caption{\label{triangles-code-and-image} Mit is mondhatnék}
+  \end{figure}
 
-%    \begin{figure}[h]
-%    \centering
-%    \psfrag{e}[b][B][0.8]{\bf{E}}
-%    \psfrag{r}[b][B][0.8]{e\bf{R}}
-%    \psfrag{d}[b][B][0.8]{e\bf{D}}
-%    \psfrag{é}[b][B][0.8]{\bf{É}}
-%    \psfrag{ly}[b][B][0.8]{e\bf{LY}}
-%    \psfrag{R}[b][B][0.8]{e\bf{RD}}
-%    \psfrag{L}[b][B][0.8]{\bf{ÉLY}}
-%    \psfrag{A}[c][c][0.8]{\it{a.}}
-%    \psfrag{B}[c][c][0.8]{\it{b.}}
-%    \psfrag{C}[c][c][0.8]{\it{c.}}
-%    \includegraphics[scale=0.6]{img/w3c_erdely_eps}
-%    \caption{\label{erdely}
-%%    \item Az ,,Erdély'' szó \emph{székely
-%%    írással}~\cite{Saandor:2014:szeekely}. Fent minden graféma külön áll, míg lent összevonva
-%%    ligatúraképzéssel.
-%%    \item Sematikusan Az ,,e'' graféma felépítésének
-%%    folyamata a Path elemeivel. Valamint
-%%    \end{enumerate}
-%    }
-%    \end{figure}
+  A fenti ábrán (\ref{triangles-code-and-image}) látható egy kis példakód,
+illetve ennek hat különböző eredménye. Az első sorban olyan alakzatokat
+látunk, ahol a \emph{closePath} parancsot meghívtuk (hármoszög), a
+másodikban pedig nem (V alak). Az első oszlopban a \emph{fill}-t, a
+másodikban pedig a \emph{stroke}-ot nem hívtuk meg. A szabvány
+~\cite{Cabanier:14:HCC} ugyanakkor rendelkezik arról, hogy minden Path zárt
+alakzat kell legyen, így mindig kitölthető is. Ezért lett a második sor utolsó két
+V-nek definiált alakzata mégis kitöltött háromszög.
 
+--- Itt íródik ---
 
 A path építés
 különböző elemek segítségével történik. Két fő részre bontható. Az első rész
@@ -530,11 +528,33 @@ parancsokat, elemeket. Ezek a parancsok vagy elemek a következők:
 \end{enumerate}
 
 \Aref{dataflow-canvas-API-diagram}. ábrán láthatók az építő és rajzoló
-elemek. Illetve feltüntettük még az ajánlásban nem szereplő
+elemek. Illetve feltüntettük még az előírásban nem szereplő
 \emph{setFillColor} parancsot is. Ezzel a paranccsal adhatjuk meg a
 contexthez tartozó aktuális kitöltő színt. Ez a parancs nem része
-az ajánlásnak. Ott egy \emph{CSS DOM} elemmel állíthatjuk be ezt
+az előírásnak. Ott egy \emph{CSS DOM} elemmel állíthatjuk be ezt
 az értéket. Az általunk tervezett API azonban csak a Canvas 2D
+    \begin{figure}[h]
+    \centering
+    \psfrag{e}[b][B][0.8]{\bf{E}}
+    \psfrag{r}[b][B][0.8]{e\bf{R}}
+    \psfrag{d}[b][B][0.8]{e\bf{D}}
+    \psfrag{é}[b][B][0.8]{\bf{É}}
+    \psfrag{ly}[b][B][0.8]{e\bf{LY}}
+    \psfrag{R}[b][B][0.8]{e\bf{RD}}
+    \psfrag{L}[b][B][0.8]{\bf{ÉLY}}
+    \psfrag{A}[c][c][0.8]{\it{a.}}
+    \psfrag{B}[c][c][0.8]{\it{b.}}
+    \psfrag{C}[c][c][0.8]{\it{c.}}
+    \includegraphics[scale=0.6]{img/w3c_erdely_eps}
+    \caption{\label{erdely}
+%    \item Az ,,Erdély'' szó \emph{székely
+%    írással}~\cite{Saandor:2014:szeekely}. Fent minden graféma külön áll, míg lent összevonva
+%    ligatúraképzéssel.
+%    \item Sematikusan Az ,,e'' graféma felépítésének
+%    folyamata a Path elemeivel. Valamint
+%    \end{enumerate}
+    }
+    \end{figure}
 Contextre koncentrál, így a CSS elemeket nem kívánjuk támogatni.
     \begin{wrapfigure}{l}{0.5\textwidth}
     \begin{center}

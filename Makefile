@@ -1,9 +1,8 @@
 ### thesis
 
-all: thesis
-
-thesis:
-	./scripts/build.sh ledanszilard
+all:
+	make thesis
+	make grayscale
 
 hunspell:
 	hunspell -d hu_HU -i utf-8 -t -p paper/hunspell/words paper/src/szakdolgozat.tex
@@ -19,6 +18,19 @@ clean:
 
 dist.clean:
 	rm -rf build
+
+thesis:
+	cmake -H. -Bbuild
+	make -C build
+
+grayscale: src
+	./scripts/convert-grayscale.sh build/paper/src/szakdolgozat.pdf build/paper/src/szakdolgozat-gs.pdf
+
+examples:
+	make -C build/paper/examples
+
+src: examples
+	make -C build/paper/src
 
 ### code
 
