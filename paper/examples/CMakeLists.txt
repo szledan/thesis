@@ -23,3 +23,4 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_OUTPUT_DIR})
 include_directories(${CODE_NAME}_INCLUDE_DIRS)
 
 add_subdirectory(triangle)
+add_subdirectory(erdely)
