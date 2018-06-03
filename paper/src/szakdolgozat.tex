@@ -377,7 +377,7 @@ megközelítést (\inenglish{approximation}) alkalmaztunk. Ezekről a lépésekr
 
   A Canvas API egy közel tíz éves, kiforrott technológia~\footnote {A W3C első
 HTML5 szabvány-vázlata:\\ \footnotesize{
-\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. Az előírás leír
+\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. A szabvány leír
 egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{canvas}-nek
 neveznek. A canvas definició szerint nem más mint egy adott \emph{szélességgel}
 és \emph{hosszúsággal} meghatározott terület, ahova különböző alakzatokat,
@@ -414,12 +414,12 @@ is lehet a Gepard. Persze a Gepard idővel kibővülhet további funkcionalitás
 (pl. \emph{flush}, \emph{finish}, stb.), amik egy sokkal kötetlenebb rajzoló
 eszközhöz vezethetnek; ez viszont most még csak a jövő.
 
-  Térjünk vissza a Path építéséhez (\inenglish{path
-building}). Feltételezzük, hogy a kedvünkre beállítottuk a rajzolás színét, a
-méreteket és minden szükséges módon felkészítettük a vásznunkat, hogy arra
-felvigyük a kívánt alakzatot. Ez most legyen egy háromszög, mint az egyik
-legegyszerűbb, ám a szabványban külön nem definiált forma. Ellentétben a
-téglalappal: \emph{rect}, \emph{fillRect}, \emph{strokeRect}.
+  Térjünk vissza a Path építéshez. Feltételezzük, hogy a kedvünkre beállítottuk
+a rajzolás színét, a méreteket és minden szükséges módon felkészítettük a
+vásznunkat, hogy arra felvigyük a kívánt alakzatot. Ez most legyen egy
+háromszög, mint az egyik legegyszerűbb, ám a szabványban külön nem definiált
+forma. Ellentétben a téglalappal: \emph{rect}, \emph{fillRect},
+\emph{strokeRect}.
 
   \begin{figure}[!htb]
     \hspace{0.1\textwidth}
@@ -440,17 +440,19 @@ ctx.stroke();  // első két oszlop
     \minipage{0.5\textwidth}
       \includegraphics[width=.5\textwidth]{img/triangle}
     \endminipage
-    \caption{\label{triangles-code-and-image} Mit is mondhatnék}
+    \caption{\label{triangles-code-and-image} Bezárt és nyitva hagyott
+    alakzatok körvonalai és kitöltései }
   \end{figure}
 
   A fenti ábrán (\ref{triangles-code-and-image}) látható egy kis példakód,
 illetve ennek hat különböző eredménye. Az első sorban olyan alakzatokat látunk,
 ahol a \emph{closePath} parancsot meghívtuk (hármoszög), a másodikban pedig nem
-(V alak). Az első oszlopban a \emph{fill}-t, a másodikban pedig a
+(V alak). Az első oszlopban a \emph{fill}-t, a harmadikban pedig a
 \emph{stroke}-ot nem hívtuk meg. A szabvány ~\cite{Cabanier:14:HCC} ugyanakkor
 rendelkezik arról, hogy minden Path zárt alakzat kell legyen, így mindig
 kitölthető is. Ezért lett a második sor utolsó két V-nek definiált alakzata
 mégis kitöltött háromszög.
+  Nézzük meg, hogy milyen konkrét eszközöket kíván biztosítani a szabvány.
 
   \begin{figure}[!htb]
     \centering
@@ -628,8 +630,8 @@ ahol $\mathbf{B}(t)=(x(t), y(t))$ a $t\in[0,1]$ paraméter által
   A \emph{Gepard} tervezésekor fontos szempont volt, hogy ne csak az
 GLES2 API-val működjön. Lehetőséget kell kínálni, hogy a jövőben
 több grafikus meghajtó közül lehessen választani. Mint például
-az OpenGL, a Vulkan, DirectX, esetleg egy referencia szoftveres
-képalkotó (\inenglish{renderer}). Ezért a Gepard külső API-ján
+a Vulkan, DirectX, esetleg egy referencia szoftveres
+raszterizáló (\inenglish{renderer}). Ezért a Gepard külső API-ján
 belül terveztünk egy belső API-t, amely már a választott
 rendererrel rajzol. A mi esetünkben ez a belső API-nak a Path
 része. Ez rajzol GLES2-t használva. Ebben a részben kell elvégezni

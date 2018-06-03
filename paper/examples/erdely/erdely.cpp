@@ -363,10 +363,6 @@ private:
     float _lw;
 };
 
-void shapeMoon(gepard::Gepard& ctx)
-{
-}
-
 int main(int argc, char* argv[])
 {
     if (HAS_FLAG("-h", "--help", argc, argv)) {
