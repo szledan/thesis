@@ -22,7 +22,7 @@ margin=$(getValue $(getFlag "--export-margin" $@) $margin)
 svgDir=$(getValue $(getFlag "--svg" $@) $svgDir)
 epsDir=$(getValue $(getFlag "--eps" $@) $epsDir)
 if [[ ! -d "$svgDir" || ! -d "$epsDir" ]] ; then
-  echo "One of the directories does not exist!";
+  echo "One of the directories does not exist! Wrong: $svgDir || $epsDir";
   echo $helpMsg;
   exit 1
 fi

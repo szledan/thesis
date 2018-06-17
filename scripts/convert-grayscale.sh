@@ -44,3 +44,5 @@ if [ "$errorCode" != "0" ] ; then
 else
   echo "Done!"
 fi
+
+exit $errorCode
