@@ -6,8 +6,8 @@ resource_list()
 {
   step "SVGs2EPS" "Convert all SVG to EPS." "./scripts/svg-to-eps.sh --export-margin=3mm --svg=./paper/src/svg --eps=./paper/src/img"
   step "Convert2Gray" "Convert the article in to grayscale." "./scripts/convert-grayscale.sh"
-  step "Triangle" "Run 'triangle' example" "./build/paper/examples/bin/triangle"
-  step "Erdely" "Run 'erdely' example" "./build/paper/examples/bin/erdely"
+  step "Triangle" "Run 'triangle' example" "./build/paper/examples/triangle/triangle"
+  step "Erdely" "Run 'erdely' example" "./build/paper/examples/erdely/erdely"
 }
 
 #### Main and util functions ####

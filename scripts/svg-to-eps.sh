@@ -36,7 +36,7 @@ fi
 # Convert 'svg' to 'eps'.
 for svgFile in `ls $svgDir/*.svg` ; do
   svgBaseName=`basename $svgFile .svg`
-  epsFile=$epsDir/`basename $svgBaseName _svg`_eps.eps
+  epsFile=$epsDir/`basename $svgBaseName`_eps.eps
   echo "inkscape --export-margin=$margin $svgFile --export-eps=$epsFile"
 
   inkscape --export-margin=$margin $svgFile --export-eps=$epsFile
