@@ -266,6 +266,22 @@ public:
         return flush();
     }
 
+    SzeklerWriter& t()
+    {
+        begin();
+        leading(0.3);
+        _ctx.save();
+
+        _ctx.moveTo(0.0 * _fs, 0.0 * _fs);
+        _ctx.lineTo(0.0 * _fs, 1.0 * _fs);
+        _ctx.moveTo(0.0 * _fs, 0.4 * _fs);
+        _ctx.lineTo(-0.3 * _fs, 0.0 * _fs);
+
+        _ctx.restore();
+        moveCursor(0.7);
+        return flush();
+    }
+
     SzeklerWriter& STAR(const float size = 0.8)
     {
         begin();
@@ -389,7 +405,7 @@ int main(int argc, char* argv[])
 
     ctx.translate(1800, 120);
     SzeklerWriter szw(ctx, 250);
-    szw.MOON()._().e().Rd().eely().x().sz().a().ba().d()._().STAR();
+    szw.MOON()._().sz().a().ba().d().x().e().Rd().eely().t()._().STAR();
 
     std::string pngFile = argc > 1 ? argv[1] : "./paper/src/img/erdely.png";
     surface.save(pngFile);
