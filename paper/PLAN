@@ -17,8 +17,15 @@ megvalósítása.
   * Tartalmi összefoglaló
   * Bevezetés
   1. Háttér
-  2. Path API (ismertetése)
-  3. Összefoglalás
+     w3c gles2 mat
+  2. geprad gles
+    a. Path API : visszavezetés szerint sorrendbe bemutatni
+    b. segment aprox
+    c. trapezoid builder
+    d. use gles2 to render
+  3. példák és hasznalat
+
+  4. Összefoglalás
   * Irodalomjegyzék
   * Nyilatkozat
   * Köszönetnyilvánítás
