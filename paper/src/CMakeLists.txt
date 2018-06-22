@@ -10,3 +10,8 @@ add_latex_document (
     TARGET_NAME thesispaper
     DEPENDS ${THESIS_DEPENDENCIES}
 )
+
+add_latex_document (
+    plan.tex
+    TARGET_NAME plan.tex
+)

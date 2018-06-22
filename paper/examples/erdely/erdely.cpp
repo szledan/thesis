@@ -37,6 +37,21 @@
 
 class SzeklerWriter {
 public:
+    static const std::string kLower;
+    static const std::string kUpper;
+
+    static const std::string toLower(std::string upper)
+    {
+        std::string lower = upper;
+        for (size_t i = 0; i < lower.length(); ++i) {
+            const size_t pos = kUpper.find(lower[i]);
+            if (pos != std::string::npos) {
+                lower[i] = kLower[pos];
+            }
+        }
+        return lower;
+    }
+
     SzeklerWriter(gepard::Gepard& ctx, const float fontSize = 12.0)
         : _ctx(ctx)
         , _fontSize(fontSize)
@@ -45,8 +60,31 @@ public:
         _leadingSize = _fs * 0.7 * 0.5;
     }
 
-    SzeklerWriter& text(const std::string& str)
+    SzeklerWriter& text(const std::string latin)
     {
+        std::string str = toLower(latin);
+        while (!str.empty()) {
+            size_t adv = 1;
+
+            if (str.find(" x ") == 0) { x(); adv = 3; }
+            else if (str.find("ély") == 0) { eely(); adv = 3; }
+            else if (str.find("ba") == 0) { ba(); adv = 2; }
+            else if (str.find("ly") == 0) { ly(); adv = 2; }
+            else if (str.find("rd") == 0) { Rd(); adv = 2; }
+            else if (str.find("sz") == 0) { sz(); adv = 2; }
+            else if (str.find("a") == 0) { a(); }
+            else if (str.find("d") == 0) { d(); }
+            else if (str.find("e") == 0) { e(); }
+            else if (str.find("é") == 0) { ee(); }
+            else if (str.find("r") == 0) { R(); }
+            else if (str.find("t") == 0) { t(); }
+            else if (str.find(" ") == 0) { _(); }
+            else if (str.find("*") == 0) { STAR(); }
+            else if (str.find(")") == 0) { MOON(); }
+
+            str.erase(0, adv);
+        }
+
         return *this;
     }
 
@@ -379,6 +417,9 @@ private:
     float _lw;
 };
 
+const std::string SzeklerWriter::kLower = "aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyz";
+const std::string SzeklerWriter::kUpper = "AÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ";
+
 int main(int argc, char* argv[])
 {
     if (HAS_FLAG("-h", "--help", argc, argv)) {
@@ -405,7 +446,8 @@ int main(int argc, char* argv[])
 
     ctx.translate(1800, 120);
     SzeklerWriter szw(ctx, 250);
-    szw.MOON()._().sz().a().ba().d().x().e().Rd().eely().t()._().STAR();
+
+    szw.text(") Szabad x Erdélyt *");
 
     std::string pngFile = argc > 1 ? argv[1] : "./paper/src/img/erdely.png";
     surface.save(pngFile);
