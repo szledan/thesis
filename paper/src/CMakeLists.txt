@@ -11,7 +11,3 @@ add_latex_document (
     DEPENDS ${THESIS_DEPENDENCIES}
 )
 
-add_latex_document (
-    plan.tex
-    TARGET_NAME plan.tex
-)

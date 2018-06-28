@@ -1,0 +1,339 @@
+\documentclass[12pt]{article}
+
+\def\magyarOptions{defaults=hu-min}
+\usepackage[magyar]{babel}
+
+\usepackage{t1enc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{times}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\usepackage{fancyhdr}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{wrapfig}
+
+\usepackage[labelfont=it,justification=centering]{caption}
+
+\usepackage{graphicx}
+\usepackage{epigraph}
+
+\usepackage{dirtree}
+
+% Margók:
+\hoffset -1in
+\voffset -1in
+\oddsidemargin 35mm
+\textwidth 150mm
+\topmargin 15mm
+\headheight 10mm
+\headsep 5mm
+\textheight 237mm
+
+% Becsült oldaszámok követése
+\usepackage{calc}
+\newcounter{osszesen}
+\newcommand*{\oldalak}[1]{#1 oldal \setcounter{osszesen}{\theosszesen +
+#1}($\Sigma=\theosszesen$)}
+
+\begin{document}
+
+\clearpage
+\thispagestyle{empty}
+\begin{center}
+
+\vspace*{4.8cm}
+
+{\LARGE\bf BSc. Szakdolgozat tervezet}
+
+\vspace*{12cm}
+
+{\large \raggedright
+\emph{Készítette:} \textbf{Ledán Szilárd} informatika szakos hallgató\\
+\emph{Témavezető:} \textbf{Dr. Kiss Ákos} adjunktus\\
+Szegedi Tudományegyetem, Szoftverfejlesztés Tanszék\\
+}
+\end{center}
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Tartalomjegyzék                                                %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Téma                                                           %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Téma}
+
+A \emph{W3C} (World Wide Web Consortium) által \emph{Canvas 2D Context} néven
+2015-ben elfogadott API ajánlás \emph{Path} részének \emph{OpenGL-ES 2.0} alapú
+megvalósítása.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Szakdolgozat felépítése                                        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Szakdolgozat felépítése}
+
+\subsection*{Címoldal}
+
+\begin{description}[noitemsep]
+  \item[Cím] Még pontosítani kell Ákossal.
+  \item[Dátum] Javítani és ellenőrizni kell.
+  \item[Témavezető] Ákos egyetemi címét is ellenőrizni kell, ha addig változna.
+  \item[Oldalszám] \oldalak{1}.
+\end{description}
+
+\subsection*{Tartalomjegyzék}
+
+\begin{itemize}[noitemsep]
+  \item[\checkmark] Ez kész.
+  \item[$\bullet$] Oldalszám: \oldalak{1}.
+\end{itemize}
+
+\subsection*{Feladatkiírás}
+
+\begin{itemize}[noitemsep]
+  \item[$\square$] Még meg kell írni, és Ákossal átnézetni.
+  \item[$\bullet$] Oldalszám: \oldalak{1}.
+\end{itemize}
+
+\subsection*{Tartalmi összefoglaló}
+
+\begin{itemize}[noitemsep]
+  \item[$\square$] Ez is nagyjából kész. még igazítani kell a végső szöveghez.
+  \item[$\bullet$] Oldalszám: \oldalak{1}.
+\end{itemize}
+
+\subsection*{Bevezetés}
+
+\begin{itemize}[noitemsep]
+  \item[\checkmark] Ez kész.
+  \item[$\bullet$] Oldalszám: \oldalak{1}.
+\end{itemize}
+
+\subsection{Háttér }
+
+Az alapvető gondolat az, hogy bemutatom a Canvas API-t mint interface-t, és
+ezáltal a kényszereket is, amiknek meg kell felelnie az ezt implementáló
+Gepárdnak. Azután a használni kívánt GLES2-es API-t ismertetem, hogy
+milyen lehetőségek állnak a rendelkezésemre. Ezáltal érthetővé válik,
+hogy mit és mivel szeretnék összekötni, és hogy mik a nehézségek.
+Azután még beszélnem kell itt a szükséges és választott matematikai
+háttérről is.
+
+\subsubsection{W3C - Canvas 2D Context}
+
+Bevezetésként leírok egy minimális történeti részt és hogy miért választottam
+ezt az API-t. Azután felületesen megismertetem az olvasót az API-val, hogyan
+szokták használni, mire jó, mire nem alkalmas.
+
+\begin{description}[noitemsep]
+  %\setlength{\itemsep}{0pt plus 1pt}
+  \item[Kulcsszavak] Canvas, bitmap, path, zárt alakzat, fill, stroke.
+  \item[Becsült oldalszám] \oldalak{3}.
+\end{description}
+
+\subsubsection{OpenGL-ES 2.0}
+
+Röviden ismertetem az olvasóval, hogy mi is a GLES2 és miért választottam.
+Majd megmutatom a számomra legfontosabb részeket és tulajdonságokat. Itt
+fogom bemutatni, hogy alapvetően csak \emph{háromszögek} kitöltésére
+hagyatkozhatunk. Ezért már itt előre vetítem, hogy a megoldásom egy olyan
+program kell legyen, ami végül a tetszőleges alakzatot háromszögekkel lefedi.
+Ezután a háromszögek gyors és a GLES2 működéséhez jól illeszkedő
+módon való kirajzolásához szükséges további GLES2-es fogalmakat ismertetem.
+
+\begin{description}[noitemsep]
+  \item[Kulcsszavak] Állapotgép, shader, vertex, fragment, pipeline, batching
+  queue, texturák.
+  \item[Becsült oldalszám] \oldalak{4}.
+\end{description}
+
+\subsubsection{Matematikai háttér}
+
+Az előbbi részekben már ismertetett kényszer miatt leírom, hogy az egyik
+régi megközelítést fogom kissé tágabban értelmezve használni. Így a
+következő egymásra épülő és használt matematikai fogalmakkal kell
+megismerkedni.
+
+\begin{description}
+  \item[Seprő egyenesek] Mit értünk pontosan matematikailag seprő
+  egyeneseknek, hogyan értelmezhetjük ezeket \emph{seprő sávokként}, és ez
+  miért lesz hasznos számunkra.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Seprő egyenes, seprő sáv.
+    \item[Becsült oldalszám] \oldalak{1}.
+  \end{description}
+
+  \item[Bézier-görbe] A másod- és harmadrendű Bézier-görbék
+  bemutatása. A görbe felosztásának ismert gyors eljárása a De Casteljau
+  algoritmusa, amit használunk, hogy közel szakasz-szerű görbedarabokkal
+  közelítsük az eredetit.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Másodrendű-, harmadrendű Bézier-görbe, De
+    Casteljau algoritmusa.
+    \item[Becsült oldalszám] \oldalak{2}.
+  \end{description}
+
+  \item[Kör visszavezetése Bézier-görbékre] Itt támaszkodunk egy cikkre,
+  alapvetően annak a számunkra legfontosabb tartalmát vesszük át.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Kör, körív.
+    \item[Becsült oldalszám] \oldalak{2}.
+  \end{description}
+
+\end{description}
+
+\subsection{Belső Path API}
+
+Itt ismertetem meg az olvasóval a \emph{Gepard} rajzolót, a kitűzött
+célokat, a támogatni kívánt rajzoló meghajtókat (GLES2, Vulkan).
+Bemutatom a Gepard minimális felépítését, s ezen belül térek ki arra a
+részre, ami az én szakdolgozatom java részét érinti, a Belső Path API és
+annak GLES2-es megvalósítása.
+
+
+\begin{description}[noitemsep]
+  \item[Kulcsszavak] Gepard, OpenGL-ES 2.0, Vulkan, Path.
+  \item[Becsült oldalszám] \oldalak{4}.
+\end{description}
+
+  \subsubsection{Path API}
+  Részletbemenően ismertetem a Path API függvény-csoportjait,
+  működésének elvét, a felhasznált technológiákat; illetve külön
+  kitérek a \emph{stroke} hívás összetett metódusaira, amelyek révén
+  visszavezettük \emph{fillre}. Ez a rész elég nagy, hogy akár egy kisebb
+  alfejezete legyen a \emph{Path API} résznek.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
+    cubic-curve, arc, arc-to, rect, fill, stroke, transform, translate, rotate,
+    scale, skew, save, restore, color.
+    \item[Becsült oldalszám] \oldalak{7}.
+  \end{description}
+
+  \subsubsection{Segment approximator}
+  Ez a lelke az algoritmusomnak. Beszélnem kell az algoritmus vázáról, majd
+  az egyes részeket megvilágítva: mi történik a listához adott
+  szakaszokkal (segments), hogyan kezelem a metszéspontokat, milyen nem
+  ábrázolható folytonossági problémák merülhetnek fel metszések
+  esetén, ezeket hogyan próbáltam meg orvosolni.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Szakasz - segment, metszéspontok.
+    \item[Becsült oldalszám] \oldalak{6}.
+  \end{description}
+
+  \subsubsection{Trapezoid tessellator}
+  Ebben e részben a halomra hányt szakaszokból a kitöltési metódus
+  alapján trapézokat hozok létre. Ezt az algoritmust is részletesen be kell
+  mutatnom. A trapéz építése, majd horizontális, végül vertikális
+  összevonásukról is kell beszélnem.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Trapéz, horizontális összevonás, vertikális összevonás.
+    \item[Becsült oldalszám] \oldalak{4}.
+  \end{description}
+
+  \subsubsection{Rajzolás GLES2-vel}
+  Az rajzolás utolsó fázisa. Itt mutatom be a trapézok
+  háromszög-párként való kirajzolását. Hogyan gyűjtjük egybe a
+  háromszög-párokat, és hogyan rajzoljuk ki azokat együtt. Hogyan lesz
+  ebből egy alpha textúra, és azt hogyan használjuk fel színes
+  kirajzolásra. Itt világosítom meg, hogy miért van szükség alpha textúrára?
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Batching, alpha textúra, textúrázás, színezés,
+    gradiens, kivágás - clipping.
+    \item[Becsült oldalszám] \oldalak{4}.
+  \end{description}
+
+\subsection{Használat és eredmények}
+  \subsubsection{Használat}
+  Ez a fejezet fog szólni arról, hogy hogyan kell a \emph{libgepard.so}-t
+  előállítani, illetve hogyan kell használni. Bemutatok néhány egyszerű
+  példát.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Gepard kontext, libgepard.
+    \item[Becsült oldalszám] \oldalak{4}.
+  \end{description}
+
+  \subsubsection{Eredmények}
+  Itt a lefedettséget, illetve néhány ismert rajzolóval való minőségi
+  összehasonlítást fogom bemutatni.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Blink, Gecko.
+    \item[Becsült oldalszám] \oldalak{4}.
+  \end{description}
+
+\subsection{Összefoglalás }
+Végül összefoglalom az elért eredményeket. Illetve összegzem a még
+lehetséges javításokat, gyorsításokat. Valamint a jövőbeli terveket vázolom fel.
+\begin{description}[noitemsep]
+  \item[Kulcsszavak] Paralel trapezoid bontás, batching queue.
+  \item[Becsült oldalszám] \oldalak{2}.
+\end{description}
+
+\subsection*{Irodalomjegyzék }
+\begin{itemize}[noitemsep]
+  \item[\checkmark] Magától generálódik.
+  \item[$\bullet$] Oldalszám: \oldalak{1}.
+\end{itemize}
+
+\subsection*{Nyilatkozat }
+\begin{itemize}[noitemsep]
+  \item[\checkmark] Ez kész.
+  \item[$\bullet$] Oldalszám: \oldalak{1}.
+\end{itemize}
+
+\subsection*{Köszönetnyilvánítás }
+\begin{itemize}[noitemsep]
+  \item[$\square$] Még meg kell írni.
+  \item[$\bullet$] Oldalszám: \oldalak{1}.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Mappaszerkezet                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Mappaszerkezet}
+\dirtree{%
+.1 gepard.
+.2 code.
+.3 gepard: behúzva külsős projektként.
+.2 paper.
+.3 examples: a szakdolgozatban használt példák.
+.3 src: a szakdolgozat forrása.
+.4 bib: bibliográfia.
+.4 img: a felhasznált képek.
+.4 svg: szerkesztett SVG fájlok.
+.4 \textbf{ledanszilard.tex}.
+.4 \textbf{kotestabla.tex}.
+.2 scripts: hasznos szkriptek, konvertáláshoz, ellenőrzéshez, stb.
+}
+
+\end{document}
