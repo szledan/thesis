@@ -134,8 +134,6 @@
 % Az angol kifejezések kiemelése
 \newcommand{\inenglish}[1]{\textsl{#1}}
 \newcommand{\inenglishfn}[1]{\footnotesize{\inenglish{#1}}}
-% A függvények a szövegben
-\newcommand{\func}[1]{{\textsf{\footnotesize#1}}}
 
 %\hyphenation{sza-bály el-kü-lö-ní-tett}
 
@@ -274,22 +272,27 @@ A témavezető által megfogalmazott feladatkiírás. Önálló oldalon szerepel
 
     \subsubsection*{A téma megnevezése}
 
-  A \emph{W3C} (World Wide Web Consortium) által \emph{Canvas 2D Context} néven
-2015-ben elfogadott ajánlás \emph{path} részének megvalósítása \emph{OpenGL-ES
-2.0} alapokon.
+  A \emph{W3C} (World Wide Web Consortium) által \emph{Canvas 2D
+Context} néven 2015-ben elfogadott ajánlás \emph{path} részének
+megvalósítása \emph{OpenGL-ES 2.0} alapokon.
 
     \subsubsection*{A megadott feladat megfogalmazása}
 
-  Az előbb említett \emph{Canvas 2D Context} egy grafikus API. Ez az API több
-grafikus függvényt definiál. Jelen dolgozat témája ezek közül az úgynevezett
-\emph{path} részének leprogramozása~úgy, hogy a lehető legtöbb feladatot a
-grafikus processzor (\textit{GPU}) lássa el.
+  Az előbb említett \emph{Canvas} egy grafikus API~\footnote{Az
+alkalmazásprogramozási felület/interfész (Application Programming Interface)
+kifejezésre a továbbiakban mint \emph{API} hivatkozunk.}.
+  Ez az API több grafikus függvényt definiál (ld. később).
+  Jelen dolgozat témája ezek közül az úgynevezett \emph{path} részének
+leprogramozása~úgy, hogy a lehető legtöbb feladatot a grafikus processzor
+(\textit{GPU}) lássa el.
 
     \subsubsection*{A megoldásmód}
 
-  Több megoldás közül mi az alakzatok trapézokra bontását választottuk. Hiszen
-minden trapéz felbontható további két háromszögre, mely megkötésre a OpenGL-ES 2.0
-grafikus meghajtó  miatt van szükség.
+  Több megoldás közül (ld. a Háttér részt) mi az alakzatok trapézokra
+bontását választottuk. Hiszen minden trapéz felbontható további két
+háromszögre, mely megkötésre a GLES2 grafikus renderelő~\footnote{Az
+előállítás--megjelenítés (\emph{rendering}) kifejezésre a továbbiakban
+\emph{renderelés}ként hívatkozunk.} API miatt van szükség.
 
     \subsubsection*{Alkalmazott eszközök, módszerek}
 
@@ -357,32 +360,30 @@ előírás (Canvas) elvárásait teljesíteni.
     \chapter{Háttér}
     \label{Háttér}
 
-  Ez a fejezet mutatja be azokat a technológiákat és kihívásokat,
-amelyek keretet szabtak a témám megvalósításának. Szót kell ejteni magáról a
-Canvas 2D Context API\footnote{Az alkalmazásprogramozási felület/interfész
-(Application Programming Interface) kifejezésre a továbbiakban mint \emph{API}
-hivatkozunk.} előírásról, a GLES2 szabvány nyújtotta lehetőségekről, azokról a
-matematikai módszerekről, amelyek biztosítják számunkra, hogy tetszőlegesen
-bonyolult -- szerencsénkre zárt -- alakzatok kitöltését helyesen elvégezhessük.
-Össze kellett kapcsolni a választott GLES2 szabta megkötést~\footnote { Az
-OpenGL 2.0 legfeljebb háromszögeket rajzol. } a Canvas Path API
-elvárásaival~\footnote { Elvárás a tetszőleges számú körcikk, szakasz és
-Bézier-görbe alkotta -- akár önmetsző -- alakzat mérethelyes megjelenítése. }.
-Ehhez több lépésbeli megközelítést (\inenglish{approximation}) alkalmaztunk.
-Ezekről a lépésekről is érdemes lesz beszélni.
+  Ebben a fejezetben tárgyaljuk azokat a technológiákat és kihívásokat,
+amelyek keretet szabtak a feladatunknak. Beszélni kell magáról a Canvas
+előírásról, a GLES2 szabvány nyújtotta lehetőségekről, azokról a matematikai
+módszerekről, amelyek biztosítják számunkra, hogy tetszőlegesen bonyolult --
+szerencsénkre zárt -- alakzatok kitöltését helyesen elvégezhessük. Össze
+kellett kapcsolni a választott GLES2 szabta megkötést~\footnote { Az OpenGL 2.0
+legfeljebb háromszögeket rajzol. } a Canvas Path API elvárásaival~\footnote {
+Elvárás a tetszőleges számú körcikk, szakasz és Bézier-görbe alkotta -- akár
+önmetsző -- alakzat mérethelyes megjelenítése. }. Ehhez több lépésbeli
+megközelítést (\inenglish{approximation}) alkalmaztunk. Ezekről a lépésekről is
+érdemes lesz beszélni.
 
     \section[A Canvas előírás]{A W3C Canvas 2D Context előírás}
     \label{A Canvas előírás}
 %    \addcontentsline{toc}{subsection}{az előírás}
 
-  A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C első
+  A Canvas API egy közel tíz éves, kiforrott technológia~\footnote {A W3C első
 HTML5 szabvány-vázlata:\\ \footnotesize{
 \url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. A szabvány leír
-egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{Canvas}-nek
-neveznek. A Canvas definíció szerint nem más mint egy adott \emph{szélességgel}
-és \emph{magassággal} meghatározott terület, ahova különböző alakzatokat,
+egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{canvas}-nek
+neveznek. A canvas definició szerint nem más mint egy adott \emph{szélességgel}
+és \emph{hosszúsággal} meghatározott terület, ahova különböző alakzatokat,
 képeket, szövegeket és egyéb nem dinamikus grafikai elemeket rakhatunk fel. Az
-elemeket a Canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
+elemeket a canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
 (pl.~\emph{fill}) esetén az addig összegyűjtötteket kirajzolja a megadott
 sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
 pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
@@ -393,7 +394,7 @@ eszközökkel definiálunk egy bonyolultabb formát. Ezt a folyamatot hívjuk
 alakzat építésnek (\inenglish{shape/path building}). Az építés fázis után
 különböző parancsokkal rajzolhatjuk ki a definiált alakzatot, akár kitöltve
 (\emph{fill}), akár körvonalként (\emph{stroke}), de lehetőségünk van az adott
-alakzattal kivágni (\emph{clip}) is a Canvas-en már meglévő képből.
+alakzattal kivágni (\emph{clip}) is a canvas-on már meglévő képből.
 
   A szabvány előír néhány megkötést. Ezekről látni fogjuk, hogy természetes
 korlátok. Hiszen józan ésszel felfogható, hogy egy egyenes szakaszból definiált
@@ -454,6 +455,140 @@ kitölthető is. Ezért lett a második sor utolsó két V-nek definiált alakza
 mégis kitöltött háromszög.
   Nézzük meg, hogy milyen konkrét eszközöket kíván biztosítani a szabvány.
 
+  \begin{figure}[!htb]
+    \centering
+    \includegraphics[width=.95\textwidth]{img/built/erdely}
+    \caption{\label{erdely} Mit is mondhatnék}
+  \end{figure}
+
+--- Itt íródik ---
+
+A path építés
+különböző elemek segítségével történik. Két fő részre bontható. Az első rész
+tulajdonképpen nem is az építésre, mint inkább a definiálásra és a rajzolásra
+vonatkozik. Míg a második rész tartalmazza a path építéséhet szükséges
+parancsokat, elemeket. Ezek a parancsok vagy elemek a következők:
+
+
+\begin{enumerate}[I.]
+  \item Rajzoló parancsok:
+    \begin{enumerate}
+      \item \emph{beginPath}: egy állapot egyszerre csak egy
+      \emph{path}t definiálhat. Ezzel a paranccsal kezdhetünk egy új
+      patht építeni. Fontos azonban, hogy nem kötelező ezzel
+      kezdeni, de az előtte épített részt viszont eldobja.
+      Parancsforma:\newline
+        \texttt{beginPath();}
+      \item \emph{fill}: az addig felépített path-t
+      \emph{kitöltéssel}, azaz a path által határolt belső részt
+      a vászonra kirajzolja. Parancsforma:\newline
+        \texttt{fill();}
+      \item \emph{stroke}: az addig felépített path-t
+      \emph{körvonallal}, azaz a path mentén a megfelelő
+      vastagsággal a vászonra kirajzolja. Parancsforma:\newline
+        \texttt{stroke();}
+    \end{enumerate}
+  \item Építő elemek, parancsok:
+    \begin{enumerate}
+      \item \emph{closePath}: egy megkezdett alakzatot bezár, azaz
+      a legutolsó \emph{moveTo} elem koordinátáihoz húz egy
+      egyenest egy \emph{lineTo} elem segítségével. Definíció
+      szerint minden alakzat zárt, ezért ha még le nem zárt
+      alakzatot próbálunk meg rajzolni, vagy egy \emph{moveTo}
+      elemmel máshova ugranánk, akkor előtte ilyen parancs
+      hívódik, hogy az bezáruljon.
+      Parancsforma:\newline
+        \texttt{closePath();}
+      \item \emph{moveTo}: ha rajzoláskor egy képzeletbeli toll
+      útjának tekintenénk az elemeket, akkor ez az elem a toll
+      felemelése és adott pontba lehelyezése lenne. Innen kezdődik
+      egy (zárt) alakzat rajzolása. Parancsforma:\newline
+        \texttt{moveTo(x, y);}
+      \item \emph{lineTo}: az előző pontból húz egy egyenest az
+      argumentumban megadott koordinátába. Parancsforma:\newline
+        \texttt{lineTo(x, y);}
+      \item \emph{quadraticCurveTo}: az előző pontból az
+      argumentumban megadott kontrollpont és végpont szerint húz
+      egy másodrendű Bézier-görbét. Parancsforma:\newline
+        \texttt{quadraticCurveTo(cpx, cpy, x, y);}
+      \item \emph{bezierCurveTo}: az előző pontból az
+      argumentumban megadott kontrollpontok és végpont szerint húz
+      egy harmadrendű Bézier-görbét. Parancsforma:\newline
+        \texttt{bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);}
+      \item \emph{arcTo}: az előző pontból, akár egy
+      \emph{lineTo} elem közbeékelésével a két kontrollpontnak
+      és a sugárnak megfelelően egy körívet definiál úgy,
+      hogy az a második pontban végződjék. Parancsforma:\newline
+        \texttt{arcTo(x1, y1, x2, y2, radius);}
+      \item \emph{rect}: egy külön zárt részalakzatot,
+      méghozzá egy téglalapot definiál az argumentumoknak
+      megfelelően. Ha nem volt bezárva az előző alakzat, akkor
+      bezárja, illetve a téglalap kezdőpontjához állítja a
+      végpontot (azaz innen folytathatjuk egy új részalakzat
+      építését). Parancsforma:\newline
+        \texttt{rect(x, y, w, h);}
+      \item \emph{arc}: az argumentumoknak megfelelően egy
+      körívet húz. Ha nem volt előző pont, akkor a
+      középpontot tekinti annak, és a kezdő szög által
+      definiált pontba egy \emph{lineTo} elemet iktat.
+      Parancsforma:\newline
+        \texttt{arc(x, y, radius, startAngle, endAngle, counterclockwise = false);}
+    \end{enumerate}
+\end{enumerate}
+
+\Aref{dataflow-canvas-API-diagram}. ábrán láthatók az építő és rajzoló
+elemek. Illetve feltüntettük még az előírásban nem szereplő
+\emph{setFillColor} parancsot is. Ezzel a paranccsal adhatjuk meg a
+contexthez tartozó aktuális kitöltő színt. Ez a parancs nem része
+az előírásnak. Ott egy \emph{CSS DOM} elemmel állíthatjuk be ezt
+az értéket. Az általunk tervezett API azonban csak a Canvas 2D
+    \begin{figure}[h]
+    \centering
+    \psfrag{e}[b][B][0.8]{\bf{E}}
+    \psfrag{r}[b][B][0.8]{e\bf{R}}
+    \psfrag{d}[b][B][0.8]{e\bf{D}}
+    \psfrag{é}[b][B][0.8]{\bf{É}}
+    \psfrag{ly}[b][B][0.8]{e\bf{LY}}
+    \psfrag{R}[b][B][0.8]{e\bf{RD}}
+    \psfrag{L}[b][B][0.8]{\bf{ÉLY}}
+    \psfrag{A}[c][c][0.8]{\it{a.}}
+    \psfrag{B}[c][c][0.8]{\it{b.}}
+    \psfrag{C}[c][c][0.8]{\it{c.}}
+    \includegraphics[scale=0.6]{img/built/w3c_erdely_eps}
+    \caption{\label{erdely}
+%    \item Az ,,Erdély'' szó \emph{székely
+%    írással}~\cite{Saandor:2014:szeekely}. Fent minden graféma külön áll, míg lent összevonva
+%    ligatúraképzéssel.
+%    \item Sematikusan Az ,,e'' graféma felépítésének
+%    folyamata a Path elemeivel. Valamint
+%    \end{enumerate}
+    }
+    \end{figure}
+Contextre koncentrál, így a CSS elemeket nem kívánjuk támogatni.
+    \begin{wrapfigure}{l}{0.5\textwidth}
+    \begin{center}
+      %\includegraphics[scale=0.6]{img/built/dataflow_canvas_api_eps}
+    \end{center}
+      \caption{\label{dataflow-canvas-API-diagram}
+      A Gepard Context 2D API}
+    \end{wrapfigure}
+Illetve nincs az ábrán a \emph{beginPath} parancs. Végül is az
+jelen esetben nem több mint egy törlés és újrakezdés.
+
+  Az ábrán a kimenő nyilak a Gepard belső APIjának a hívásait
+jelölik. A \emph{rect} függvény esetében ez nem igényel többet
+mint egy megfelelő \emph{moveTo}, három \emph{lineTo} és egy
+\emph{closePath} hívást. Azaz visszavezetjük a Canvas 2D már
+megvalósított függvényeire.
+
+  Érdemes még néhány szót ejteni a \emph{stroke} hívásról is. Ez
+a rész a jelen dolgozatnak nem témája. Viszont a jövőben ennek e
+résznek a megvalósításakor -- legalábbis első körben -- úgy fogunk
+eljárni, hogy visszavezetjük a strokeot a fillre. Lévén, hogy adott
+szélességű stroke által lefedett területet felfoghatjuk úgy is mint egy
+kitöltéssel rajzolt bonyolultabb alakzatot. Így a strokenak is a fill
+lesz a lelke.
+
     \section[GLES2 API]{Az OpenGL-ES 2.0 API}
     \label{GLES2 API}
 
@@ -474,11 +609,21 @@ félegyenesek által
     \subsection{Bézier-görbe és a de Casteljau felbontás}
     \label{Bézier-görbe és a de Casteljau felbontás}
 
+  A
+
+\begin{equation}
+%
+\mathbf{B}(t)=\sum_{i=0}^{3} B_i(t) \mathbf{b}_i %\nonumber
+%\]
+\end{equation}
+
+ahol $\mathbf{B}(t)=(x(t), y(t))$ a $t\in[0,1]$ paraméter által
+
     \subsection{Körívek közelítése Bézier-görbékkel}
     \label{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%   Alakzat rajzolás                                               %%
+%%   Path API                                                       %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \chapter{Alakzat rajzolás}
@@ -487,109 +632,87 @@ félegyenesek által
 OpenGL rajzoló modullal működjön. Lehetőséget kell kínálni, hogy a jövőben több
 grafikus meghajtó közül lehessen választani. Mint például a Vulkan, DirectX,
 esetleg egy referencia szoftveres raszterizáló. Ezért a Gepard három részre
-tagolódik (\ref{structure_eps}. ábra). A \emph{külső} réteg alapja a Canvas API. Ezt neveztük el
+tagolódik. A \emph{külső} réteg alpaja a Canvas API. Ezt neveztük el
 \emph{Gepard}-nak. A következő \emph{köztes} réteg fogja össze a közös
 részeket. Ez lett a \emph{Gepard Engine}. A \emph{Gepard Backend} pedig az
 \emph{alsó} szint, ahol az egyes grafikus meghajtók specifikus részei kaptak
 helyet. Három modul fejlesztése történik itt: \emph{GLES2} (OpenGL ES 2.0),
 \emph{Vulkan} (Vulkan 1.0) és \emph{Software} (saját raszterizáló).
 
+  A felső réteget (Gepard) \aref{Háttér}. fejezetben tárgyalt Canvas
+határozza meg. Természetesen -- mint már említettem -- a Canvas egy alapvetően
+webes interfészként fogható fel. Ez azt is jelenti, hogy a Gepard mint
+interfész nem teljesen úgy fedi le mintha webes környezetbe lenne ágyazva. A
+cél nem is az volt, hogy pontosan lemásoljuk. A cél egy a c++ környezetben
+könnyen használható -- a webes szcénában már jól kipróbált -- kezelőfelületet
+adjunk.
+
+  Érdemes röviden átnézni ezt a felületet.
+
+  A hívható függvények tekintetében egyszerűbb a helyzet. Hiszen a két
+környezet függvény (vagy metódus) leírása hasonló~\footnote{TODO: def c++ func,
+def w3c func}. A c++ környezet ugyan kissé megkötőbb. Például szövegként
+(\inenglish{string}) átadott számértéket nem fogad el a szigorú típusosság
+miatt. Ez azonban nem tekinthető durva megkötésnek, hiszen ugyanakkor az alap
+konverziók, átváltások (\inenglish{cast}) továbbra is működnek.
+
+  A függvények döntő része 32 bites lebegőpontos (\inenglish{float})
+vagy egész (\inenglish{int}) számot vár paraméterként. Ezért ezek könnyedén
+kezelhetők. Ugyanakkor pár metódus esetében szükségszerű bevezetni saját
+típusokat, osztályokat, struktúrákat, hogy a Canvashoz hasonló viselkedést
+biztosíthassuk. Ilyenek például: \emph{Image} a \emph{drawImage}(),
+\emph{putImageData}(), stb esetén; vagy az \emph{Element} a
+\emph{drawFocusIfNeeded}() használatakor. Szerencsére ezek a struktúrák is jól
+definiáltak~\footnote{TODO: def Image, def Element}, vagyis szerkezetük jobbára
+könnyen megadható.
+
     \begin{wrapfigure}{L}{0.5\textwidth}
       \includegraphics[scale=0.45]{img/built/structure_eps}
       \caption{\label{structure_eps} }
     \end{wrapfigure}
 
-  A felső réteget a \func{Gepard} osztályt \aref{Háttér}.
-fejezetben tárgyalt Canvas határozza meg. Természetesen  a Canvas
-alapvetően egy webes interfész. Ez azt is jelenti,
-hogy a \func{Gepard} mint interfész nem teljesen úgy fedi le mintha webes környezetbe
-lenne ágyazva. A cél nem is az volt, hogy pontosan lemásoljuk. A cél egy a C++
-környezetben könnyen használható -- a webes szcénában már jól kipróbált --
-kezelőfelületet adjunk. Érdemes röviden átnézni ezt a felületet.
-
-  A hívható függvények tekintetében egyszerűbb a helyzet. Hiszen a két
-környezet függvény (vagy metódus) leírása hasonló\footnote{TODO: def C++ func,
-def w3c func}. A C++ környezet ugyan kissé megkötőbb. Például szövegként
-(\inenglish{string}) átadott számértéket nem fogad el a szigorú típusosság
-miatt. Ez azonban nem tekinthető durva megkötésnek, hiszen ugyanakkor az alap
-konverziók, átváltások (\inenglish{cast}) továbbra is működnek.
-
-  A függvények döntő része 32 bites lebegőpontos (\func{float})
-vagy egész (\func{int}) számot vár paraméterként. Ezért ezek könnyedén
-kezelhetők. Ugyanakkor pár metódus esetében szükségszerű bevezetni saját
-típusokat, osztályokat, struktúrákat, hogy a Canvas-hez hasonló viselkedést
-biztosíthassuk. Ilyenek például: az \func{Image} osztály a \func{putImageData()},
-\func{drawImage()}, stb. függvények esetén; vagy az \func{Element} osztály a
-\func{drawFocusIfNeeded()} metódus használatakor. Szerencsére ezek a struktúrák is jól
-definiáltak\footnote{TODO: def Image, def Element}, vagyis szerkezetük jobbára
-könnyen megadható.
-
   A nehezebb részt a módosítható adattag (\inenglish{member}) jelenti. Itt
 a viselkedés kényelmes biztosítása saját típus (osztály) írását várta el. Ez
-lett az \func{Attribute} osztály. A bevezetésének szükségességét a
-\func{fillStyle} adattagon keresztül mutatom be. A \func{fillStyle} definíció szerint
-egy CSS attribútum\footnote{TODO: link CSS-Style}. Ez azt jelenti, hogy igen
-sokféleképpen lehet értéket adni neki. A C++ szigorú típusossága miatt
+lett az \emph{Attribute} osztály. A bevezetésének szükségességét a
+\emph{fillStyle} adattagon keresztül mutatom be. A fillStyle definíció szerint
+egy CSS attribútum~\footnote{TODO: link CSS-Style}. Ez azt jelenti, hogy igen
+sokféleképpen lehet értéket adni neki. A c++ szigorú típusossága miatt
 egyszerű, ún. primitív típussal nem is megoldható. Annak ellenére, hogy ez az
 adattag alapvetően csak a kitöltés színét tárolja. Ugyanakkor a beállítás módja
-lehet egy hexakód (\func{\#0f0}), egy előre definiált név
-(\func{green}), esetleg egy komplexebb -- függvényszerű leírás
-(\func{rgba(0, 255, 0)}). Ami azt illeti, ez könnyen felodható, hiszen egy
-erre felkészített kód minden egyes beállításnál egy közös számnégyes formájában
-eltárolhatja az értékeket. Igen ám, de érdemes emlékezni, hogy a
-\func{fillStyle}-hoz
-hasonlóan viselkedő attribútumokból még van egy jó pár a Canvasben, amik
-viszont sokszor nem egy színt, hanem egy tulajdonságot vagy csak egy sima szám
-értéket tárolnak. Éppen ezért az \func{Attribute} osztály minden példányához be tudunk
-kötni egy a beállításkor meghívódó függvényt (\inenglish{callback function}),
-amely a kapott szöveget megpróbálja értelmezni, és amennyiben sikerül,
-beállítja az adott adattagot.
+lehet egy hexakód (\inenglish{\#0f0}), egy előre definiált név
+(\inenglish{green}), esetleg egy komplexebb -- függvényszerű leírás
+(\inenglish{rgba(0, 255, 0)}). Ami azt illeti, ez könnyen felodható, hiszen egy erre felkészített kód minden
+egyes beállításnál egy közös számnégyes formájában eltárolhatja az
+értékeket. Igen ám, de érdemes emlékezni, hogy a fillStylehoz hasonlóan
+viselkedő attribútumokból még van egy jó pár a Canvasban, amik viszont
+sokszor nem egy színt, hanem egy tulajdonságot vagy csak egy sima szám
+értéket tárolnak. Éppen ezért az Attribute osztály minden példányához
+be tudunk kötni egy a beállításkor meghívódó függvényt
+(\inenglish{callback function}), amely a kapott szöveget megpróbálja
+értelmezni, és amennyiben sikerül, beállítja az adott adattagot.
 
   Röviden összefoglalva az ún. \emph{felső} rétegről mondottakat.
 
-  A \func{Gepard} mint interfész egy jól bevált Canvas API-ra támaszkodik.
-Ugyanakkor C++ környezetbe ágyazva, ami némi megkötéseket jelent többek között
+  A Gepard mint interfész egy jól bevált Canvas API-ra támaszkodik.
+Ugyanakkor c++ környezetbe ágyazva, ami némi megkötéseket jelent többek között
 az erős típusosság miatt, így szükségessé teszi további társ osztályok
-definícióját, illetve egy komplexebb adattag kezelő osztály létrehozását.
-Viszont ezeken túl jobbára nincs másra szükségünk, hogy megfeleljünk a Canvas
-elvárásainak, így ez a réteg ki is elégíti a feladatunk célkitűzésit. Vagyis
-kapcsolatot teremt a felhasználó és a következő ún. \emph{köztes} réteg között.
-
-  A köztes réteg már valamivel bonyolultabb. Egyrészt kapcsolatot teremt a
-grafikus meghajtó specifikus alsóbb szintű kódokkal, másrészt a közös
-részeket valósítja meg. Kód szinten ez a \func{GepardEngine} osztály.
-
-  Nézzük át részletesebben az itt megvalósított részeket.
-
-  Korábban volt már róla szó\footnote{TODO: csekkolni, hogy tényleg-e}, hogy
-a Canvas mint grafikus környezet (\inenglish{graphics context}) alapvetően egy
-állapotgép. Az attribútum beállítások mindaddig érvényben maradnak, amíg azokat
-nem módosítjuk. Ugyanakkor van lehetőségünk arra, hogy az adott beállításokat
-elmentsük, és tetszőleges átállítások után visszakonfiguráljuk a környezetet.
-Vagyis egy állapotot leíró osztályt és két -- \aref{A Canvas előírás}. részben
-már tárgyalt -- függvényt kellett megvalósítani. Kód szinten az állapotot leíró
-osztály a \func{GepardState}. A \func{GepardEngine} osztály ugyanakkor tartalmaz
-még olyan adattagokat amelyre nincs hatása az állapot
-mentésnek/visszatöltésnek. Ilyen például a Path is, amely tartalmazza az
-adott pontig felépített alakzatot, de ugyanakkor rá nincs hatással az
-állapotváltás.
-  A fentiek miatt definiáltam egy \func{GepardContext} osztályt amely
-tartalmazza a rajzoláshoz szükséges összes információt és adattagot. Ide
-került a \func{GepardState} is, méghozzá egy std::vector konténerben tárolva
-
-  FIXME: ez túl részletes..(?)
-
-  Nézzük át részletesebben az itt megvalósított közös részeket.
-
-  Az egyik a \func{save()} és \func{restore()} parancsok által elmenthető
-és visszaállítható beállítás állapotok (\inenglish{state}) vezérlése.
-A GepardEngine egy LIFO konténerben tárolja az elmentett állapotokat. A
-\func{save()} függvény elmenti az aktuális állapotot, míg a
-\func{restore()} visszaállítja a legutolsó elmentettet.
+definícióját, illetve egy komplexebb adattag kezelő osztály
+létrehozását. Viszont ezeken túl jobbára nincs másra szükségünk, hogy
+megfeleljünk a Canvas elvárásainak, ami ezen a réteg ki is elégíti a
+feladatunk célkitűzésit. Vagyis kapcsolatot teremt a felhasználó és a
+következő ún. \emph{köztes} réteg között.
 
 
-    \section[Felépítése]{A Path tároló}
-    \label{A Path tároló}
+--- Innentől régi szöveg, csak megtartom ---
+
+
+  Ebben a fejezetben fogjuk bemutatni ennek a belső Path API-nak a
+felépítését és működését. Elsőnek áttekintve a
+felépítését, majd részletezve az egyes megoldásokat és
+visszavezetéseket, közelítéseket.
+
+    \section[Felépítése]{Felépítése}
+    \label{Felépítése}
 
     \begin{wrapfigure}{l}{0.5\textwidth}
     \begin{center}
@@ -597,28 +720,15 @@ A GepardEngine egy LIFO konténerben tárolja az elmentett állapotokat. A
       clip=true]{img/built/dataflow_eps}
     \end{center}
       \caption{\label{dataflow-path-API-diagram} A belső Path API
-      részei}
+      részei és a szakaszokra bontás fázisai}
     \end{wrapfigure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%   Használat és eredmények                                        %%
+%%   Konklúzió                                                      %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    \chapter{Használat és eredmények}
-    \addcontentsline{toc}{section}{Használat és eredmények}
-
-  \begin{figure}[!htb]
-    \centering
-    \includegraphics[width=.95\textwidth]{img/built/erdely}
-    \caption{\label{erdely} Mit is mondhatnék}
-  \end{figure}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%   Összefoglalás                                                  %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    \chapter{Összefoglalás}
-    \addcontentsline{toc}{section}{Összefoglalás}
+    \chapter{Konklúzió}
+    \addcontentsline{toc}{section}{Konklúzió}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
