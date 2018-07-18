@@ -48,7 +48,7 @@
 
 \usepackage{cite}
 
-%\usepackage{enumitem}
+\usepackage{enumitem}
 \usepackage{enumerate}
 
 % Színek
@@ -203,7 +203,7 @@
     \begin{tabular}{c@{\hspace{4cm}}c}
     \emph{Készítette:}     &\emph{Témavezető:}\\
     \bf{Ledán Szilárd}  &\bf{Dr. Kiss Ákos}\\
-    informatika szakos     & adjunktus\\
+    informatika szakos     &egyetemi adjunktus\\
     hallgató &
     \end{tabular}
     }
@@ -561,7 +561,7 @@ részeket valósítja meg. Kód szinten ez a \func{GepardEngine} osztály.
 
   Nézzük át részletesebben az itt megvalósított részeket.
 
-  Korábban volt már róla szó\footnote{TODO: csekkolni, hogy tényleg-e}, hogy
+  Korábban már volt róla szó\footnote{TODO: csekkolni, hogy tényleg-e}, hogy
 a Canvas mint grafikus környezet (\inenglish{graphics context}) alapvetően egy
 állapotgép. Az attribútum beállítások mindaddig érvényben maradnak, amíg azokat
 nem módosítjuk. Ugyanakkor van lehetőségünk arra, hogy az adott beállításokat
@@ -588,8 +588,14 @@ A GepardEngine egy LIFO konténerben tárolja az elmentett állapotokat. A
 \func{restore()} visszaállítja a legutolsó elmentettet.
 
 
-    \section[Felépítése]{A Path tároló}
+    \section[A Path tároló]{A Path tároló}
     \label{A Path tároló}
+
+Részletbemenően ismertetem a Path API függvény-csoportjait,
+működésének elvét, a felhasznált technológiákat; illetve külön
+kitérek a \emph{stroke} hívás összetett metódusaira, amelyek révén
+visszavezettük \emph{fillre}. Ez a rész elég nagy, hogy akár egy kisebb
+alfejezete legyen a \emph{Path API} résznek.
 
     \begin{wrapfigure}{l}{0.5\textwidth}
     \begin{center}
@@ -599,6 +605,52 @@ A GepardEngine egy LIFO konténerben tárolja az elmentett állapotokat. A
       \caption{\label{dataflow-path-API-diagram} A belső Path API
       részei}
     \end{wrapfigure}
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
+    cubic-curve, arc, arc-to, rect, fill, stroke, transform, translate, rotate,
+    scale, skew, save, restore, color.
+    \item[Becsült oldalszám] 7.
+  \end{description}
+
+  \section{Szakaszokra bontás}
+
+Ez a lelke az algoritmusomnak. Beszélnem kell az algoritmus vázáról, majd
+az egyes részeket megvilágítva: mi történik a listához adott
+szakaszokkal (segments), hogyan kezelem a metszéspontokat, milyen nem
+ábrázolható folytonossági problémák merülhetnek fel metszések
+esetén, ezeket hogyan próbáltam meg orvosolni.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Szakasz - segment, metszéspontok.
+    \item[Becsült oldalszám] 6.
+  \end{description}
+
+  \section{Trapézzá alakítás}
+
+Ebben e részben a halomra hányt szakaszokból a kitöltési metódus
+alapján trapézokat hozok létre. Ezt az algoritmust is részletesen be kell
+mutatnom. A trapéz építése, majd horizontális, végül vertikális
+összevonásukról is kell beszélnem.
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Trapéz, horizontális összevonás, vertikális összevonás.
+    \item[Becsült oldalszám] 4.
+  \end{description}
+
+  \section{Rajzolás GLES2-vel}
+
+Az rajzolás utolsó fázisa. Itt mutatom be a trapézok
+háromszög-párként való kirajzolását. Hogyan gyűjtjük egybe a
+háromszög-párokat, és hogyan rajzoljuk ki azokat együtt. Hogyan lesz
+ebből egy alpha textúra, és azt hogyan használjuk fel színes
+kirajzolásra. Itt világosítom meg, hogy miért van szükség alpha textúrára?
+
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Batching, alpha textúra, textúrázás, színezés,
+    gradiens, kivágás - clipping.
+    \item[Becsült oldalszám] 4.
+  \end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Használat és eredmények                                        %%
