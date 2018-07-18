@@ -23,6 +23,15 @@ add_custom_command(
 add_custom_target(erdely.png ALL DEPENDS ${BUILT_IMG_DIR}/erdely.png)
 list(APPEND THESIS_DEPENDENCIES erdely.png)
 
+# Run code/gepard/apps/svggepard to generate tiger.png output
+add_custom_command(
+    OUTPUT ${BUILT_IMG_DIR}/tiger.png
+    COMMAND ${PROJECT_BINARY_DIR}/code/${CODE_NAME}/bin/svggepard ARGS -C -p ${BUILT_IMG_DIR}/tiger.png ${PROJECT_SOURCE_DIR}/code/${CODE_NAME}/apps/svggepard/tiger.svg
+    DEPENDS svggepard
+)
+add_custom_target(tiger.png ALL DEPENDS ${BUILT_IMG_DIR}/tiger.png)
+list(APPEND THESIS_DEPENDENCIES tiger.png)
+
 # Convert SVG files to EPS ones
 file(GLOB EPS_FILES "${PROJECT_SOURCE_DIR}/paper/src/svg/*.svg")
 foreach(file ${EPS_FILES})
