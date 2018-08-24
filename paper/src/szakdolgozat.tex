@@ -537,42 +537,44 @@ lenne ágyazva. A cél nem is az volt, hogy pontosan lemásoljuk. A cél egy a C
 környezetben könnyen használható -- a webes szcénában már jól kipróbált --
 kezelőfelületet adjunk. Érdemes röviden átnézni ezt a felületet.
 
-  A hívható függvények tekintetében egyszerűbb a helyzet. Hiszen a két
-környezet függvény (vagy metódus) leírása hasonló\footnote{TODO: def C++ func,
-def w3c func}. A C++ környezet ugyan kissé megkötőbb. Például szövegként
-(\inenglish{string}) átadott számértéket nem fogad el a szigorú típusosság
-miatt. Ez azonban nem tekinthető durva megkötésnek, hiszen ugyanakkor az alap
-konverziók, átváltások (\inenglish{cast}) továbbra is működnek.
+  A Canvas interfész két csoportra osztható. Az egyik a hívható függvények, a
+másik a beállítható adattagok csoportja. A hívható függvények tekintetében
+egyszerűbb a helyzet. Hiszen az interfész által leírt függvények szemantikája
+nagyon hasonló a C++ által elvártakhoz. A C++ környezet ugyan kissé megkötőbb.
+Például szövegként (\inenglish{string}) átadott számértéket nem fogad el a
+szigorú típusosság miatt. Ez azonban nem tekinthető durva megkötésnek, hiszen
+ugyanakkor az alap konverziók, átváltások (\inenglish{cast}) továbbra is
+működnek.
 
-  A függvények döntő része 32 bites lebegőpontos (\func{float})
-vagy egész (\func{int}) számot vár paraméterként. Ezért ezek könnyedén
-kezelhetők. Ugyanakkor pár metódus esetében szükségszerű bevezetni saját
-típusokat, osztályokat, struktúrákat, hogy a Canvas-hez hasonló viselkedést
-biztosíthassuk. Ilyenek például: az \func{Image} osztály a \func{putImageData()},
-\func{drawImage()}, stb. függvények esetén; vagy az \func{Element} osztály a
-\func{drawFocusIfNeeded()} metódus használatakor. Szerencsére ezek a struktúrák is jól
-definiáltak\footnote{TODO: def Image, def Element}, vagyis szerkezetük jobbára
+  A függvények döntő része 32 bites lebegőpontos (\func{float}) vagy egész
+(\func{int}) számot vár paraméterként. Ezért ezek könnyedén kezelhetők.
+Ugyanakkor pár metódus esetében szükségszerű bevezetni saját típusokat,
+osztályokat, struktúrákat, hogy a Canvas-hez hasonló viselkedést
+biztosíthassuk. Ilyen osztály lett például az \func{Image}, amit többek között
+a \func{putImageData()} függvény miatt kellett bevezetni. Szerencsére ezek az
+osztályok is jól definiáltak a Canvas szintjén, vagyis szerkezetük jobbára
 könnyen megadható.
 
-  A nehezebb részt a módosítható adattag (\inenglish{member}) jelenti. Itt
-a viselkedés kényelmes biztosításához saját osztályt kellett írni. Ez lett az
-\func{Attribute} osztály. A bevezetésének szükségességét a \func{fillStyle}
-adattagon keresztül mutatom be. A \func{fillStyle} definíció szerint egy CSS
-attribútum\footnote{TODO: link CSS-Style}. Ez azt jelenti, hogy igen
-sokféleképpen lehet értéket adni neki. A C++ szigorú típusossága miatt
-egyszerű, ún. primitív típussal nem is megoldható, annak ellenére, hogy ez az
-adattag alapvetően csak a kitöltés színét tárolja. Ugyanakkor a beállítás módja
-lehet egy hexa-kód (\func{\#0f0}), egy előre definiált név (\func{green}),
-esetleg egy komplexebb -- függvényszerű leírás (\func{rgba(0, 255, 0)}). Ami
-azt illeti, ez könnyen feloldható, hiszen egy erre felkészített kód minden egyes
-beállításnál egy közös számnégyes formájában eltárolhatja az értékeket. Igen
-ám, de érdemes emlékezni, hogy a \func{fillStyle}-hoz hasonlóan viselkedő
-attribútumokból még van egy jó pár a Canvas-ben, amik viszont sokszor nem egy
-színt, hanem egy tulajdonságot vagy csak egy sima szám értéket tárolnak. Éppen
-ezért az \func{Attribute} osztály minden példányához be tudunk kötni egy a
-beállításkor meghívódó függvényt (\inenglish{callback function}), amely a
-kapott szöveget megpróbálja értelmezni, beolvasni (\inenglish{parsing}), és
-amennyiben sikerül, beállítja az adott adattagot.
+  A nehezebb részt a másik csoport a módosítható adattagoké jelentette
+(\inenglish{members}). Itt a viselkedés kényelmes biztosításához saját
+osztályt kellett írni. Ez lett az \func{Attribute} osztály. A bevezetésének
+szükségességét a \func{fillStyle} adattagon keresztül mutatom be. A
+\func{fillStyle} definíció szerint egy CSS attribútum\footnote{TODO: link
+CSS-Style} vagyis adattag. Ez azt jelenti, hogy igen sokféleképpen lehet
+értéket adni neki. A C++ szigorú típusossága miatt egyszerű, ún. primitív
+típussal nem is megoldható, annak ellenére, hogy ez az adattag alapvetően csak
+a kitöltés színét tárolja. Ugyanakkor a beállítás módja lehet egy hexa-kód
+(\func{\#0f0}), egy előre definiált név (\func{green}), esetleg egy komplexebb
+-- függvényszerű leírás. Ami azt illeti, ez könnyen feloldható, hiszen egy erre
+felkészített kód minden egyes beállításnál egy közös számnégyes formájában
+eltárolhatja az értékeket. Igen ám, de érdemes emlékezni, hogy a
+\func{fillStyle}-hoz hasonlóan viselkedő attribútumokból még van egy jó pár a
+Canvas-ben, amik viszont sokszor nem egy színt, hanem egy tulajdonságot vagy
+csak egy sima szám értéket tárolnak. Éppen ezért az \func{Attribute} osztály
+minden példányához be tudunk kötni egy a beállításkor meghívódó függvényt
+(\inenglish{callback function}), amely a kapott szöveget megpróbálja
+értelmezni, beolvasni (\inenglish{parsing}), és amennyiben sikerül, beállítja
+az adott adattagot.
 
   Tehát a \emph{felső} réteg a \func{Gepard} mint interfész egy jól bevált
 Canvas API-ra támaszkodik. Ugyanakkor C++ környezetbe ágyazva -- többek között
