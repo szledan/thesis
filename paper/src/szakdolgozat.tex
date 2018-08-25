@@ -234,7 +234,7 @@
     {
     \setlength\epigraphrule{0pt}
     \linespread{1.0}\epigraph{\small\emph{,,A világ csak híd, menj át rajta,
-    de ne építs rajta házat."}}{\small(IHS)}
+    de ne építs rajta házat.''}}{\small(IHS)}
     }
 
 
@@ -274,27 +274,28 @@ A témavezető által megfogalmazott feladatkiírás. Önálló oldalon szerepel
 
     \subsubsection*{A téma megnevezése}
 
-  A \emph{W3C} (World Wide Web Consortium) által \emph{Canvas 2D Context} néven
+A \emph{W3C} (World Wide Web Consortium) által \emph{Canvas 2D Context} néven
 2015-ben elfogadott ajánlás \emph{path} részének megvalósítása \emph{OpenGL-ES
 2.0} alapokon.
 
     \subsubsection*{A megadott feladat megfogalmazása}
 
-  Az előbb említett \emph{Canvas 2D Context} egy grafikus API. Ez az API több
+Az előbb említett \emph{Canvas 2D Context} egy grafikus API. Ez az API több
 grafikus függvényt definiál. Jelen dolgozat témája ezek közül az úgynevezett
 \emph{path} részének leprogramozása~úgy, hogy a lehető legtöbb feladatot a
 grafikus processzor (\textit{GPU}) lássa el.
 
     \subsubsection*{A megoldásmód}
 
-  Több megoldás közül mi az alakzatok trapézokra bontását választottuk. Hiszen
-minden trapéz felbontható további két háromszögre, mely megkötésre a OpenGL-ES 2.0
-grafikus meghajtó  miatt van szükség.
+Több megoldás közül mi az alakzatok trapézokra bontását választottuk. Hiszen
+minden trapéz felbontható további két háromszögre, mely megkötésre a OpenGL-ES
+2.0 grafikus meghajtó  miatt van szükség.
 
     \subsubsection*{Alkalmazott eszközök, módszerek}
 
-  Az API \emph{c++11} programozási nyelven készült, használva a következő
-eszközöket, technológiákat: \emph{gcc}, \emph{git}, \textit{OpenGL~ES~2.0}, \emph{\LaTeX},
+Az API \emph{c++11} programozási nyelven készült, használva a következő
+eszközöket, technológiákat: \emph{gcc}, \emph{git}, \textit{OpenGL~ES~2.0},
+\emph{\LaTeX},
 
     \subsubsection*{Elért eredmények}
 
@@ -311,26 +312,25 @@ grafika, path, canvas-2D-context, OpenGL-ES 2.0
     \label{Bevezetés}
     \addcontentsline{toc}{section}{Bevezetés}
 
-  A környezetünkben található számítástechnikai eszközök
-legtöbbjének van grafikus kijelzője, és ezen eszközök mindegyike használ
-valamilyen megjelenítő~\footnote{A számítógépes grafikában egy modell
-megjelenítését végző folyamatot \emph{renderelés}nek (\inenglishfn{rendering}),
-a renderelést végző programrészt pedig \emph{motor}nak (\inenglishfn{engine})
-hívnak} (a továbbiakban renderelő) függvénykönyvtárat. Ilyen például a Skia, a
-Cairo, az OpenGL, és ilyen kíván lenni a \emph{Gepard} is. A cél egy
-\emph{C++11}-es nyelven írt és több (\mbox{OpenGL~ES~2.0
-\cite{Munshi:2008:OEP:1481069}}, Vulkan) grafikus renderelő motort támogató
-függvénykönyvtár.
+A környezetünkben található számítástechnikai eszközök legtöbbjének van
+grafikus kijelzője, és ezen eszközök mindegyike használ valamilyen
+megjelenítő~\footnote{A számítógépes grafikában egy modell megjelenítését végző
+folyamatot \emph{renderelés}nek (\inenglishfn{rendering}), a renderelést végző
+programrészt pedig \emph{motor}nak (\inenglishfn{engine}) hívnak} (a
+továbbiakban renderelő) függvénykönyvtárat. Ilyen például a Skia, a Cairo, az
+OpenGL, és ilyen kíván lenni a \emph{Gepard} is. A cél egy \emph{C++11}-es
+nyelven írt és több (\mbox{OpenGL~ES~2.0 \cite{Munshi:2008:OEP:1481069}},
+Vulkan) grafikus renderelő motort támogató függvénykönyvtár.
 
-  A tervek szerint idővel a Gepard több interfésszel is rendelkezik.
-Így alkot majd egy komplex grafikus alkalmazásprogramozási felületet
+A tervek szerint idővel a Gepard több interfésszel is rendelkezik. Így alkot
+majd egy komplex grafikus alkalmazásprogramozási felületet
 (\inenglish{Application Programming Interface}, a továbbiakban API). Az elsőnek
 választott ilyen ismertebb interfész amit támogatni kíván az a \emph{W3C} által
 készített \emph{Canvas 2D Context}~\cite{Cabanier:14:HCC} előírás.
 
-  A \emph{Canvas 2D Context} (a továbbiakban \emph{Canvas}) előírás
-2015-ös kiadása több elkülönített részből állítja össze az API-t. Ezen részek
-egyike az úgynevezett \emph{Path}. Az említett 2015-ös előírás az 5., 8. és 11.
+A \emph{Canvas 2D Context} (a továbbiakban \emph{Canvas}) előírás 2015-ös
+kiadása több elkülönített részből állítja össze az API-t. Ezen részek egyike az
+úgynevezett \emph{Path}. Az említett 2015-ös előírás az 5., 8. és 11.
 fejezetekben részletezi a Path-szal szembeni elvárásokat. A Path maga a
 definiált grafikus alakzatokhoz képest bonyolultabbak leírását biztosító
 eszköz. A Háttér (\ref{Háttér}.) fejezetben részletesebben kifejtjük a path-t
@@ -338,13 +338,13 @@ eszköz. A Háttér (\ref{Háttér}.) fejezetben részletesebben kifejtjük a pa
 rá, hogy alapvetően két nagyobb részből áll. A \emph{körvonalból}
 (\inenglish{stroke}) és a \emph{kitöltésből} (\inenglish{fill}).
 
-  Jelen dolgozat az említett \emph{Path} rész megvalósítását kívánja bemutatni.
+Jelen dolgozat az említett \emph{Path} rész megvalósítását kívánja bemutatni.
 Azt, hogy milyen szabályoknak kellett megfelelni, illetve milyen lehetőségeket
 biztosított a választott OpenGL~ES~2.0 (a továbbiakban GLES2) szabvány, és azt,
 hogy hogyan alkot köztes réteget ezek között a Gepard Path-t rajzoló, renderelő
 része.
 
-  Első körben nem volt cél a ,,leggyorsabban futó'' és ,,legkisebb méretű''
+Első körben nem volt cél a ,,leggyorsabban futó'' és ,,legkisebb méretű''
 Path-t rajzoló API elkészítése. Célunk egy lehetséges megvalósítás megtalálása,
 és ez alapján egy olyan eszköz megalkotása volt, amely képes a választott
 előírás (Canvas) elvárásait teljesíteni.
@@ -357,25 +357,25 @@ előírás (Canvas) elvárásait teljesíteni.
     \chapter{Háttér}
     \label{Háttér}
 
-  Ez a fejezet mutatja be azokat a technológiákat és kihívásokat,
-amelyek keretet szabtak a témám megvalósításának. Szót kell ejteni magáról a
-Canvas 2D Context API\footnote{Az alkalmazásprogramozási felület/interfész
-(Application Programming Interface) kifejezésre a továbbiakban mint \emph{API}
-hivatkozunk.} előírásról, a GLES2 szabvány nyújtotta lehetőségekről, azokról a
-matematikai módszerekről, amelyek biztosítják számunkra, hogy tetszőlegesen
-bonyolult -- szerencsénkre zárt -- alakzatok kitöltését helyesen elvégezhessük.
-Össze kellett kapcsolni a választott GLES2 szabta megkötést~\footnote { Az
-OpenGL 2.0 legfeljebb háromszögeket rajzol. } a Canvas Path API
-elvárásaival~\footnote { Elvárás a tetszőleges számú körcikk, szakasz és
-Bézier-görbe alkotta -- akár önmetsző -- alakzat mérethelyes megjelenítése. }.
-Ehhez több lépésbeli megközelítést (\inenglish{approximation}) alkalmaztunk.
-Ezekről a lépésekről is érdemes lesz beszélni.
+Ez a fejezet mutatja be azokat a technológiákat és kihívásokat, amelyek keretet
+szabtak a témám megvalósításának. Szót kell ejteni magáról a Canvas 2D Context
+API\footnote{Az alkalmazásprogramozási felület/interfész (Application
+Programming Interface) kifejezésre a továbbiakban mint \emph{API} hivatkozunk.}
+előírásról, a GLES2 szabvány nyújtotta lehetőségekről, azokról a matematikai
+módszerekről, amelyek biztosítják számunkra, hogy tetszőlegesen bonyolult --
+szerencsénkre zárt -- alakzatok kitöltését helyesen elvégezhessük. Össze
+kellett kapcsolni a választott GLES2 szabta megkötést~\footnote { Az OpenGL 2.0
+legfeljebb háromszögeket rajzol. } a Canvas Path API elvárásaival~\footnote {
+Elvárás a tetszőleges számú körcikk, szakasz és Bézier-görbe alkotta -- akár
+önmetsző -- alakzat mérethelyes megjelenítése. }. Ehhez több lépésbeli
+megközelítést (\inenglish{approximation}) alkalmaztunk. Ezekről a lépésekről is
+érdemes lesz beszélni.
 
     \section[A Canvas előírás]{A W3C Canvas 2D Context előírás}
     \label{A Canvas előírás}
 %    \addcontentsline{toc}{subsection}{az előírás}
 
-  A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C első
+A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C első
 HTML5 szabvány-vázlata:\\ \footnotesize{
 \url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. A szabvány leír
 egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{Canvas}-nek
@@ -387,7 +387,7 @@ elemeket a Canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
 sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
 pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
 
-  Az előíráson belül definiált Path API rész amúgy egy régebbi, elterjedt
+Az előíráson belül definiált Path API rész amúgy egy régebbi, elterjedt
 alakzatszerkesztő eljáráson alapul. Az eljárás lényege, hogy bizonyos alap
 eszközökkel definiálunk egy bonyolultabb formát. Ezt a folyamatot hívjuk
 alakzat építésnek (\inenglish{shape/path building}). Az építés fázis után
@@ -395,7 +395,7 @@ különböző parancsokkal rajzolhatjuk ki a definiált alakzatot, akár kitölt
 (\emph{fill}), akár körvonalként (\emph{stroke}), de lehetőségünk van az adott
 alakzattal kivágni (\emph{clip}) is a Canvas-en már meglévő képből.
 
-  A szabvány előír néhány megkötést. Ezekről látni fogjuk, hogy természetes
+A szabvány előír néhány megkötést. Ezekről látni fogjuk, hogy természetes
 korlátok. Hiszen józan ésszel felfogható, hogy egy egyenes szakaszból definiált
 alakzatra értelmetlen a kitöltés, azaz a fill parancsot meghívni. Hasonlóan nem
 mond semmit a nulla vastagságú vonal a stroke parancs esetén. Érdekes
@@ -405,17 +405,17 @@ programozási szempontból jól indokolható módon -- a megtartás mellett
 döntöttek. Így viszont az a fontos megkötés is megjelent, hogy mindig
 egyértelműen jelezni kell, ha új alakzatot akarunk definiálni.
 
-  A W3C-féle Canvas felfogható egy állapotgépnek. Ami ebben a esetben azt
+A W3C-féle Canvas felfogható egy állapotgépnek. Ami ebben a esetben azt
 jelenti, hogy bizonyos beállítások (kitöltőszín, betűméret, vonalvastagság,
 transzformációk, stb.) érvényben maradnak mindaddig, amíg meg nem változtatjuk
 azokat. Ezt már az előbb említett felépített vonal esetén is érezhettük. Mint
 később látni fogjuk, ez erősen megköti a kezünket, hogy milyen rajzoló program
-is lehet a Gepard. Persze a Gepard idővel kibővülhet további funkcionalitásokkal
-(pl. \emph{flush}, \emph{finish}, stb.), amik egy sokkal kötetlenebb rajzoló
-eszközhöz vezethetnek; ez viszont most még csak a jövő.
+is lehet a Gepard. Persze a Gepard idővel kibővülhet további
+funkcionalitásokkal (pl. \emph{flush}, \emph{finish}, stb.), amik egy sokkal
+kötetlenebb rajzoló eszközhöz vezethetnek; ez viszont most még csak a jövő.
 
-  Térjünk vissza a Path építéshez. Feltételezzük, hogy a kedvünkre beállítottuk
-a rajzolás színét, a méreteket és minden szükséges módon felkészítettük a
+Térjünk vissza a Path építéshez. Feltételezzük, hogy a kedvünkre beállítottuk a
+rajzolás színét, a méreteket és minden szükséges módon felkészítettük a
 vásznunkat, hogy arra felvigyük a kívánt alakzatot. Ez most legyen egy
 háromszög, mint az egyik legegyszerűbb, ám a szabványban külön nem definiált
 forma. Ellentétben a téglalappal: \emph{rect}, \emph{fillRect},
@@ -444,49 +444,46 @@ ctx.stroke();  // első két oszlop
     alakzatok körvonalai és kitöltései }
   \end{figure}
 
-  A fenti ábrán (\ref{triangles-code-and-image}) látható egy kis példakód,
+A fenti ábrán (\ref{triangles-code-and-image}) látható egy kis példakód,
 illetve ennek hat különböző eredménye. Az első sorban olyan alakzatokat látunk,
 ahol a \emph{closePath} parancsot meghívtuk (hármoszög), a másodikban pedig nem
 (V alak). Az első oszlopban a \emph{fill}-t, a harmadikban pedig a
 \emph{stroke}-ot nem hívtuk meg. A szabvány ~\cite{Cabanier:14:HCC} ugyanakkor
 rendelkezik arról, hogy minden Path zárt alakzat kell legyen, így mindig
 kitölthető is. Ezért lett a második sor utolsó két V-nek definiált alakzata
-mégis kitöltött háromszög.
-  Nézzük meg, hogy milyen konkrét eszközöket kíván biztosítani a szabvány.
+mégis kitöltött háromszög. Nézzük meg, hogy milyen konkrét eszközöket kíván
+biztosítani a szabvány.
 
     \section[GLES2 API]{Az OpenGL-ES 2.0 API}
     \label{GLES2 API}
 
-  Az OpenGL-ES azaz az OpenGL Embeded System 2.0-ás verziója a
-Khronos Group által felügyelt grafikus meghajtó szabvány.
+Az OpenGL-ES azaz az OpenGL Embeded System 2.0-ás verziója a Khronos Group
+által felügyelt grafikus meghajtó szabvány.
 
     \section[Matematikai háttér]{Matematikai háttér}
     \label{Matematikai háttér}
 
-  Az előbbi részekben már ismertetett kényszer miatt leírom, hogy az egyik
-régi megközelítést fogom kissé tágabban értelmezve használni. Így a
-következő egymásra épülő és használt matematikai fogalmakkal kell
-megismerkedni.
+Az előbbi részekben már ismertetett kényszer miatt leírom, hogy az egyik régi
+megközelítést fogom kissé tágabban értelmezve használni. Így a következő
+egymásra épülő és használt matematikai fogalmakkal kell megismerkedni.
 
-    \subsection{Seprő-egyenesek}
+    \subsection*{Seprő-egyenesek}
     \label{Seprő-egyenesek}
 
-  Mit értünk pontosan matematikailag seprő
-egyeneseknek, hogyan értelmezhetjük ezeket \emph{seprő sávokként}, és ez
-miért lesz hasznos számunkra.
+Mit értünk pontosan matematikailag seprő egyeneseknek, hogyan értelmezhetjük
+ezeket \emph{seprő sávokként}, és ez miért lesz hasznos számunkra.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Seprő egyenes, seprő sáv.
     \item[Becsült oldalszám] 1.
   \end{description}
 
-    \subsection{Bézier-görbe és a de Casteljau felbontás}
+    \subsection*{Bézier-görbe és a de Casteljau felbontás}
     \label{Bézier-görbe és a de Casteljau felbontás}
 
-  A másod- és harmadrendű Bézier-görbék
-bemutatása. A görbe felosztásának ismert gyors eljárása a De Casteljau
-algoritmusa, amit használunk, hogy közel szakasz-szerű görbedarabokkal
-közelítsük az eredetit.
+A másod- és harmadrendű Bézier-görbék bemutatása. A görbe felosztásának ismert
+gyors eljárása a De Casteljau algoritmusa, amit használunk, hogy közel
+szakasz-szerű görbedarabokkal közelítsük az eredetit.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Másodrendű-, harmadrendű Bézier-görbe, De
@@ -495,10 +492,10 @@ közelítsük az eredetit.
   \end{description}
 
 
-    \subsection{Körívek közelítése Bézier-görbékkel}
+    \subsection*{Körívek közelítése Bézier-görbékkel}
     \label{}
 
-  Itt támaszkodunk egy cikkre, alapvetően annak a számunkra legfontosabb
+Itt támaszkodunk egy cikkre, alapvetően annak a számunkra legfontosabb
 tartalmát vesszük át.
 
   \begin{description}[noitemsep]
@@ -507,46 +504,60 @@ tartalmát vesszük át.
   \end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%   Alakzat rajzolás                                               %%
+%%   Alakzatrajzolás                                                %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    \chapter{Alakzat rajzolás}
+    \chapter{Alakzatrajzolás}
 
-  A \emph{Gepard} tervezésekor fontos szempont volt, hogy ne csak az
-OpenGL rajzoló modullal működjön. Vagyis lehetőséget kell kínálni, hogy a
-jövőben több grafikus meghajtóval is tudjuk használni. Mint például a Vulkan,
-DirectX, esetleg egy referencia szoftveres raszterizáló. Ezért a Gepard három
-részre tagolódik (\ref{structure_eps}. ábra). A \emph{külső} réteg alapja a
-Canvas API. Ezt neveztük el \emph{Gepard}-nak. A következő \emph{köztes} réteg
-fogja össze a közös részeket. Ez lett a \emph{Gepard Engine}. A \emph{Gepard
-Backend} pedig az \emph{alsó} szint, ahol az egyes grafikus meghajtók
-specifikus részei kaptak helyet. Három modul fejlesztése történik itt:
-\emph{GLES2} (OpenGL ES 2.0), \emph{Vulkan} (Vulkan 1.0) és \emph{Software}
-(saját raszterizáló).
-
-    \begin{wrapfigure}{L}{0.5\textwidth}
+A \emph{Gepard} tervezésekor fontos szempont volt, hogy ne csak az OpenGL
+rajzoló modullal működjön. Vagyis lehetőséget kell kínálni, hogy a jövőben több
+grafikus meghajtóval is tudjuk használni. Mint például a Vulkan, DirectX,
+esetleg egy referencia szoftveres raszterizáló. Ezért a Gepard három részre
+tagolódik (\ref{structure_eps}. ábra). A \emph{felső} réteg alapja a Canvas
+API. Ezt neveztük el \emph{Gepard}-nak. A következő \emph{köztes} réteg fogja
+össze a közös részeket. Ez lett a \emph{Gepard Engine}. A \emph{Gepard Backend}
+pedig az \emph{alsó} szint, ahol az egyes grafikus meghajtók specifikus részei
+kaptak helyet. Három modul fejlesztése történik itt: \emph{GLES2} (OpenGL ES
+2.0), \emph{Vulkan} (Vulkan 1.0) és \emph{Software} (saját raszterizáló).
+    \begin{wrapfigure}{l}{0.5\textwidth}
       \includegraphics[scale=0.45]{img/built/structure_eps}
-      \caption{\label{structure_eps} }
+      \caption{\label{structure_eps} A három fő réteg}
     \end{wrapfigure}
+Ezeket a modulokat vagyis az ún. Backend-eket jelen pillanatban
+\func{GepardEngineBackend} néven fordítási időben adjuk hozzá Gepardhoz, és
+ezáltal a Gepard egy adott grafikus meghajtóra speciálisan lefordított
+függvénykönyvtár lesz. Ugyanakkor a köztes (az Engine) és az alsó réteg
+(valamelyik Backend) tervezéskori pontos szétválasztásának köszönhetően a
+jövőben ez akár futás időben is megtörténhet. Javítva ezzel is az
+átjárhatóságot a grafikus meghajtók között, és könnyebbé téve a
+Gepard használatát.
 
-  A felső réteget a \func{Gepard} osztályt \aref{Háttér}.
-fejezetben tárgyalt Canvas határozza meg. Természetesen  a Canvas
-alapvetően egy webes interfész. Ez azt is jelenti,
-hogy a \func{Gepard} mint interfész nem teljesen úgy fedi le mintha webes környezetbe
-lenne ágyazva. A cél nem is az volt, hogy pontosan lemásoljuk. A cél egy a C++
-környezetben könnyen használható -- a webes szcénában már jól kipróbált --
-kezelőfelületet adjunk. Érdemes röviden átnézni ezt a felületet.
+Most nézzük meg részletesebben a fent említett három réteget. Természetesen az
+egyes rétegekhez kapcsolódó főbb részek, melyek tulajdonképpen a dolgozatunk
+témája, külön fejezetben lesznek tárgyalva. Tehát most csak a rétegek
+bemutatásához szükséges módon említjük meg ezeket.
 
-  A Canvas interfész két csoportra osztható. Az egyik a hívható függvények, a
-másik a beállítható adattagok csoportja. A hívható függvények tekintetében
-egyszerűbb a helyzet. Hiszen az interfész által leírt függvények szemantikája
-nagyon hasonló a C++ által elvártakhoz. A C++ környezet ugyan kissé megkötőbb.
-Például szövegként (\inenglish{string}) átadott számértéket nem fogad el a
-szigorú típusosság miatt. Ez azonban nem tekinthető durva megkötésnek, hiszen
-ugyanakkor az alap konverziók, átváltások (\inenglish{cast}) továbbra is
+    \subsection*{A felső réteg, azaz a Gepard interfész}
+
+A felső réteget a \func{Gepard} osztályt \aref{Háttér}. fejezetben tárgyalt
+Canvas határozza meg. Természetesen  a Canvas alapvetően egy webes interfész.
+Ez azt is jelenti, hogy a \func{Gepard} nem teljesen úgy működik mint a Canvas
+API a webes környezetben. A cél nem is az volt, hogy pontosan lemásoljuk. A cél
+egy a C++ környezetben könnyen használható -- a webes szcénában már jól
+kipróbált -- kezelőfelületet adjunk. Érdemes röviden átnézni ezt a felületet.
+
+A Canvas API két csoportra osztható. Az egyik a hívható függvények, a másik a
+beállítható adattagok csoportja. Tehát a Gepard interfész is többnyire ezt a
+felosztást és működést próbálja meg követni. A hívható függvények tekintetében
+egyszerűbb a helyzet. Hiszen az API által leírt függvények szemantikája nagyon
+hasonló a C++ által elvártakhoz. A C++ környezet ugyan kissé megkötőbb. Például
+szövegként (\inenglish{string}) átadott számértéket nem fogad el a szigorú
+típusosság miatt. Ez azonban nem tekinthető durva megkötésnek, hiszen egyrészt
+elemző-értelmező függvényekkel (\inenglish{parser functions}) az átváltások
+biztosíthatók, és ugyanakkor az alap konverziók (\inenglish{cast}) továbbra is
 működnek.
 
-  A függvények döntő része 32 bites lebegőpontos (\func{float}) vagy egész
+A függvények döntő része 32 bites lebegőpontos (\func{float}) vagy egész
 (\func{int}) számot vár paraméterként. Ezért ezek könnyedén kezelhetők.
 Ugyanakkor pár metódus esetében szükségszerű bevezetni saját típusokat,
 osztályokat, struktúrákat, hogy a Canvas-hez hasonló viselkedést
@@ -555,39 +566,71 @@ a \func{putImageData()} függvény miatt kellett bevezetni. Szerencsére ezek az
 osztályok is jól definiáltak a Canvas szintjén, vagyis szerkezetük jobbára
 könnyen megadható.
 
-  A nehezebb részt a másik csoport a módosítható adattagoké jelentette
-(\inenglish{members}). Itt a viselkedés kényelmes biztosításához saját
-osztályt kellett írni. Ez lett az \func{Attribute} osztály. A bevezetésének
-szükségességét a \func{fillStyle} adattagon keresztül mutatom be. A
-\func{fillStyle} definíció szerint egy CSS attribútum\footnote{TODO: link
+A másik csoport a módosítható adattagoké (\inenglish{attributes}). Itt a
+viselkedés kényelmes biztosításához saját osztályt kellett írni. Ez lett az
+\func{Attribute} osztály. A bevezetésének szükségességét a \func{fillStyle}
+adattagon keresztül mutatom be.
+
+A \func{fillStyle} definíció szerint egy CSS attribútum\footnote{TODO: link
 CSS-Style} vagyis adattag. Ez azt jelenti, hogy igen sokféleképpen lehet
 értéket adni neki. A C++ szigorú típusossága miatt egyszerű, ún. primitív
 típussal nem is megoldható, annak ellenére, hogy ez az adattag alapvetően csak
-a kitöltés színét tárolja. Ugyanakkor a beállítás módja lehet egy hexa-kód
-(\func{\#0f0}), egy előre definiált név (\func{green}), esetleg egy komplexebb
--- függvényszerű leírás. Ami azt illeti, ez könnyen feloldható, hiszen egy erre
-felkészített kód minden egyes beállításnál egy közös számnégyes formájában
-eltárolhatja az értékeket. Igen ám, de érdemes emlékezni, hogy a
-\func{fillStyle}-hoz hasonlóan viselkedő attribútumokból még van egy jó pár a
-Canvas-ben, amik viszont sokszor nem egy színt, hanem egy tulajdonságot vagy
-csak egy sima szám értéket tárolnak. Éppen ezért az \func{Attribute} osztály
-minden példányához be tudunk kötni egy a beállításkor meghívódó függvényt
-(\inenglish{callback function}), amely a kapott szöveget megpróbálja
-értelmezni, beolvasni (\inenglish{parsing}), és amennyiben sikerül, beállítja
-az adott adattagot.
+a kitöltés színét tárolja. Ugyanakkor a beállítás módja lehet hexa-kód
+(\func{\#0f0} vagy \func{\#00ff00}), egy előre definiált név (\func{green}),
+esetleg egy függvényszerű leírás vagy egy másik adattag értéke. Azáltal, hogy
+az \func{Attribute} osztályt bevezettük, lehetőség nyílt az adattagok kényelmes
+értékadásának.
 
-  Tehát a \emph{felső} réteg a \func{Gepard} mint interfész egy jól bevált
-Canvas API-ra támaszkodik. Ugyanakkor C++ környezetbe ágyazva -- többek között
-az erős típusosság miatt is -- szükségessé vált további társ osztályok
-definíciója, illetve egy komplexebb adattag kezelő osztály létrehozása.
-Viszont ezeken túl jobbára nincs másra szükségünk, hogy megfeleljünk a Canvas
-elvárásainak. Így ez a réteg ki is elégíti a feladatunk célkitűzéseit. Vagyis
-kapcsolatot teremt a felhasználó és a következő ún. \emph{köztes} réteg között.
+Nézzük meg röviden ezt az osztályt is. Tehát mint már az előbb említettük
+egyrészt, az értékadás sokféleségét biztosítani kellett. Ugyanakkor nem csak az
+értékadás lehet többféle, hanem az adattagok ,,típusa'' is. Vagyis az említett
+\func{fillStyle}-hoz képest más típusú adatot tároló módon is kellett tudjon
+működni az \func{Attribute} osztály. Az értékadás sokféleségét egyrészt az
+\emph{ad hoc polimorfizmus}\footnote{TODO:link!
+https://www.itu.dk/courses/BPRD/E2009/fundamental-1967.pdf} biztosítja. A
+bonyolultabb értékadásokat (pl. függvény leírás) pedig egy a példányosításkor
+bekötött elemző-értelmező függvény végzi.
+    \begin{wrapfigure}{r}{0.3\textwidth}
+    \begin{center}
+      \includegraphics[scale=0.6,bb=0 210 160 590,
+      clip=true]{img/built/dataflow_eps}
+    \end{center}
+      \caption{\label{dataflow-API-diagram} A \emph{felső} réteg, vagyis
+      a Gepard interfész függvényei és adattagjai}
+    \end{wrapfigure}
+Az így bekötött függvény az
+értékadáskor meghívódik (visszahívódik, \inenglish{callback}), és a kapott
+szöveget értelmezi, majd a megfelelő adattagot immáron a középső rétegben
+vagyis a \func{Gepard Engine}-ben beállítja.
 
-  A köztes réteg már valamivel bonyolultabb. Egyrészt kapcsolatot teremt a
-grafikus meghajtó specifikus alsóbb szintű kódokkal, másrészt a közös részeket
-valósítja meg. Ez a \func{GepardEngine} osztály. Nézzük át részletesebben az
-itt megvalósított részeket.
+\Aref{dataflow-API-diagram}. ábrán a Canvas API-nak a Geprad interfészben
+általam megvalósított függvényei és adattagjai láthatók. A függvényeket a nevük
+utáni zárójelpár jelzi. Az egyes függvények paramétereit itt nem tüntettük fel,
+ezek úgy is megtalálhatók részletesebben is kifejtve az API dokumentációjában.
+A zárójelpár nélküli nevek az egyes adattagok. Ezekről is tartalmaz bővebb
+leírást a dokumentáció. A megvalósított API részek -- a gradiens színezést és a
+szaggatott vonallal rajzolást leszámítva -- teljes körű alakzatrajzolást
+biztosítanak számunkra. Erre láthatunk majd példát az eredményeket bemutató
+fejezetben (\ref{Eredmények}). Az ábrán nem tüntettük fel a többi -- a
+dolgozatot nem érintő API függvényt és adattagot.
+
+Tehát az itt bemutatott \emph{felső} réteg vagyis a \func{Gepard} egy C++
+interfész, ami egy jól bevált Canvas API-ra támaszkodik, és teremt kapcsolatot
+a felhasználó és a következő ún. \emph{köztes} réteg között.
+
+    \subsection*{A köztes réteg, azaz a GepardEngine osztály}
+
+A köztes réteg már valamivel bonyolultabb. Egyrészt használja a grafikus
+meghajtó specifikus alsóbb szintű réteget, előállítva a kívánt képet. Másrészt
+tartalmazza és megvalósítja a közös osztályokat. Az egész réteget összefogó
+osztály pedig a \func{GepardEngine}. Nézzük át részletesebben az itt
+megvalósított részeket.
+
+\Aref{structure_eps}. ábrán már láthattuk, hogy ez a szint a jelen
+dolgozatot érintő négy főbb részből tevődik össze. Most csak hármat
+részletezünk itt. A negyedik részt, azaz a \emph{Path} alakzatleíró és
+tároló és az ezt feldolgozó osztályokkal úgy is külön alfejezetekben
+foglalkozunk.
 
   Az egyik fontos eleme az alsó réteget elérhetővé tevő
 \func{GepardEngineBackend} interfész. Erről majd később részletesen lesz szó.
@@ -609,20 +652,19 @@ transzformációkat el lehet menteni.
     \section[A Path tároló]{A Path tároló}
     \label{A Path tároló}
 
-Részletbemenően ismertetem a Path API függvény-csoportjait,
-működésének elvét, a felhasznált technológiákat; illetve külön
-kitérek a \emph{stroke} hívás összetett metódusaira, amelyek révén
-visszavezettük \emph{fillre}. Ez a rész elég nagy, hogy akár egy kisebb
-alfejezete legyen a \emph{Path API} résznek.
-
-    \begin{wrapfigure}{l}{0.5\textwidth}
+Részletbemenően ismertetem a Path API függvény-csoportjait, működésének elvét,
+a felhasznált technológiákat; illetve külön kitérek a \emph{stroke} hívás
+összetett metódusaira,
+    \begin{wrapfigure}{l}{0.4\textwidth}
     \begin{center}
-      \includegraphics[scale=0.5,bb=170 380 365 620,
+      \includegraphics[scale=0.6,bb=152 355 345 595,
       clip=true]{img/built/dataflow_eps}
     \end{center}
       \caption{\label{dataflow-path-API-diagram} A belső Path API
       részei}
     \end{wrapfigure}
+amelyek révén visszavezettük \emph{fillre}. Ez a rész elég nagy, hogy akár egy
+kisebb alfejezete legyen a \emph{Path API} résznek.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
@@ -695,6 +737,7 @@ példát.
   \end{description}
 
     \section{Eredmények}
+    \label{Eredmények}
 
   Itt a lefedettséget, illetve néhány ismert rajzolóval való minőségi
 összehasonlítást fogom bemutatni.
@@ -704,13 +747,6 @@ példát.
     \item[Becsült oldalszám] 4.
   \end{description}
 
-  \begin{wrapfigure}{l}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[scale=0.2]{img/built/tiger}
-  \end{center}
-    \caption{\label{tiger} A tiger.svg}
-  \end{wrapfigure}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Összefoglalás                                                  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -718,13 +754,36 @@ példát.
     \chapter{Összefoglalás}
     \addcontentsline{toc}{section}{Összefoglalás}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Irodalomjegyzék                                                %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \bibliography{bib/cites}{}
     \bibliographystyle{bib/huplain}
+    \addtocontents{toc}{\ }
+    \addcontentsline{toc}{section}{Irodalomjegyzék}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Mellékletek                                                    %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \chapter*{Mellékletek}
+    \addcontentsline{toc}{section}{Mellékletek}
+
+
+  \begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[scale=0.5]{img/built/tiger}
+  \end{center}
+    \caption{\label{tiger} A tiger.svg}
+  \end{figure}
+
+  \begin{figure}[!htb]
+  \begin{center}
+    \includegraphics[scale=0.8]{img/built/dataflow_eps}
+  \end{center}
+    \caption{\label{dataflow_eps} A rajzolás folyamatai}
+  \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Nyilatkozat                                                    %%
@@ -732,7 +791,6 @@ példát.
 
     \chapter*{Nyilatkozat}
     %Egy üres sort adunk a tartalomjegyzékhez:
-    \addtocontents{toc}{\ }
     \addcontentsline{toc}{section}{Nyilatkozat}
     %\hspace{\parindent}
 
