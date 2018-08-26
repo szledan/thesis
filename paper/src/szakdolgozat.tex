@@ -647,23 +647,6 @@ region}) és a legtöbb színezéssel kapcsolatos értékeket igen, de a \emph{P
 legfontosabbakat soroltuk fel, de a Canvas API leírás \cite{Cabanier:14:HCC}
 második fejezetében megtalálható a teljes lista.
 
-  Az egyik fontos eleme az alsó réteget elérhetővé tevő
-\func{GepardEngineBackend} interfész. Erről majd később részletesen lesz szó.
-  A másik fontos osztály a \func{GepardContext}. Ez alapvetően egy tároló
-osztály. Itt van elmentve a \func{Surface} is, ahová rajzolunk (ld. később).
-Ugyan csak itt tároljuk az alakzatot azaz a path-t is, vagy a már említett
-kitöltési színt, stílust, vagy a körvonal paramétereit is. Ami fontos
-tulajdonság ebben az osztályban az az, hogy biztosítania kell, hogy a rajzolási
-beállítások (paraméter értékek) elmenthetők és visszaállíthatók legyenek. Ezért
-ezeket a paramétereket összefogja egy \func{GepardState} nevű osztály. A
-\func{GepardContext}-nek mindig van egy (aktuális) státusza, amely tartalmazza
-a kurrens beállításokat. Azonban az aktuális állapotot bármikor elmenthetjük a
-\func(save()) paranccsal, és bármikor visszaállíthatjuk a \func{restor()}-ral.
-A működéi logikája pedig egy verem puffer azaz egy LIFO konténer. Fontos
-megjegyezni, hogy néhány \func{GepardContext}-beli elemre nincs hatása. Ilyen
-például a path is. Ugyanakkor a rajzoló stílusokat és az affin
-transzformációkat el lehet menteni.
-
     \section[A Path tároló]{A Path tároló}
     \label{A Path tároló}
 
