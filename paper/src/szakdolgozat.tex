@@ -626,11 +626,26 @@ tartalmazza és megvalósítja a közös osztályokat. Az egész réteget össze
 osztály pedig a \func{GepardEngine}. Nézzük át részletesebben az itt
 megvalósított részeket.
 
-\Aref{structure_eps}. ábrán már láthattuk, hogy ez a szint a jelen
-dolgozatot érintő négy főbb részből tevődik össze. Most csak hármat
-részletezünk itt. A negyedik részt, azaz a \emph{Path} alakzatleíró és
-tároló és az ezt feldolgozó osztályokkal úgy is külön alfejezetekben
-foglalkozunk.
+\Aref{structure_eps}. ábrán már láthattuk, hogy ez a szint a jelen dolgozatot
+érintő négy főbb részből tevődik össze. Most csak hármat részletezünk itt. A
+negyedik részt, azaz a \emph{Path} alakzatleíró és tároló és az ezt feldolgozó
+osztályokkal úgy is külön alfejezetekben foglalkozunk.
+
+Az egyik funkcionalitás a rajzolás környezetének (a továbbiakban kontextus,
+\inenglish(drawing context))\footnote{\Aref{structure_eps}. ábrán ez az
+,,Állapot kezelése'' rész.} biztosítása, bizonyos változások elmentése és
+helyreállítása. Az elmentésért a \func{save}, a visszaállításért pedig a
+\func{restore} API függvények a felelősek. A függvények hívásának hatásai ezen
+a rétegen fejtődnek ki. A \func{save} egy verempufferbe teszi az aktuális
+kontextus bizonyos beállításait. A \func{restore} pedig kiveszi a soron
+következőt. Gyakorlatilag úgy kell értelmezni, hogy a verem tetején lévő
+kontextus beállítások az érvényesek, azaz ezeket kell használni. Fontos
+megjegyezni, hogy nem minden kontextusbeli elemet mentünk el, vagy állítunk
+vissza. Például a transzformációkat, a kivágás alakzatát (\inenglish{clipping
+region}) és a legtöbb színezéssel kapcsolatos értékeket igen, de a \emph{Path}
+által aktuálisan tartalmazott alakzatot például nem. Itt csak a
+legfontosabbakat soroltuk fel, de a Canvas API leírás \cite{Cabanier:14:HCC}
+második fejezetében megtalálható a teljes lista.
 
   Az egyik fontos eleme az alsó réteget elérhetővé tevő
 \func{GepardEngineBackend} interfész. Erről majd később részletesen lesz szó.
