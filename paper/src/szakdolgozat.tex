@@ -590,7 +590,7 @@ működni az \func{Attribute} osztály. Az értékadás sokféleségét egyrész
 https://www.itu.dk/courses/BPRD/E2009/fundamental-1967.pdf} biztosítja. A
 bonyolultabb értékadásokat (pl. függvény leírás) pedig egy a példányosításkor
 bekötött elemző-értelmező függvény végzi.
-    \begin{wrapfigure}{r}{0.3\textwidth}
+    \begin{wrapfigure}{l}{0.3\textwidth}
     \begin{center}
       \includegraphics[scale=0.6,bb=0 210 160 590,
       clip=true]{img/built/dataflow_eps}
@@ -646,6 +646,46 @@ region}) és a legtöbb színezéssel kapcsolatos értékeket igen, de a \emph{P
 által aktuálisan tartalmazott alakzatot például nem. Itt csak a
 legfontosabbakat soroltuk fel, de a Canvas API leírás \cite{Cabanier:14:HCC}
 második fejezetében megtalálható a teljes lista.
+
+A második rész a transzformációk. A Háttér részben (\ref{A Canvas
+előírás}) a Canvas API bemutatásakor már tárgyaltuk\footnote{TODO:
+ellenőrizni!} a transzformációkat, itt most csak röviden a
+megvalósításukat nézzük át.
+
+Minden kontextus tartalmaz egy transzformációs mátrixot. Ezt a mátrixot a
+\func{Transform} osztály valósítja meg. A megvalósítani kívánt mátrix egy
+homogén sík koordinátás affin transzformációt tartalmaz. Aminek az alsó sora
+ismert ($0\enskip 0\enskip 1$), így csak a felső két sort kell eltárolni. Ez
+hat értéket jelent. Ebből a harmadik oszlopban találhatók a síkban eltolás
+vektorának értékei. A hat lebegőpontos értéken kívül még megvalósítottuk a
+leggyakrabban használt mátrix műveleteket, mint például a szorzás, inverz
+számítás, stb.
+
+Alakzatot rajzoló parancsok esetén a rajzolás pillanatában az aktuális
+kontextus által tartalmazott mátrixot kell alkalmazni. Ez a primitív alakzatok
+esetén könnyebb, hiszen az alakzat egyszerre definiálódik és rajzolódik ki.
+Tehát a megfelelő koordinátákat megszorozzuk a transzformációs mátrixszal. A
+\emph{Path} esetén figyelnünk kell arra, hogy az alakzat építése közben is
+lehetséges a transzformációs mátrix módosítása. Ami azt jelenti, hogy az addig
+épített alakzatra érvényesíteni kell a megváltoztatott mátrixot. Ugyanakkor az
+alakzatot tovább lehet építeni. Az eltranszformált részt úgy kell felfogni,
+mintha eredetileg is így eltranszformálva adták volna meg, vagyis
+tulajdonképpen könnyedén folytathatjuk az alakzat építését.
+
+Részben ehhez a réteghez kapcsolódik a kitöltött téglalap (\func{fillRect})
+rajzolása is. Ez ugyan szigorúan nem tartozik a szakdolgozatunk tárgyához,
+ugyanakkor mint a Path általános alakzatleírás egyik -- külön is definiált --
+primitív alakzatként azért érdemes pár szót ejteni róla. Elsőre erre az
+egyszerű alakzatra készült el a kirajzolás általános folyamata. Kezdve az API
+hívástól (\func{fillRect}) a felső rétegben. Majd haladva a köztes rétegen át a
+konkrét kirajzolásig OpenGL ES 2.0-t használva. A téglalapot mint két egymáshoz
+illesztett derékszögű háromszöget értelmeztük. A négy sarokra mint vertexekre
+hívódott meg egy nagyon egyszerű \emph{program} a grafikus eszközön. Az alakzat
+egyszerűsége miatt mind a \emph{vertex}, mind pedig a \emph{fragment}
+programrészekhez tartozó ún. árnyaló\footnote{FIXME: magyarul a shader?}
+(\inenglish{shader}) kódok viszonylag egyszerűek lettek. Ezért könnyen
+felállítható volt a rajzolás folyamata, ahová aztán be lehetett illeszteni a
+komplexebb alakzatok megjelenítését.
 
     \section[A Path tároló]{A Path tároló}
     \label{A Path tároló}
