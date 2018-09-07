@@ -687,22 +687,46 @@ programrészekhez tartozó ún. árnyaló\footnote{FIXME: magyarul a shader?}
 felállítható volt a rajzolás folyamata, ahová aztán be lehetett illeszteni a
 komplexebb alakzatok megjelenítését.
 
-    \section[A Path tároló]{A Path tároló}
+    \section[A Path tároló]{A Path tároló\footnote{TODO: Kéne találni valami jó elnevezést: Path osztály, Path építő, stb.}}
     \label{A Path tároló}
 
-Részletbemenően ismertetem a Path API függvény-csoportjait, működésének elvét,
-a felhasznált technológiákat; illetve külön kitérek a \emph{stroke} hívás
-összetett metódusaira,
-    \begin{wrapfigure}{l}{0.4\textwidth}
+A \func{Path} egy konténer osztály. A fő feladata, hogy az alakzatot és az
+ahhoz szorosan kapcsolódó tulajdonságokat tárolja. Ebben a fejezetben ezt az
+osztályt illetve a hozzá szorosan kapcsolódó kisebb struktúrákat fogjuk
+bemutatni.
+  \begin{wrapfigure}{l}{0.4\textwidth}
     \begin{center}
       \includegraphics[scale=0.6,bb=152 355 345 595,
       clip=true]{img/built/dataflow_eps}
     \end{center}
-      \caption{\label{dataflow-path-API-diagram} A belső Path API
-      részei}
-    \end{wrapfigure}
-amelyek révén visszavezettük \emph{fillre}. Ez a rész elég nagy, hogy akár egy
-kisebb alfejezete legyen a \emph{Path API} résznek.
+    \caption{\label{dataflow-path-API-diagram} A belső Path API részei}
+  \end{wrapfigure}
+Ezek a \emph{Path}-hoz szükséges struktúrák egyenként megfelelnek az alakzat
+építésekor hívható elemeknek. Vagyis a \func{moveTo} híváshoz a
+\func{MoveToElement} struktúra tartozik és így tovább. A \func{Path} osztályban
+minden elemhez tartozik egy függvény, amellyel ezekből a struktúrákból adhatunk
+hozzá példányokat az épülő alakzathoz. Tehát a fenti példában említett
+\func{moveTo} hatására a \func{Path}-beli \func{addMoveTo} függvény hívódik, és
+hozzáad az alakzat építésének sorába egy példányt a \func{MoveToElement}
+struktúrából. Természetesen nem minden alakzatépítő híváshoz tartozik
+egyedi struktúra. Néhányat közülük visszavezethetünk egy vagy több
+másikra. Ilyen például a \func{rect} API függvény, amit akár már a felső rétegben
+is visszavezetünk egy \func{moveTo} és három \func{lineTo} hívásra. Vagy
+hasonló a \func{arcTo} API hívás. Ami ugyan meghívja a \func{Path} osztály
+\func{addArcToElement} függvényét, ugyanakkor ez a függvény végül mégis
+csak az \func{arc} függvényhez tartozó \func{ArcElement} struktúraként
+tárolja.
+
+A \func{Path} osztály minden speciális alakzatalkotó-elemet egy közös, ős
+struktúraként tárol. Ez lett a \func{PathElement}.
+
+Tehát a \func{Path}-t alkotó struktúrák a következők:
+  \begin{itemize}[noitemsep]
+    \item Mozgató \func{MoveToElement},
+    \item Szakasz \func{LineToElement}, \func{CloseSubpathElement},
+    \item Görbe \func{QuadraticCurveToElement}, \func{BezierCurveToElement},
+    \item Körcikk \func{ArcElement}.
+  \end{itemize}
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
