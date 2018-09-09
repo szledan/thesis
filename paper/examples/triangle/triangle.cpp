@@ -49,29 +49,33 @@ int main(int argc, char* argv[])
 
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, width, height);
+
     ctx.fillStyle = "#b4e256";
     ctx.strokeStyle = "#25385e";
-    ctx.lineWidth = 30;
-    ctx.lineCap = "square";
-    ctx.lineJoin = "miter";
 
-    const int sx = width * 0.35;
-    const int sy = height * 0.45;
-    for (int x = 0; x < 3; ++x) {
-        for (int y = 0; y < 2; ++y) {
+    ctx.translate(50, 50);
+    ctx.scale(30, 30);
+
+    for (int row = 0; row < 3; ++row) {
+        for (int col = 0; col < 2; ++col) {
+            ctx.save();
+            ctx.translate(row * 12, col * 12);
+
             ctx.beginPath();
-            ctx.moveTo(50 + sx * x + sx / 2, 30 + sy * y + 0);
-            ctx.lineTo(50 + sx * x + sx * 0.6, 30 + sy * y + sy * 0.9);
-            ctx.lineTo(50 + sx * x + 0, 30 + sy * y + sy * 0.3);
-            if (y < 1) {
+            ctx.moveTo(5, 0);
+            ctx.lineTo(6, 9);
+            ctx.lineTo(0, 3);
+
+            if (col < 1) {
                 ctx.closePath();
             }
-            if (x > 0) {
+            if (row > 0) {
                 ctx.fill();
             }
-            if (x < 2) {
+            if (row < 2) {
                 ctx.stroke();
             }
+            ctx.restore();
         }
     }
 
