@@ -697,6 +697,7 @@ A \func{Path} egy konténer osztály. A fő feladata, hogy az alakzatot és az
 ahhoz szorosan kapcsolódó tulajdonságokat tárolja. Ebben a fejezetben ezt az
 osztályt illetve a hozzá szorosan kapcsolódó kisebb struktúrákat fogjuk
 bemutatni.
+
   \begin{wrapfigure}{l}{0.4\textwidth}
     \begin{center}
       \includegraphics[scale=0.6,bb=152 355 345 595,
@@ -711,24 +712,70 @@ minden elemhez tartozik egy függvény, amellyel ezekből a struktúrákból adh
 hozzá példányokat az épülő alakzathoz. Tehát a fenti példában említett
 \func{moveTo} hatására a \func{Path}-beli \func{addMoveTo} függvény hívódik, és
 hozzáad az alakzat építésének sorába egy példányt a \func{MoveToElement}
-struktúrából. Természetesen nem minden alakzatépítő híváshoz tartozik
-egyedi struktúra. Néhányat közülük visszavezethetünk egy vagy több
-másikra. Ilyen például a \func{rect} API függvény, amit akár már a felső rétegben
-is visszavezetünk egy \func{moveTo} és három \func{lineTo} hívásra. Vagy
-hasonló a \func{arcTo} API hívás. Ami ugyan meghívja a \func{Path} osztály
-\func{addArcToElement} függvényét, ugyanakkor ez a függvény végül mégis
-csak az \func{arc} függvényhez tartozó \func{ArcElement} struktúraként
-tárolja.
+struktúrából. Természetesen nem minden alakzatépítő híváshoz tartozik egyedi
+struktúra. Néhányat közülük visszavezethetünk egy vagy több másikra. Ilyen
+például a \func{rect} API függvény, amit akár már a felső rétegben is
+visszavezetünk egy \func{moveTo} és három \func{lineTo} hívásra. Vagy hasonló a
+\func{arcTo} API hívás. Ami ugyan meghívja a \func{Path} osztály
+\func{addArcToElement} függvényét, ugyanakkor ez a függvény végül mégis csak az
+\func{arc} függvényhez tartozó \func{ArcElement} struktúraként tárolja
+(\ref{dataflow-path-API-diagram}. ábra).
 
-A \func{Path} osztály minden speciális alakzatalkotó-elemet egy közös, ős
-struktúraként tárol. Ez lett a \func{PathElement}.
+Minden speciális alakzatelemet definiáló struktúra egy közös ős
+\func{PathElement} struktúrából származik. Nézzük meg részletesebben ezeket a
+struktúrákat.
 
-Tehát a \func{Path}-t alkotó struktúrák a következők:
+A \func{PathElement} ős definiálja (és tárolja) azokat az információkat,
+amelyekre minden gyerek struktúrának szükséges van. Minden alakzatelemnek van
+végpontja, ahol az alakzatot rajzoló képzeletbeli tollhegy megáll. Ez egy
+koordinátát tároló \func{to} adattag. Minden alakzatelemre igaz, hogy vagy az
+utolsó, vagy követi egy újabb elem. A \func{next} adattag adja meg a következő
+elem memóriacímét. Amennyiben ez \func{NULL}, az azt jelenti, hogy az adott
+elem az utolsó struktúrája az alakzatnak. Minden struktúrának meg kell tudnia
+mondania magáról, hogy a speciálisak közül melyik. Erre azért van szükség,
+hogyha az ősként hivatkoznánk rá. Ezt adja meg a \func{type} adattag.
+
+A \func{MoveToElement} jelöli az alakzatépítési-listában, hogy felemeltük a
+tollat, és áthelyeztük egy másik pontba (\func{to}). Két ilyen elem egymásután
+összevonható eggyé. Valamint minden alakzatot leíró lista egy ilyen
+struktúrával kezdődik.
+
+A \func{LineToElement} egy egyenes vonalat határoz meg az utolsó elem
+végpontjától a saját végpontjáig (\func{to}). Ha nincs előtte elem, akkor úgy
+kell tekinteni~\footnote{szabványrész} rá mint egy \func{MoveToElement}. Itt is
+érvényes, hogy amennyiben az előző elem végpontjával megegyezik a végpontja,
+akkor összevonható, még pontosabban nem szükséges hozzáadni a listához.
+
+A \func{CloseSubpathElement} egy egyenes vonallal zárja a legutolsó
+\func{MoveToElement} pontjából indított alakzatot. Ha nincs még elem a listában
+vagy az előző elem egy \func{MoveToElement}, akkor figyelmen kívül kell hagyni,
+vagyis el kell vetni a hozzáadását.
+
+A \func{QuadaraticCurveToElement} egy másodrendű Bézier-görbét határoz meg az
+előző elem végpontjától a saját végpontjáig az újabb adattagként megjelenő
+kontrollpont (\func{control}) szerint. Ha nincs előtte elem, akkor szintén
+kezdő elemként kell tekinteni a végpontjára. Amennyiben a kontrollpont egyenlő
+a végponttal, akkor az elem leegyszerűsödik egy \func{LineToElement}-re.
+
+A \func{BezierCurveToElement} egy harmadrendű Bézier-görbét határoz meg. Az
+előző elem végpontjától a saját végpontjáig a két újabb adattagként megjelenő
+kontrollpontok (\func{control1} és \func{control2}) szerint. A másodrendű
+görbét leíró elemre vonatkozó megkötések itt is érvényesek.
+
+
+
+Később látni fogjuk, hogy a \func{Path} minden
+
+
+Az alakzatalkotó
+struktúrák a következők:
   \begin{itemize}[noitemsep]
-    \item Mozgató \func{MoveToElement},
-    \item Szakasz \func{LineToElement}, \func{CloseSubpathElement},
-    \item Görbe \func{QuadraticCurveToElement}, \func{BezierCurveToElement},
-    \item Körcikk \func{ArcElement}.
+    \item \func{MoveToElement},
+    \item \func{LineToElement},
+    \item \func{CloseSubpathElement},
+    \item \func{QuadraticCurveToElement}
+    \item \func{BezierCurveToElement}
+    \item \func{ArcElement}.
   \end{itemize}
 
   \begin{description}[noitemsep]
