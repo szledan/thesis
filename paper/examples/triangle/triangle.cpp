@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
 
     const uint width = 1024;
     const uint height = 768;
+
     gepard::PNGSurface surface(width, height);
     gepard::Gepard ctx(&surface);
 
@@ -56,23 +57,23 @@ int main(int argc, char* argv[])
     ctx.translate(50, 50);
     ctx.scale(30, 30);
 
-    for (int row = 0; row < 3; ++row) {
-        for (int col = 0; col < 2; ++col) {
+    for (int col = 0; col < 3; ++col) {
+        for (int row = 0; row < 2; ++row) {
             ctx.save();
-            ctx.translate(row * 12, col * 12);
+            ctx.translate(col * 12, row * 12);
 
             ctx.beginPath();
             ctx.moveTo(5, 0);
             ctx.lineTo(6, 9);
             ctx.lineTo(0, 3);
 
-            if (col < 1) {
+            if (row < 1) {
                 ctx.closePath();
             }
-            if (row > 0) {
+            if (col > 0) {
                 ctx.fill();
             }
-            if (row < 2) {
+            if (col < 2) {
                 ctx.stroke();
             }
             ctx.restore();
