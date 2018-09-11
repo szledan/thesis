@@ -109,7 +109,7 @@
     %name=\thelstnumber,              %
     %rulecolor=\color{black},         % if notset, the frame-color may be changed online-breaks within not-black text (e.g.comments (green here))
     showspaces=false,                % showspaces everywhere adding particularunderscores; it overrides'showstringspaces'
-    %showstringspaces=false,          % underline spaces within strings only
+    showstringspaces=false,          % underline spaces within strings only
     showtabs=false,                  % show tabs within strings addingparticular underscores
     %stepnumber=2,                    % the step between two line-numbers.If it's 1, each line will benumbered
     %stringstyle=\color{mymauve},     % string literal style
@@ -434,10 +434,21 @@ forma. Ellentétben a téglalappal: \emph{rect}, \emph{fillRect},
     \hspace{0.1\textwidth}
     \minipage{0.5\textwidth}
       \centering
-      \lstinputlisting[language=JavaScript,
-                       firstnumber=1,autogobble=true,
-                       linerange={11-12,25-28,31-31,33-33, 35-35}]
-      {paper/examples/triangle/triangle.js}
+      \begin{lstlisting}[language=JavaScript, autogobble=true]
+        var cv = document.getElementById("Canvas");
+        var ctx = cv.getContext("2d");
+        ctx.beginPath();
+        ctx.moveTo(5, 0);
+        ctx.lineTo(6, 9);
+        ctx.lineTo(0, 3);
+        ctx.closePath();  // felső sor
+        ctx.fill();  // utolsó két oszlop
+        ctx.stroke();  // első két oszlop
+      \end{lstlisting}
+%      \lstinputlisting[language=JavaScript,
+%                       firstnumber=1, autogobble=true,
+%                       linerange={11-12,25-28,31-31,33-33, 35-35}]
+%      {paper/examples/triangle/triangle.js}
     \endminipage
     \hfill
     \minipage{0.5\textwidth}
@@ -451,7 +462,7 @@ A fenti ábrán (\ref{triangles-code-and-image}) látható egy kis példakód,
 illetve ennek hat különböző eredménye. Az első sorban olyan alakzatokat látunk,
 ahol a \emph{closePath} parancsot meghívtuk (hármoszög), a másodikban pedig nem
 (V alak). Az első oszlopban a \emph{fill}-t, a harmadikban pedig a
-\emph{stroke}-ot nem hívtuk meg. A szabvány ~\cite{Cabanier:14:HCC} ugyanakkor
+\emph{stroke}-ot nem hívtuk meg. A szabvány~\cite{Cabanier:14:HCC} ugyanakkor
 rendelkezik arról, hogy minden Path zárt alakzat kell legyen, így mindig
 kitölthető is. Ezért lett a második sor utolsó két V-nek definiált alakzata
 mégis kitöltött háromszög. Nézzük meg, hogy milyen konkrét eszközöket kíván
@@ -765,13 +776,13 @@ kezelhessük.
 Az elemeket jelölő és azok adatait tároló segédstruktúrák után rátérhetünk a
 \func{Path} osztályra. Ez az osztály az előbb felsorolt struktúrákat egy
 listában tárolja. A lista első eleme a szabvány
-értelmében\footnote{szabványrész} mindig egy \func{MoveToElement} kell
-legyen. Utána pedig tetszőlegesen sok elem következhet. Jellemzően az
-alakzatokat egymás utáni hívások sorozataként építjük fel. Ebből az is
-következik, hogy jó pár viszonylag hasonló méretű struktúra memóriába
-való lefoglalására kerül sor egy alakzat építésekor. Ugyanakkor érdemes
-kerülni az ilyen jellegű foglalásokat. Ezért egy ún. \emph{Region} modellt
-alkalmaztunk a lista tárolására.
+értelmében\footnote{szabványrész} mindig egy \func{MoveToElement} kell legyen.
+Utána pedig tetszőlegesen sok elem következhet. Jellemzően az alakzatokat
+egymás utáni hívások sorozataként építjük fel. Ebből az is következik, hogy jó
+pár viszonylag hasonló méretű struktúra memóriába való lefoglalására kerül sor
+egy alakzat építésekor. Ugyanakkor érdemes kerülni az ilyen jellegű
+foglalásokat. Ezért egy ún. \emph{Region} modellt alkalmaztunk a lista
+tárolására.
 
 Ez az osztály (\func{Region}) több a tárolandó struktúrák méretéhez képest
 néhány nagyságrenddel nagyobb memóriaterületet foglal le szintén listába fűzve.
@@ -798,43 +809,39 @@ elemtől kezdve végig sétálhatunk a struktúrákat tartalmazó listán. Az
 \func{isEmpthy} függvénnyel lekérdezhetjük, hogy üres-e az alakzatot leíró
 lista. A \func{lastElement} pedig megadja az utolsó elemet a listában.
 
-A már ismertetett struktúrákhoz mind tartozik egy függvény ami egy
-példányt add a listához. Ezek a függvények bizonyos feltételeket
-megvizsgálva és a szabványhoz igazodva alkalmaznak bizonyos egyszerűsítéseket.
-Az \func{addMoveToElement} függvény például kihasználja azt a
-nyilvánvaló tényt, hogy az egymásután következő \func{moveTo} hívások
-összevonhatók, és csak a legutolsó hívás koordinátáját kell
-letárolni. Minden vonalhúzó struktúrára alkalmazni kell például, hogy ha
-elsőként kerülne az üres listába, akkor a végpontját meghatározó
-koordinátát használva egy alakzatkezdő \func{MoveToElement} struktúraként
-kell értelmezni. De ilyen könnyítő feltétel az is, hogy olyan egyenes
-vonalat nem kell a listához adni, aminek a végpontja megegyezik az utolsó
-elem végpontjával; vagy azt a másodrendű Bézier-görbét aminek a
-kontrollpontja és a végpontja egybeesik, azt egyszerűen egyenes vonalként
-adhatjuk a listához. Az \func{addArcElement} függvény esetében már sokkal
-komolyabb beállításokat és egyszerűsítéseket hozhatunk. Nyilvánvaló,
-hogy egy körciklusnál nagyobb körbejárási szög leegyszerűsíthető. Vagy
-egy nulla méretű sugarú kör sem kell egy a középpontba húzott vonalnál
-több legyen.
+A már ismertetett struktúrákhoz mind tartozik egy függvény ami egy példányt add
+a listához. Ezek a függvények bizonyos feltételeket megvizsgálva és a
+szabványhoz igazodva alkalmaznak bizonyos egyszerűsítéseket. Az
+\func{addMoveToElement} függvény például kihasználja azt a nyilvánvaló tényt,
+hogy az egymásután következő \func{moveTo} hívások összevonhatók, és csak a
+legutolsó hívás koordinátáját kell letárolni. Minden vonalhúzó struktúrára
+alkalmazni kell például, hogy ha elsőként kerülne az üres listába, akkor a
+végpontját meghatározó koordinátát használva egy alakzatkezdő
+\func{MoveToElement} struktúraként kell értelmezni. De ilyen könnyítő feltétel
+az is, hogy olyan egyenes vonalat nem kell a listához adni, aminek a végpontja
+megegyezik az utolsó elem végpontjával; vagy azt a másodrendű Bézier-görbét
+aminek a kontrollpontja és a végpontja egybeesik, azt egyszerűen egyenes
+vonalként adhatjuk a listához. Az \func{addArcElement} függvény esetében már
+sokkal komolyabb beállításokat és egyszerűsítéseket hozhatunk. Nyilvánvaló,
+hogy egy körciklusnál nagyobb körbejárási szög leegyszerűsíthető. Vagy egy
+nulla méretű sugarú kör sem kell egy a középpontba húzott vonalnál több legyen.
 
 Van egy olyan függvény, amelyikhez nem tartozik külön struktúra. Ez az
-\func{addArcToElement}. Itt azért nem volt szükség külön struktúrára,
-mert ez a függvény által leírt elem megadható egy egyenes vonal és egy
-körcikk segítségével. Ezért ez a függvénytörzs ezt a visszavezetést
-tartalmazza.
-
-Az \func{addLineToElement}
-
- Ha nincs előtte elem, akkor úgy
-kell tekinteni rá mint egy \func{MoveToElement}. Itt is
-érvényes, hogy amennyiben az előző elem végpontjával megegyezik a végpontja,
-akkor összevonható, még pontosabban nem szükséges hozzáadni a listához.
- Ha nincs még elem a listában
-vagy az előző elem egy \func{MoveToElement}, akkor figyelmen kívül kell hagyni,
-vagyis el kell vetni a hozzáadását.
- Ha nincs előtte elem, akkor szintén
-kezdő elemként kell tekinteni a végpontjára. Amennyiben a kontrollpont egyenlő
-a végponttal, akkor az elem leegyszerűsödik egy \func{LineToElement}-re.
+\func{addArcToElement}. Itt azért nem volt szükség külön struktúrára, mert ez a
+függvény által leírt elem megadható egy egyenes vonal és egy körcikk
+segítségével. Ezért ez a függvénytörzs ezt a visszavezetést tartalmazza. Arról
+már volt szó~\footnote{TODO: ellenőrizni}, hogy ehhez a függvényhez egy olyan
+alakzatelem tartozik, ami főleg a lekerekített alakzatok könnyebb
+meghatározását biztosítja. Például egy rádiusz érték következetes használatával
+könnyedén definiálhatunk egy a sarkainál lekerekített téglalapot. Ha most ezt a
+téglalapot vesszük, akkor négy ilyen alakzatelemből felépíthetjük. Ugyanakkor a
+valóságban négy egyenes vonalból és négy körcikkből épül fel. Ennél az elemnél
+tudjuk, hogy mindig benne van a használt pontok által meghatározott alakzatban,
+csupán a sarkoknál a megadott rádiusz(ok) hatására körcikkeket kell beszúrjunk.
+A visszavezetés azt kell eldöntse, hogy az előző elem végpontjából hogyan és
+meddig kell vonalat húzni a lekerekítést adó körcikkhez, milyen szögtől milyen
+szögig terjed a körcikk, és hogyan kell az elem végpontjába egyenes vonalat
+húzni a körcikktől.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
