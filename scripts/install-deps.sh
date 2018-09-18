@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # For generate the thesis.
-sudo apt-get install texlive-full
+sudo apt-get install texlive-full inkscape
 
 if [[ ${1} == "--dev" ]] ; then
   echo "Install packages for developing..."
