@@ -283,26 +283,26 @@ A témavezető által megfogalmazott feladatkiírás. Önálló oldalon szerepel
 
     \subsubsection*{A téma megnevezése}
 
-A \emph{W3C} (World Wide Web Consortium) által \emph{Canvas 2D Context} néven
+A \emph{World Wide Web Consortium} (W3C) által \emph{Canvas 2D Context} néven
 2015-ben elfogadott ajánlás \emph{path} részének megvalósítása \emph{OpenGL-ES
 2.0} alapokon.
 
     \subsubsection*{A megadott feladat megfogalmazása}
 
-Az előbb említett \emph{Canvas 2D Context} egy grafikus API. Ez az API több
-grafikus függvényt definiál. Jelen dolgozat témája ezek közül az úgynevezett
-\emph{path} részének leprogramozása~úgy, hogy a lehető legtöbb feladatot a
-grafikus processzor (\textit{GPU}) lássa el.
+Az előbb említett \emph{Canvas 2D Context} egy grafikus interfész. Ez az
+interfész több grafikus függvényt definiál. Jelen dolgozat témája ezek közül az
+úgynevezett \emph{path} részének leprogramozása úgy, hogy a lehető legtöbb
+feladatot a grafikus processzor (\textit{GPU}) lássa el.
 
     \subsubsection*{A megoldásmód}
 
-Több megoldás közül mi az alakzatok trapézokra bontását választottuk. Hiszen
-minden trapéz felbontható további két háromszögre, mely megkötésre a OpenGL-ES
-2.0 grafikus meghajtó  miatt van szükség.
+Több megoldás közül mi az alakzatok trapézokra bontását választottuk. Minden
+trapéz felbontható további két háromszögre, amely megkötésre a OpenGL~ES~2.0
+grafikus meghajtó miatt van szükség.
 
     \subsubsection*{Alkalmazott eszközök, módszerek}
 
-Az API \emph{c++11} programozási nyelven készült, használva a következő
+Az API \emph{C++11} programozási nyelven készült, használva a következő
 eszközöket, technológiákat: \emph{gcc}, \emph{git}, \textit{OpenGL~ES~2.0},
 \emph{\LaTeX},
 
@@ -310,7 +310,7 @@ eszközöket, technológiákat: \emph{gcc}, \emph{git}, \textit{OpenGL~ES~2.0},
 
     \subsubsection*{Kulcsszavak}
 
-grafika, path, canvas-2D-context, OpenGL-ES 2.0
+grafika, path, Canvas 2D Context, OpenGL-ES 2.0
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -386,13 +386,14 @@ megközelítést (\inenglish{approximation}) alkalmaztunk. Ezekről a lépésekr
 
 A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C első
 HTML5 szabvány-vázlata:\\ \footnotesize{
-\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. A szabvány leír
+\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. Az előírás leír
 egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{Canvas}-nek
 neveznek. A Canvas definíció szerint nem más mint egy adott \emph{szélességgel}
 és \emph{magassággal} meghatározott terület, ahova különböző alakzatokat,
 képeket, szövegeket és egyéb nem dinamikus grafikai elemeket rakhatunk fel. Az
-elemeket a Canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
-(pl.~\emph{fill}) esetén az addig összegyűjtötteket kirajzolja a megadott
+elemeket függvények segítségével rajzolhatjuk a vászonra, vagy pedig a
+Canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
+(pl.~\emph{fill}) esetén az addig összegyűjtött elemeket kirajzolja a megadott
 sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
 pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
 
@@ -404,7 +405,7 @@ különböző parancsokkal rajzolhatjuk ki a definiált alakzatot, akár kitölt
 (\emph{fill}), akár körvonalként (\emph{stroke}), de lehetőségünk van az adott
 alakzattal kivágni (\emph{clip}) is a Canvas-en már meglévő képből.
 
-A szabvány előír néhány megkötést. Ezekről látni fogjuk, hogy természetes
+A Canvas előír néhány megkötést. Ezekről látni fogjuk, hogy természetes
 korlátok. Hiszen józan ésszel felfogható, hogy egy egyenes szakaszból definiált
 alakzatra értelmetlen a kitöltés, azaz a fill parancsot meghívni. Hasonlóan nem
 mond semmit a nulla vastagságú vonal a stroke parancs esetén. Érdekes
@@ -421,14 +422,14 @@ azokat. Ezt már az előbb említett felépített vonal esetén is érezhettük.
 később látni fogjuk, ez erősen megköti a kezünket, hogy milyen rajzoló program
 is lehet a Gepard. Persze a Gepard idővel kibővülhet további
 funkcionalitásokkal (pl. \emph{flush}, \emph{finish}, stb.), amik egy sokkal
-kötetlenebb rajzoló eszközhöz vezethetnek; ez viszont most még csak a jövő.
+kötetlenebb rajzoló eszközhöz vezethetnek.
 
-Térjünk vissza a Path építéshez. Feltételezzük, hogy a kedvünkre beállítottuk a
-rajzolás színét, a méreteket és minden szükséges módon felkészítettük a
-vásznunkat, hogy arra felvigyük a kívánt alakzatot. Ez most legyen egy
-háromszög, mint az egyik legegyszerűbb, ám a szabványban külön nem definiált
-forma. Ellentétben a téglalappal: \emph{rect}, \emph{fillRect},
-\emph{strokeRect}.
+Térjünk vissza egy kis példa erejéig a Path építéshez. Feltételezzük, hogy a
+kedvünkre beállítottuk a rajzolás színét, a méreteket és minden szükséges módon
+felkészítettük a vásznunkat, hogy arra felvigyük a kívánt alakzatot. Ez most
+legyen egy háromszög, mint az egyik legegyszerűbb, ám a szabványban külön nem
+definiált forma, ellentétben a téglalappal (\emph{rect}, \emph{fillRect},
+\emph{strokeRect}).
 
   \begin{figure}[!htb]
     \hspace{0.1\textwidth}
@@ -462,11 +463,57 @@ A fenti ábrán (\ref{triangles-code-and-image}) látható egy kis példakód,
 illetve ennek hat különböző eredménye. Az első sorban olyan alakzatokat látunk,
 ahol a \emph{closePath} parancsot meghívtuk (hármoszög), a másodikban pedig nem
 (V alak). Az első oszlopban a \emph{fill}-t, a harmadikban pedig a
-\emph{stroke}-ot nem hívtuk meg. A szabvány~\cite{Cabanier:14:HCC} ugyanakkor
+\emph{stroke}-ot nem hívtuk meg. Az előírás~\cite{Cabanier:14:HCC} ugyanakkor
 rendelkezik arról, hogy minden Path zárt alakzat kell legyen, így mindig
 kitölthető is. Ezért lett a második sor utolsó két V-nek definiált alakzata
-mégis kitöltött háromszög. Nézzük meg, hogy milyen konkrét eszközöket kíván
-biztosítani a szabvány.
+mégis kitöltött háromszög. Nézzük meg, hogy milyen konkrét eszközöket biztosít
+az előírás.
+
+Ebben a fejezetben nem térünk ki részletesen a teljes előírásra. A legfontosabb
+rész a dolgozatunk témája a Path. Ugyanakkor a munkához szorosan kapcsolódott a
+környezet megvalósítása is. Ezért érintőlegesen beszélnünk kell a rajzolás
+kontextusáról (\inenglish{drawing context}), a színek és vonaltulajdonságok
+beállításáról, valamint a transzformációkról. Ezek után térünk rá az előírás
+Path-t definiáló részére.
+
+A rajzolás környezete, vagyis a \emph{context} tartalmazza, hogy milyen
+színekkel fogunk rajzolni, milyen betűtípussal és mérettel, de ez tartalmazza
+az aktuális transzformációt és itt van elméletileg letárolva az aktuálisan
+felépített alakzat (\inenglish{path}) is. A context-nek mindig van egy aktuális
+állapota (\inenglish{state}). A Canvas rendelkezik arról, hogy az aktuális
+állapotot egy verembe elmenthessük és visszaállíthassuk. Ez a tulajdonsága a
+vászonnak megkönnyíti a transzformációk alkalmazását egy-egy alakzatra, vagy
+képre, esetleg szövegre. Ugyanakkor az állapot elmentése nem érinti az épített
+alakzatot. Vagyis nincs hatással a path-ra. A context mindig egy path-t
+tartalmaz, határoz meg. Ha például egy ilyen alakzatot több különböző színnel
+és helyen akarunk a vászonra rajzolni, de nem akarjuk elveszíteni az aktuális
+állapot szín és koordináta beállításait, akkor egy mentés után könnyedén
+módosíthatjuk az attribútumokat, és tolhatjuk el az alakzatot. Majd a
+kirajzolások után visszaállíthatjuk az elmentett állapotot.
+
+Minket két színbeállítás érint. Az egyik az alakzat kitöltésekor használt
+\func{fillStyle} attribútum. A másik az alakzat körvonalának színét meghatározó
+\func{strokeStyle} attribútum. Ezek az attribútumok nem csak színek lehetnek,
+hanem például leírhatnak egy gradiens színezést is. Illetve nem csak néhány
+névvel előre definiált színt (\func{red}, \func{green}, \func{blue} stb.)
+adhatunk meg, hanem különböző színterekből csatornánként saját színt is
+beállíthatunk. Ilyen például az \emph{RGBA} (\func{rgb(red, green, blue,
+alpha)}) vagy az \emph{HSV} (\func{hsv(hue, saturation, value)}) színtér. Sőt,
+lehetőségünk van használni a webes környezetekben megszokott úgynevezett
+hexa-kódokat. Ekkor az RGB színtérből választhatunk, és kétféle mintát
+használhatunk: a hosszabb \func{\#rrggbb}-t és a rövidebb \func{\#rgb}-t. A két
+attribútum viselkedését a CSS ajánlás\footnote{link} írja le. A beállítást
+szöveges (\func{string}) formában kell megadni, amit aztán értelmezni kell, és
+aszerint megadni az értékeket. Később részletesen lesz szó arról, hogy
+milyen módon oldottuk meg a hasonló viselkedést C++-os környezetben.
+
+A színekhez hasonlóan az alakzat körvonalának tulajdonságát leíró
+attribútumokat is szöveg formájában kell megadni. Itt viszont van egy kis
+játéktér, mert az ajánlások ugyan szöveget várnak, de a számértéket
+váró attribútumok esetében (pl. \func{lineWidth}) azért elfogadhatunk majd
+ténylegesen szám típust is. Erről is lesz szó az alakzatépítés
+működését leíró fejezetben.
+
 
     \section[GLES2 API]{Az OpenGL-ES 2.0 API}
     \label{GLES2 API}
@@ -814,9 +861,21 @@ elemtől kezdve végig sétálhatunk a struktúrákat tartalmazó listán. Az
 lista. A \func{lastElement} pedig megadja az utolsó elemet a listában.
 
 A már ismertetett struktúrákhoz rendre tartozik egy \func{Path} osztálybeli
-függvény ami egy példányt add a listához. Ezek a függvények bizonyos
+függvény ami egy példányt ad a listához. Ezek a függvények bizonyos
 feltételeket megvizsgálva és a szabványhoz igazodva alkalmaznak bizonyos
-egyszerűsítéseket. Az \func{addMoveToElement} függvény például kihasználja azt
+egyszerűsítéseket.
+
+Az \func{addMoveToElement} függvény adja hozzá a képzeletbeli toll áthelyezését
+leíró \func{MoveToElement} struktúrát. Az előírás szerint minden alakzat egy
+ilyen elemmel kell kezdődjön. Ezért ez a függvény megvizsgálja, hogy az
+alakzatot leíró elemek listája üres-e. Ha üres, akkor a megadott koordinátával
+létrehoz egy ilyen elemet, beteszi a listába, és a listát leíró speciális
+markereket (\func{firstElement}, \func{lastElement}) beállítja erre az elem
+memóriacímére. Ha nem üres, és az utolsó elem a listában egy hasonló
+\func{MoveToElement}, akkor értelemszerűen elégséges ennek az utolsó elemnek a
+koordinátát tartalmazó adattagját módosítani az új elem értékeivel.
+
+például kihasználja azt
 a nyilvánvaló tényt, hogy az egymásután következő \func{moveTo} hívások
 összevonhatók, és csak a legutolsó hívás koordinátáját kell letárolni. Minden
 vonalhúzó struktúrára alkalmazni kell például, hogy ha elsőként kerülne az üres
