@@ -223,7 +223,7 @@
     Szeged
     \\
     \vspace{2mm}
-    2016
+    2018
     }
     \end{center}
 
@@ -784,15 +784,19 @@ egy alakzat építésekor. Ugyanakkor érdemes kerülni az ilyen jellegű
 foglalásokat. Ezért egy ún. \emph{Region} modellt alkalmaztunk a lista
 tárolására.
 
-Ez az osztály (\func{Region}) több a tárolandó struktúrák méretéhez képest
-néhány nagyságrenddel nagyobb memóriaterületet foglal le szintén listába fűzve.
-A struktúrákat pedig ebbe a Region listába tároljuk úgy, hogy közvetlen
-hozzáférünk a már lefoglalt memóriához. Amennyiben az aktuális lefoglalt
-részből kilógna az újabb struktúra mérete, akkor a Region osztálytól újabb
-szabad területet kérünk. Ez pedig már valóban memóriafoglalást eredményez,
-ugyanakkor a nagyságrend függvényében jóval kevesebbszer. A modell másik nagy
-előnye, hogy az eldobott alakzat memóriahasználatának felszabadítása is sokkal
-kevesebb hívásból valósulhat meg.
+Ez az osztály (\func{Region}) a tárolandó struktúrák méretéhez képest néhány
+nagyságrenddel nagyobb memóriaterületet (memóriarégiót) foglal le. A
+struktúrákat pedig ebben a memóriarégióban listában tároljuk úgy, hogy
+közvetlen hozzáférünk a már lefoglalt memóriához. Amennyiben az aktuális
+lefoglalt részből kilógna a következő struktúra mérete, akkor a \func{Region}
+osztálytól újabb szabad területet kérünk. Ez pedig már valóban memóriafoglalást
+eredményez, ugyanakkor a nagyságrend függvényében jóval kevesebbszer. A modell
+másik nagy előnye, hogy az eldobott alakzat memóriahasználatának felszabadítása
+is sokkal kevesebb hívásból valósulhat meg. Jelenleg a lefoglalt memóriarégiók
+mérete egységesen $2048$ bájt, és előre eldöntött, azaz nem változik.
+Természetesen a jövőben, a Gepard optimalizálásának fázisában akár dinamikusan
+változó méretű memóriarégiókat is használhatunk; persze ha ennek hasznosságát
+mérések is alátámasztják.
 
 Most pedig nézzük át a \func{Path} osztályhoz tartozó függvényeket
 (\ref{dataflow-path-API-diagram}. ábra). Vannak egyrészt az elemeket hozzáadó,
@@ -809,21 +813,21 @@ elemtől kezdve végig sétálhatunk a struktúrákat tartalmazó listán. Az
 \func{isEmpthy} függvénnyel lekérdezhetjük, hogy üres-e az alakzatot leíró
 lista. A \func{lastElement} pedig megadja az utolsó elemet a listában.
 
-A már ismertetett struktúrákhoz mind tartozik egy függvény ami egy példányt add
-a listához. Ezek a függvények bizonyos feltételeket megvizsgálva és a
-szabványhoz igazodva alkalmaznak bizonyos egyszerűsítéseket. Az
-\func{addMoveToElement} függvény például kihasználja azt a nyilvánvaló tényt,
-hogy az egymásután következő \func{moveTo} hívások összevonhatók, és csak a
-legutolsó hívás koordinátáját kell letárolni. Minden vonalhúzó struktúrára
-alkalmazni kell például, hogy ha elsőként kerülne az üres listába, akkor a
-végpontját meghatározó koordinátát használva egy alakzatkezdő
+A már ismertetett struktúrákhoz rendre tartozik egy \func{Path} osztálybeli
+függvény ami egy példányt add a listához. Ezek a függvények bizonyos
+feltételeket megvizsgálva és a szabványhoz igazodva alkalmaznak bizonyos
+egyszerűsítéseket. Az \func{addMoveToElement} függvény például kihasználja azt
+a nyilvánvaló tényt, hogy az egymásután következő \func{moveTo} hívások
+összevonhatók, és csak a legutolsó hívás koordinátáját kell letárolni. Minden
+vonalhúzó struktúrára alkalmazni kell például, hogy ha elsőként kerülne az üres
+listába, akkor a végpontját meghatározó koordinátát használva egy alakzatkezdő
 \func{MoveToElement} struktúraként kell értelmezni. De ilyen könnyítő feltétel
 az is, hogy olyan egyenes vonalat nem kell a listához adni, aminek a végpontja
 megegyezik az utolsó elem végpontjával; vagy azt a másodrendű Bézier-görbét
 aminek a kontrollpontja és a végpontja egybeesik, azt egyszerűen egyenes
 vonalként adhatjuk a listához. Az \func{addArcElement} függvény esetében már
-sokkal komolyabb beállításokat és egyszerűsítéseket hozhatunk. Nyilvánvaló,
-hogy egy körciklusnál nagyobb körbejárási szög leegyszerűsíthető. Vagy egy
+sokkal komolyabb egyszerűsítést alkalmazhatunk. Nyilvánvaló, hogy egy
+körciklusnál nagyobb körbejárási szög leegyszerűsíthető egy ciklusra. Vagy egy
 nulla méretű sugarú kör sem kell egy a középpontba húzott vonalnál több legyen.
 
 Van egy olyan függvény, amelyikhez nem tartozik külön struktúra. Ez az
@@ -838,10 +842,9 @@ téglalapot vesszük, akkor négy ilyen alakzatelemből felépíthetjük. Ugyana
 valóságban négy egyenes vonalból és négy körcikkből épül fel. Ennél az elemnél
 tudjuk, hogy mindig benne van a használt pontok által meghatározott alakzatban,
 csupán a sarkoknál a megadott rádiusz(ok) hatására körcikkeket kell beszúrjunk.
-A visszavezetés azt kell eldöntse, hogy az előző elem végpontjából hogyan és
-meddig kell vonalat húzni a lekerekítést adó körcikkhez, milyen szögtől milyen
-szögig terjed a körcikk, és hogyan kell az elem végpontjába egyenes vonalat
-húzni a körcikktől.
+A visszavezetés azt kell eldöntse, hogy milyen szögtől milyen szögig terjed a
+körcikk, és az előző elem végpontjából hogyan kell vonalat húzni a lekerekítést
+adó körcikkhez.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
@@ -894,7 +897,7 @@ kirajzolásra. Itt világosítom meg, hogy miért van szükség alpha textúrár
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \chapter{Használat és eredmények}
-    \addcontentsline{toc}{section}{Használat és eredmények}
+    %\addcontentsline{toc}{section}{Használat és eredmények}
 
     \section{Használat}
 
