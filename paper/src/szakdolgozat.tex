@@ -857,7 +857,7 @@ memóriarégiók is használhatók; persze ha ennek hasznosságát mérések is
 alátámasztják.
 
 Most pedig nézzük át a \func{Path} osztályhoz tartozó függvényeket
-(\ref{dataflow-path-API-diagram}. ábra). Vannak egyrészt az elemeket hozzáadó,
+(\emph{\ref{dataflow-path-API-diagram}. ábra}). Vannak egyrészt az elemeket hozzáadó,
 illetve a már hozzáadott elemek bejárását és átalakítását biztosító függvények.
 
   \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
@@ -874,10 +874,11 @@ az \func{applayTransform} függvény. Gyakorlatilag a kapott
 affin-transzformációval végig szorozza az addig felépített alakzat eleminek
 meghatározó koordinátáit.
 
-A bejárás lehetőségét pedig a \func{firstElement} függvény biztosítja. Ettől az
-elemtől kezdve végig sétálhatunk a struktúrákat tartalmazó listán. Az
-\func{isEmpthy} függvénnyel lekérdezhetjük, hogy üres-e az alakzatot leíró
-lista. A \func{lastElement} pedig megadja az utolsó elemet a listában.
+A bejárás lehetőségét pedig a \func{firstElement} függvény biztosítja.
+Visszaadja a lista első elemének memóriacímét, amitől kezdve végig sétálhatunk
+a struktúrákat tartalmazó listán. Az \func{isEmpthy} függvénnyel
+lekérdezhetjük, hogy üres-e az alakzatot leíró lista. A \func{lastElement}
+pedig megadja az utolsó elem memóriacímét a listában.
 
 A már ismertetett struktúrákhoz rendre tartozik egy \func{Path} osztálybeli
 függvény ami egy példányt ad a listához. Ezek a függvények bizonyos
@@ -894,35 +895,65 @@ memóriacímére. Ha nem üres, és az utolsó elem a listában egy hasonló
 \func{MoveToElement}, akkor értelemszerűen elégséges ennek az utolsó elemnek a
 koordinátát tartalmazó adattagját módosítani az új elem értékeivel.
 
-például kihasználja azt
-a nyilvánvaló tényt, hogy az egymásután következő \func{moveTo} hívások
-összevonhatók, és csak a legutolsó hívás koordinátáját kell letárolni. Minden
-vonalhúzó struktúrára alkalmazni kell például, hogy ha elsőként kerülne az üres
-listába, akkor a végpontját meghatározó koordinátát használva egy alakzatkezdő
-\func{MoveToElement} struktúraként kell értelmezni. De ilyen könnyítő feltétel
-az is, hogy olyan egyenes vonalat nem kell a listához adni, aminek a végpontja
-megegyezik az utolsó elem végpontjával; vagy azt a másodrendű Bézier-görbét
-aminek a kontrollpontja és a végpontja egybeesik, azt egyszerűen egyenes
-vonalként adhatjuk a listához. Az \func{addArcElement} függvény esetében már
-sokkal komolyabb egyszerűsítést alkalmazhatunk. Nyilvánvaló, hogy egy
-körciklusnál nagyobb körbejárási szög leegyszerűsíthető egy ciklusra. Vagy egy
-nulla méretű sugarú kör sem kell egy a középpontba húzott vonalnál több legyen.
+Az \func{addLineToElement} függvény egy egyenes vonal elemet ad a listához.
+Vizsgálnia kell, hogyha még nincs elem a listában, akkor úgy kell
+viselkednie, mintha egy \func{addMoveToElement} hívás történt volna. Vagyis
+az elem által meghatározott (végpont) koordináta lesz az első pont. Ha nem üres a
+lista, és a hozzáadni kívánt elem végpontja megegyezik az utolsó elem
+végpontjával, azaz egy nulla hosszúságú vonalat kéne hozzáadni, akkor
+azt figyelmen kívül lehet hagyni. Minden más esetben egy újabb
+\func{LineToElement}-et adunk a listához.
 
-Van egy olyan függvény, amelyikhez nem tartozik külön struktúra. Ez az
-\func{addArcToElement}. Itt azért nem volt szükség külön struktúrára, mert ez a
-függvény által leírt elem megadható egy egyenes vonal és egy körcikk
-segítségével. Ezért ez a függvénytörzs ezt a visszavezetést tartalmazza. Arról
-már volt szó~\footnote{TODO: ellenőrizni}, hogy ehhez a függvényhez egy olyan
-alakzatelem tartozik, ami főleg a lekerekített alakzatok könnyebb
-meghatározását biztosítja. Például egy rádiusz érték következetes használatával
-könnyedén definiálhatunk egy a sarkainál lekerekített téglalapot. Ha most ezt a
-téglalapot vesszük, akkor négy ilyen alakzatelemből felépíthetjük. Ugyanakkor a
-valóságban négy egyenes vonalból és négy körcikkből épül fel. Ennél az elemnél
-tudjuk, hogy mindig benne van a használt pontok által meghatározott alakzatban,
-csupán a sarkoknál a megadott rádiusz(ok) hatására körcikkeket kell beszúrjunk.
-A visszavezetés azt kell eldöntse, hogy milyen szögtől milyen szögig terjed a
-körcikk, és az előző elem végpontjából hogyan kell vonalat húzni a lekerekítést
-adó körcikkhez.
+Az \func{addCloseSubpathElement} függvény egy alakzatot bezáró elemet ad hozzá
+az listához. Ha a lista üres a függvény hívásakor, vagy az utolsó elem szintén
+egy alakzatzáró, akkor a függvény mellőzi a beszúrást. A beszúrás minden
+esetben egy egyenes vonalat jelent a lista legutolsó elemének végpontjától a
+listában szereplő legutolsó \func{MoveToElement} pontjáig. Hogy mégis külön
+struktúraként, azaz elemként kerül a listába, annak a körvonal funkcionalitása
+az oka. Vagyis meg kell tudni különböztetni, hogy az adott alakzat zárt-e vagy
+sem. Ami a kitöltés estében sosem kérdés, de a körvonal megrajzolásakor
+kulcsfontosságú. Még akkor is fontos lehet ezt az elemet a listába szúrni, ha
+az alakzat első és az utolsó pontja pont egybeesik. Ugyanis a körvonalak
+végénél és a csatlakozási pontokban definiált lekerekítési stílusok
+eltérhetnek, vagyis más eredményt kaphatunk a kezdő pontba húzott vagy ott be
+is zárt path esetén.
+
+Az \func{addQuadaraticCurveToElement} függvény egy másodrendű
+Bézier-görbe elemet add a listához. Ha a lista üres, akkor a görbe
+végpontját kezdő pontnak kell tekinteni. Illetve egyszerűsítés az is,
+hogy ha a kontroll pont és a végpont azonos, akkor az alakzatelem egy egyenes
+vonalra egyszerűsödik.
+
+Az \func{addBezierCurveToElement} függvény egy harmadrendű
+Bézier-görbe elemet add a listához. Ha a lista üres, akkor a görbe
+végpontját kezdő pontnak kell tekinteni.
+
+Az \func{addArcElement} függvény egy körcikk elemet ad az alakzatot leíró
+listához. Ha a lista üres, akkor kezdőpontnak a kör középpontját meghatározó
+koordinátát kell választani. Ha a körcikk elfajuló, azaz nulla a sugara, vagy a
+kezdő- és végszöge azonos, akkor csak egy egyenes vonalat kell húzni a kezdő
+pontba, amit a kezdő szög határoz meg. Ha az utolsó elem koordinátája nem
+egyenlő a körcikk kezdő pontjával, akkor szintén egyenes vonalat kell
+húzni a kezdő pontba, de értelemszerűen az alakzatot leíró elemet már a
+listába kell szúrni. A körcikk esetén még kisebb, a szögekkel kapcsolatos
+egyszerűsítéseket lehet alkalmazni.
+
+Az \func{addArcToElement} függvény elméletileg egy speciális körcikk elemet ad
+a listához, valójában azonban ehhez a függvényhez nem tartozik külön struktúra.
+Itt azért nem volt szükség külön struktúrára, mert ez a függvény által leírt
+elem megadható egy egyenes vonal és egy körcikk segítségével. Ezért ez a
+függvény ezt a visszavezetést tartalmazza. Arról már volt szó~\footnote{TODO:
+ellenőrizni}, hogy ehhez a függvényhez egy olyan alakzatelem tartozik, ami
+főleg a lekerekített alakzatok könnyebb meghatározását biztosítja. Például egy
+rádiusz érték következetes használatával könnyedén definiálhatunk egy, a
+sarkainál lekerekített téglalapot. Ha most ezt a téglalapot vesszük, akkor négy
+ilyen alakzatelemből felépíthetjük. Ugyanakkor a valóságban négy egyenes
+vonalból és négy körcikkből épül fel. Ennél az elemnél tudjuk, hogy mindig
+benne van a használt pontok által meghatározott alakzatban, csupán a sarkoknál
+a megadott rádiusz(ok) hatására körcikkeket kell beszúrjunk. A visszavezetés
+azt kell eldöntse, hogy milyen szögtől milyen szögig terjed a körcikk, és az
+előző elem végpontjából hogyan kell vonalat húzni a lekerekítést adó
+körcikkhez.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
