@@ -146,6 +146,15 @@
 % A függvények a szövegben
 \newcommand{\func}[1]{{\textsf{\footnotesize{#1}}}}
 
+% A WRAPFIGUREnak adhatjuk meg az egész dolgozatban, hogy milyen globális
+% stratégia szerint helyezze el a képeket: r - right, o - outside, l - left,
+% i - inside, stb. A magyar makrónév melletti érv a lehetséges ütközések
+% elkerülése. Az alapbeállítás az 'r', a szakdolgozat egyoldalas
+% nyomtatása miatt, ha azonban az aktuális helyzet megkívánja, a makró
+% használatát mellőzzük.
+\newcommand{\melyikoldalra}{r}
+%\newcommand{\melyikoldalra}{o} % az oldal külső felére
+
 %\hyphenation{sza-bály el-kü-lö-ní-tett}
 
 %Margók:
@@ -580,7 +589,7 @@ API. Ezt neveztük el \emph{Gepard}-nak. A következő \emph{köztes} réteg fog
 pedig az \emph{alsó} szint, ahol az egyes grafikus meghajtók specifikus részei
 kaptak helyet. Három modul fejlesztése történik itt: \emph{GLES2} (OpenGL ES
 2.0), \emph{Vulkan} (Vulkan 1.0) és \emph{Software} (saját raszterizáló).
-    \begin{wrapfigure}{l}{0.5\textwidth}
+    \begin{wrapfigure}{\melyikoldalra}{0.5\textwidth}
       \includegraphics[scale=0.45]{img/built/structure_eps}
       \caption{\label{structure_eps} A három fő réteg}
     \end{wrapfigure}
@@ -651,7 +660,7 @@ működni az \func{Attribute} osztály. Az értékadás sokféleségét egyrész
 https://www.itu.dk/courses/BPRD/E2009/fundamental-1967.pdf} biztosítja. A
 bonyolultabb értékadásokat (pl. függvény leírás) pedig egy a példányosításkor
 bekötött elemző-értelmező függvény végzi.
-    \begin{wrapfigure}{l}{0.3\textwidth}
+    \begin{wrapfigure}{\melyikoldalra}{0.3\textwidth}
     \begin{center}
       \includegraphics[scale=0.6,bb=0 210 160 590,
       clip=true]{img/built/dataflow_eps}
@@ -773,7 +782,7 @@ Vagy hasonló a \func{arcTo} API hívás. Ami ugyan meghívja a \func{Path} oszt
 \func{arc} függvényhez tartozó \func{ArcElement} párosaként adja hozzá az
 alakzatot leíró listához (\ref{dataflow-path-API-diagram}. ábra).
 
-  \begin{wrapfigure}{l}{0.4\textwidth}
+  \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
     \begin{center}
       \includegraphics[scale=0.6,bb=152 355 345 595,
       clip=true]{img/built/dataflow_eps}
