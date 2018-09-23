@@ -955,6 +955,55 @@ azt kell eldöntse, hogy milyen szögtől milyen szögig terjed a körcikk, és 
 előző elem végpontjából hogyan kell vonalat húzni a lekerekítést adó
 körcikkhez.
 
+    \subsection[A körvonal visszavezetése]{A körvonal visszavezetése kitöltésre}
+
+A körvonal visszavezetését egy külön osztály (\func{StrokePathBuilder}) kezeli,
+mégis a \func{Path} osztály leírásának részeként mutatjuk be. Ugyanis
+magának a visszavezetést kezelő osztálynak szerkezete igen hasonló
+\func{Path}-éra. A kitöltéskor egyszerűen bejárjuk az elemeket tartalmazó
+listát, és a későbbiekben ismertetett módon trapézokká (végül is háromszögekké)
+alakítjuk az alakzatot. A körvonal esetében egy köztes lépést alkalmazunk. Egy
+alakzat körvonala felfogható egy adott vastagságú vonalakból álló, bonyolultabb
+alakzat kitöltésével. Magyarán, az eredeti alakzatunkból képezünk egy olyan
+újabb path-t, aminek a kitöltése az eredeti alakzat körvonalát adja. Ezt az
+újabb alakzatot továbbra is a \func{Path} osztállyal határozzuk meg. Ezért is
+tartjuk indokoltnak, hogy ehhez az alfejezethez tartozóan beszéljünk róla.
+
+Tehát a körvonal kirajzolását indukáló hívás (\emph{stroke}) hatására először a
+visszavezetés történik meg. Az így kapott alakzat úgy áll elő, mint az eredeti
+path vastagságát megadó \func{lineWidth} attribútum különálló részalakzatai.
+Például a \func{LineToElement} elem egy téglalap alakzatként kerül az új
+path-ba. Nézzük meg nagy vonalakban az egyes elemek alakzatait, illetve a
+csatlakozási- és végpontoknál használt formákat.
+
+Az toll áthelyezését csak annyi dolgunk van, hogy ha nem az utolsó elem az
+eredeti path-ban, akkor az utolsó elemhez egy \emph{végpont elemet} vagy egy
+\emph{csatlakozási elemet} kell hozzáfűzzünk. Az egyenes vonalelem esetén egy
+azzal párhuzamos téglalapot kell hozzáadnunk úgy, hogy a téglalap vastagsága
+értelemszerűen a megadott értékkel egyenlő, hossza a vonaléval egyenlő, és a
+téglalapot megadó vonalra úgy illeszkedik, hogy a vonal hosszmentén felezi
+a téglalapot.
+
+A nem egyenes vonalak esetén elméletileg úgy kell eljárni, hogy a vonalelemre
+merőlegesen egy szakaszt helyezünk a középpontjával. A szakasz hossza a
+megadott vastagsággal egyenlő. Majd a vonal mentén, tartva az adott pontban a
+merőlegességet végigsöprünk az adott elemen. A vásznon érintett pontok
+tartoznak az adott körvonalelemhez. A gyakorlatban ez olyan négyszögek
+hozzáadását jelenti, amik az adott felbontás mellett lefedik az elméleti
+alakzatelemet.
+
+Az eredeti path elemeinek végpontjában (az elemek sajátosságai miatt) mindig
+értelmezhetünk egy párhuzamos vektort. Egy kezdő- vagy végelem esetén
+lehetséges, hogy záróformát kell illesszünk az adott elemhez. Ha kell, akkor ez egy a
+vastagságot kipótoló \emph{téglalap} vagy egy abba illeszkedő félkör
+kell legyen. Ezeknek a kiegészítő formáknak az irányultságát
+határozzák meg az adott pontban ismert vektorok.
+
+Két vonal csatlakozásakor is úgy kell eljárni, a ,,hézagokat'' töltsük
+fel a meghatározott módon. Egy háromszög forma pont összekapcsolja a két
+elem végét. Ha pedig szükséges, akkor egy újabb háromszög, vagy körcikk
+kiegészíti az összekapcsolás pontját.
+
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
     cubic-curve, arc, arc-to, rect, fill, stroke, transform, translate, rotate,
