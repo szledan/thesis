@@ -780,19 +780,21 @@ Vagy hasonló a \func{arcTo} API hívás. Ami ugyan meghívja a \func{Path} oszt
 \func{addArcToElement} függvényét, ugyanakkor ez a függvény végül mégis csak
 átalakítja ezt az elemet, és egy \func{LineToElement} valamint egy az
 \func{arc} függvényhez tartozó \func{ArcElement} párosaként adja hozzá az
-alakzatot leíró listához (\ref{dataflow-path-API-diagram}. ábra).
-
-  \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
-    \begin{center}
-      \includegraphics[scale=0.6,bb=152 355 345 595,
-      clip=true]{img/built/dataflow_eps}
-    \end{center}
-    \caption{\label{dataflow-path-API-diagram} A belső Path API részei}
-  \end{wrapfigure}
+alakzatot leíró listához.
 
 Minden speciális alakzatelemet definiáló struktúra egy közös ős
-\func{PathElement} struktúrából származik. Nézzük meg részletesebben ezeket a
-struktúrákat.
+(\func{PathElement}) struktúrából származik. Tehát a megvalósított struktúrák a
+következők:
+    \begin{itemize}[noitemsep]
+      \item \func{PathElement} (ős),
+      \item \func{MoveToElement},
+      \item \func{LineToElement},
+      \item \func{CloseSubpathElement},
+      \item \func{QuadraticCurveToElement},
+      \item \func{BezierCurveToElement},
+      \item \func{ArcElement}.
+    \end{itemize}
+Nézzük meg részletesebben ezeket a struktúrákat.
 
 A \func{PathElement} mint ős definiálja a közös információkat. Minden
 alakzatelemnek van végpontja, ahol az alakzatot rajzoló képzeletbeli tollhegy
@@ -840,23 +842,31 @@ egy alakzat építésekor. Ugyanakkor érdemes kerülni az ilyen jellegű
 foglalásokat. Ezért egy ún. \emph{Region} modellt alkalmaztunk a lista
 tárolására.
 
-Ez az osztály (\func{Region}) a tárolandó struktúrák méretéhez képest néhány
-nagyságrenddel nagyobb memóriaterületet (memóriarégiót) foglal le. A
-struktúrákat pedig ebben a memóriarégióban listában tároljuk úgy, hogy
-közvetlen hozzáférünk a már lefoglalt memóriához. Amennyiben az aktuális
-lefoglalt részből kilógna a következő struktúra mérete, akkor a \func{Region}
-osztálytól újabb szabad területet kérünk. Ez pedig már valóban memóriafoglalást
-eredményez, ugyanakkor a nagyságrend függvényében jóval kevesebbszer. A modell
-másik nagy előnye, hogy az eldobott alakzat memóriahasználatának felszabadítása
-is sokkal kevesebb hívásból valósulhat meg. Jelenleg a lefoglalt memóriarégiók
-mérete egységesen $2048$ bájt, és előre eldöntött, azaz nem változik.
-Természetesen a jövőben, a Gepard optimalizálásának fázisában akár dinamikusan
-változó méretű memóriarégiókat is használhatunk; persze ha ennek hasznosságát
-mérések is alátámasztják.
+Ez az osztály (\func{Region}) a tárolni kívánt struktúrák méretéhez képest
+néhány nagyságrenddel nagyobb memóriaterületet (memóriarégiót) foglal le. A
+struktúrákat pedig ebben a memóriarégióban listában tárolja úgy, hogy közvetlen
+hozzáfér a már lefoglalt memóriához. Amennyiben az aktuális lefoglalt részből
+kilógna a következő struktúra mérete, akkor a \func{Region} osztály újabb
+szabad területet foglal le. Ez pedig már valóban memóriafoglalást eredményez,
+ugyanakkor a nagyságrend függvényében jóval kevesebbszer. A modell másik nagy
+előnye, hogy az eldobott alakzat memóriahasználatának felszabadítása is sokkal
+kevesebb hívásból valósulhat meg. Jelenleg a lefoglalt memóriarégiók mérete
+egységesen 2048 bájt, és előre eldöntött, azaz nem változik. Természetesen a
+jövőben, a Gepard optimalizálásának fázisában akár dinamikusan változó méretű
+memóriarégiók is használhatók; persze ha ennek hasznosságát mérések is
+alátámasztják.
 
 Most pedig nézzük át a \func{Path} osztályhoz tartozó függvényeket
 (\ref{dataflow-path-API-diagram}. ábra). Vannak egyrészt az elemeket hozzáadó,
 illetve a már hozzáadott elemek bejárását és átalakítását biztosító függvények.
+
+  \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
+    \begin{center}
+      \includegraphics[scale=0.6,bb=152 355 345 595,
+      clip=true]{img/built/dataflow_eps}
+    \end{center}
+    \caption{\label{dataflow-path-API-diagram} A belső Path API részei}
+  \end{wrapfigure}
 
 Az átalakításra azért van szükség, mert az alakzat építése közben lehetőség van
 transzformációk alkalmazására, amiket az alakzatnak követnie kell. Erre szolgál
