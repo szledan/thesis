@@ -180,7 +180,7 @@
     %ez mindent töröl:
     \fancyhf{}
     % a láblécbe jobboldalra kerüljön az oldalszám:
-    \fancyfoot[R]{\thepage}
+    \fancyhead[R]{\thepage}
     %elválasztó vonal sem kell:
     \renewcommand{\headrulewidth}{0pt}
     }
@@ -188,8 +188,8 @@
     %A TÖBBI OLDAL FEJ ÉS LÁBLÉCE:
     \pagestyle{fancy}
     \fancyhf{}
-    \fancyhead[L]{OpenGL-ES 2.0 alapú Path API}
-    \fancyfoot[R]{\thepage}
+    \fancyhead[L]{\rightmark}
+    \fancyhead[R]{\thepage}
 
 
     %A címoldalra se fej- se lábléc nem kell:
@@ -390,7 +390,6 @@ megközelítést (\inenglish{approximation}) alkalmaztunk. Ezekről a lépésekr
 
     \section[A Canvas előírás]{A W3C Canvas 2D Context előírás}
     \label{A Canvas előírás}
-%    \addcontentsline{toc}{subsection}{az előírás}
 
 A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C első
 HTML5 szabvány-vázlata:\\ \footnotesize{
@@ -454,10 +453,6 @@ definiált forma, ellentétben a téglalappal (\emph{rect}, \emph{fillRect},
         ctx.fill();  // utolsó két oszlop
         ctx.stroke();  // első két oszlop
       \end{lstlisting}
-%      \lstinputlisting[language=JavaScript,
-%                       firstnumber=1, autogobble=true,
-%                       linerange={11-12,25-28,31-31,33-33, 35-35}]
-%      {paper/examples/triangle/triangle.js}
     \endminipage
     \hfill
     \minipage{0.5\textwidth}
@@ -522,12 +517,11 @@ váró attribútumok esetében (pl. \func{lineWidth}) azért elfogadhatunk majd
 ténylegesen szám típust is. Erről is lesz szó az alakzatépítés
 működését leíró fejezetben.
 
-
     \section[GLES2 API]{Az OpenGL~ES~2.0 API}
     \label{GLES2 API}
 
-Az OpenGL~ES azaz az OpenGL Embeded System~2.0-ás verziója a Khronos Group
-által felügyelt grafikus meghajtó szabvány.
+Az OpenGL~ES~2.0 azaz az \emph{OpenGL Embeded System~2.0}-ás verziója a
+\emph{Khronos Group} által felügyelt grafikus függvénykönyvtár szabvány.
 
     \section[Matematikai háttér]{Matematikai háttér}
     \label{Matematikai háttér}
@@ -560,7 +554,6 @@ szakasz-szerű görbedarabokkal közelítsük az eredetit.
     \item[Becsült oldalszám] 2.
   \end{description}
 
-
     \subsection*{Körívek közelítése Bézier-görbékkel}
     \label{}
 
@@ -571,6 +564,7 @@ tartalmát vesszük át.
     \item[Kulcsszavak] Kör, körív.
     \item[Becsült oldalszám] 2.
   \end{description}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Alakzatrajzolás                                                %%
@@ -952,17 +946,17 @@ azt kell eldöntse, hogy milyen szögtől milyen szögig terjed a körcikk, és 
 előző elem végpontjából hogyan kell vonalat húzni a lekerekítést adó
 körcikkhez.
 
-    \subsection[A körvonal visszavezetése]{A körvonal visszavezetése kitöltésre}
+    \subsection[A körvonal rajzolása]{A körvonal rajzolása}
 
 A körvonal visszavezetését egy külön osztály (\func{StrokePathBuilder}) kezeli,
 mégis a \func{Path} osztály leírásának részeként mutatjuk be. Ugyanis magának a
 visszavezetést kezelő osztálynak szerkezete igen hasonló \func{Path}-éra. A
 kitöltéskor egyszerűen bejárjuk az elemeket tartalmazó listát, és a
 későbbiekben ismertetett módon trapézokká (végül is háromszögekké) alakítjuk az
-alakzatot. A körvonal esetében egy köztes lépést alkalmazunk. Egy alakzat
+alakzatot. A körvonal esetében egy köztes lépést alkalmazunk. Egy path
 körvonala felfogható egy adott vastagságú vonalakból álló, bonyolultabb alakzat
-kitöltésével. Magyarán, az eredeti alakzatunkból képezünk egy olyan újabb
-path-t, aminek a kitöltése az eredeti alakzat körvonalát adja. Ezt az újabb
+kitöltésével. Magyarán, az eredeti path-ból képezünk egy olyan újabb
+alakzatot, aminek a kitöltése az eredeti path körvonalát adja. Ezt az újabb
 alakzatot továbbra is a \func{Path} osztállyal határozzuk meg. Ezért is tartjuk
 indokoltnak, hogy ehhez az alfejezethez tartozóan beszéljünk róla.
 
@@ -973,30 +967,32 @@ Például a \func{LineToElement} elem egy téglalap alakzatként kerül az új
 path-ba. Nézzük meg nagy vonalakban az egyes elemek alakzatait, illetve a
 csatlakozási- és végpontoknál használt formákat.
 
-Az toll áthelyezését csak annyi dolgunk van, hogy ha nem az utolsó elem az
-eredeti path-ban, akkor az utolsó elemhez egy \emph{végpont elemet} vagy egy
-\emph{csatlakozási elemet} kell hozzáfűzzünk. Az egyenes vonalelem esetén egy
-azzal párhuzamos téglalapot kell hozzáadnunk úgy, hogy a téglalap vastagsága
+Egy vonalat leíró elem esetén elméletileg úgy kell eljárni, hogy a vonalelemre
+merőlegesen egy szakaszt helyezünk a középpontjával. A szakasz hossza a
+megadott vastagsággal egyenlő. Majd a vonal mentén végigsöprünk az adott
+elemen, tartva minden pontban a merőlegességet. A vásznon érintett pontok
+tartoznak az adott körvonalelemhez. A gyakorlatban ez olyan három- és
+négyszögek hozzáadását jelenti, amik az adott felbontás mellett lefedik az
+elméleti alakzatelemet.  Például az egyenes vonalelem esetén egy azzal
+párhuzamos téglalapot kell hozzáadnunk úgy, hogy a téglalap vastagsága
 értelemszerűen a megadott értékkel egyenlő, hossza a vonaléval egyenlő, és a
 téglalapot megadó vonalra úgy illeszkedik, hogy a vonal hosszmentén felezi a
 téglalapot.
 
-A nem egyenes vonalak esetén elméletileg úgy kell eljárni, hogy a vonalelemre
-merőlegesen egy szakaszt helyezünk a középpontjával. A szakasz hossza a
-megadott vastagsággal egyenlő. Majd a vonal mentén, tartva az adott pontban a
-merőlegességet végigsöprünk az adott elemen. A vásznon érintett pontok
-tartoznak az adott körvonalelemhez. A gyakorlatban ez olyan négyszögek
-hozzáadását jelenti, amik az adott felbontás mellett lefedik az elméleti
-alakzatelemet.
+Az toll áthelyezését jelölő \func{MoveToElement}-nél ugyan nem kell különálló
+formát hozzáadnunk az új alakzathoz, de lehetséges, hogy kiegészítő formákat
+mégis be kell szúrjunk. Ilyen kiegészítő formák lehetnek a path végeinél a
+\emph{lezárások} (\inenglish{cap}) és/vagy a köztes elemek közötti
+\emph{csatlakozási pontok} (\inenglish{join}).
 
 Az eredeti path elemeinek végpontjában (az elemek sajátosságai miatt) mindig
 értelmezhetünk egy párhuzamos vektort. Egy kezdő- vagy végelem esetén
 lehetséges, hogy záróformát kell illesszünk az adott elemhez. Ha kell, akkor ez
-egy a vastagságot kipótoló \emph{téglalap} vagy egy abba illeszkedő félkör kell
-legyen. Ezeknek a kiegészítő formáknak az irányultságát határozzák meg az adott
-pontban ismert vektorok.
+egy a vastagságot kipótoló \emph{téglalap} vagy egy abba illeszkedő
+\emph{félkör} kell legyen. Ezeknek a kiegészítő formáknak az irányultságát
+határozzák meg az adott pontban ismert vektorok.
 
-Két vonal csatlakozásakor is úgy kell eljárni, hogy a hézagokat töltsük fel a
+Két vonal csatlakozásakor úgy kell eljárni, hogy a hézagokat töltsük fel a
 meghatározott módon. Egy háromszög forma pont összekapcsolja a két elem végét.
 Ha pedig szükséges, akkor egy újabb háromszög, vagy körcikk kiegészíti az
 összekapcsolás pontját.
@@ -1008,7 +1004,7 @@ Ha pedig szükséges, akkor egy újabb háromszög, vagy körcikk kiegészíti a
     \item[Becsült oldalszám] 7.
   \end{description}
 
-  \section{Szakaszokra bontás}
+  \section{Szakaszra bontás}
 
 Ez a lelke az algoritmusomnak. Beszélnem kell az algoritmus vázáról, majd
 az egyes részeket megvilágítva: mi történik a listához adott
@@ -1047,6 +1043,7 @@ kirajzolásra. Itt világosítom meg, hogy miért van szükség alpha textúrár
     \item[Becsült oldalszám] 4.
   \end{description}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Használat és eredmények                                        %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1082,12 +1079,14 @@ példát.
     \item[Becsült oldalszám] 4.
   \end{description}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Összefoglalás                                                  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \chapter{Összefoglalás}
     \addcontentsline{toc}{section}{Összefoglalás}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Irodalomjegyzék                                                %%
@@ -1097,6 +1096,7 @@ példát.
     \bibliographystyle{bib/huplain}
     \addtocontents{toc}{\ }
     \addcontentsline{toc}{section}{Irodalomjegyzék}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Mellékletek                                                    %%
@@ -1119,6 +1119,7 @@ példát.
   \end{center}
     \caption{\label{dataflow_eps} A rajzolás folyamatai}
   \end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Nyilatkozat                                                    %%
