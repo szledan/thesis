@@ -293,8 +293,7 @@ A témavezető által megfogalmazott feladatkiírás. Önálló oldalon szerepel
     \subsubsection*{A téma megnevezése}
 
 A \emph{World Wide Web Consortium} (W3C) által \emph{Canvas 2D Context} néven
-2015-ben elfogadott ajánlás \emph{path} részének megvalósítása \emph{OpenGL-ES
-2.0} alapokon.
+2015-ben elfogadott ajánlás \emph{path} részének megvalósítása \emph{OpenGL~ES~2.0} alapokon.
 
     \subsubsection*{A megadott feladat megfogalmazása}
 
@@ -524,10 +523,10 @@ ténylegesen szám típust is. Erről is lesz szó az alakzatépítés
 működését leíró fejezetben.
 
 
-    \section[GLES2 API]{Az OpenGL-ES 2.0 API}
+    \section[GLES2 API]{Az OpenGL~ES~2.0 API}
     \label{GLES2 API}
 
-Az OpenGL-ES azaz az OpenGL Embeded System 2.0-ás verziója a Khronos Group
+Az OpenGL~ES azaz az OpenGL Embeded System~2.0-ás verziója a Khronos Group
 által felügyelt grafikus meghajtó szabvány.
 
     \section[Matematikai háttér]{Matematikai háttér}
@@ -589,18 +588,18 @@ API. Ezt neveztük el \emph{Gepard}-nak. A következő \emph{köztes} réteg fog
 pedig az \emph{alsó} szint, ahol az egyes grafikus meghajtók specifikus részei
 kaptak helyet. Három modul fejlesztése történik itt: \emph{GLES2} (OpenGL ES
 2.0), \emph{Vulkan} (Vulkan 1.0) és \emph{Software} (saját raszterizáló).
-    \begin{wrapfigure}{\melyikoldalra}{0.5\textwidth}
-      \includegraphics[scale=0.45]{img/built/structure_eps}
-      \caption{\label{structure_eps} A három fő réteg}
-    \end{wrapfigure}
+  \begin{wrapfigure}{\melyikoldalra}{0.5\textwidth}
+    \includegraphics[scale=0.45]{img/built/structure_eps}
+    \caption{\label{structure_eps} A három fő réteg}
+  \end{wrapfigure}
 Ezeket a modulokat vagyis az ún. Backend-eket jelen pillanatban
 \func{GepardEngineBackend} néven fordítási időben adjuk hozzá Gepardhoz, és
 ezáltal a Gepard egy adott grafikus meghajtóra speciálisan lefordított
 függvénykönyvtár lesz. Ugyanakkor a köztes (az Engine) és az alsó réteg
 (valamelyik Backend) tervezéskori pontos szétválasztásának köszönhetően a
 jövőben ez akár futás időben is megtörténhet. Javítva ezzel is az
-átjárhatóságot a grafikus meghajtók között, és könnyebbé téve a
-Gepard használatát.
+átjárhatóságot a grafikus meghajtók között, és könnyebbé téve a Gepard
+használatát.
 
 Most nézzük meg részletesebben a fent említett három réteget. Természetesen az
 egyes rétegekhez kapcsolódó főbb részek, melyek tulajdonképpen a dolgozatunk
@@ -660,18 +659,18 @@ működni az \func{Attribute} osztály. Az értékadás sokféleségét egyrész
 https://www.itu.dk/courses/BPRD/E2009/fundamental-1967.pdf} biztosítja. A
 bonyolultabb értékadásokat (pl. függvény leírás) pedig egy a példányosításkor
 bekötött elemző-értelmező függvény végzi.
-    \begin{wrapfigure}{\melyikoldalra}{0.3\textwidth}
-    \begin{center}
-      \includegraphics[scale=0.6,bb=0 210 160 590,
-      clip=true]{img/built/dataflow_eps}
-    \end{center}
-      \caption{\label{dataflow-API-diagram} A \emph{felső} réteg, vagyis
-      a Gepard interfész függvényei és adattagjai}
-    \end{wrapfigure}
-Az így bekötött függvény az
-értékadáskor meghívódik (visszahívódik, \inenglish{callback}), és a kapott
-szöveget értelmezi, majd a megfelelő adattagot immáron a középső rétegben
-vagyis a \func{Gepard Engine}-ben beállítja.
+  \begin{wrapfigure}{\melyikoldalra}{0.3\textwidth}
+  \begin{center}
+    \includegraphics[scale=0.6,bb=0 210 160 590,
+    clip=true]{img/built/dataflow_eps}
+  \end{center}
+    \caption{\label{dataflow-API-diagram} A \emph{felső} réteg, vagyis
+    a Gepard interfész függvényei és adattagjai}
+  \end{wrapfigure}
+Az így bekötött függvény az értékadáskor meghívódik (visszahívódik,
+\inenglish{callback}), és a kapott szöveget értelmezi, majd a megfelelő
+adattagot immáron a középső rétegben vagyis a \func{Gepard Engine}-ben
+beállítja.
 
 \Aref{dataflow-API-diagram}. ábrán a Canvas API-nak a Geprad interfészben
 általam megvalósított függvényei és adattagjai láthatók. A függvényeket a nevük
@@ -717,10 +716,9 @@ region}) és a legtöbb színezéssel kapcsolatos értékeket igen, de a \emph{P
 legfontosabbakat soroltuk fel, de a Canvas API leírás \cite{Cabanier:14:HCC}
 második fejezetében megtalálható a teljes lista.
 
-A második rész a transzformációk. A Háttér részben (\ref{A Canvas
-előírás}) a Canvas API bemutatásakor már tárgyaltuk\footnote{TODO:
-ellenőrizni!} a transzformációkat, itt most csak röviden a
-megvalósításukat nézzük át.
+A második rész a transzformációk. A Háttér részben (\ref{A Canvas előírás}) a
+Canvas API bemutatásakor már tárgyaltuk\footnote{TODO: ellenőrizni!} a
+transzformációkat, itt most csak röviden a megvalósításukat nézzük át.
 
 Minden kontextus tartalmaz egy transzformációs mátrixot. Ezt a mátrixot a
 \func{Transform} osztály valósítja meg. A megvalósítani kívánt mátrix egy
@@ -785,15 +783,15 @@ alakzatot leíró listához.
 Minden speciális alakzatelemet definiáló struktúra egy közös ős
 (\func{PathElement}) struktúrából származik. Tehát a megvalósított struktúrák a
 következők:
-    \begin{itemize}[noitemsep]
-      \item \func{PathElement} (ős),
-      \item \func{MoveToElement},
-      \item \func{LineToElement},
-      \item \func{CloseSubpathElement},
-      \item \func{QuadraticCurveToElement},
-      \item \func{BezierCurveToElement},
-      \item \func{ArcElement}.
-    \end{itemize}
+  \begin{itemize}[noitemsep]
+    \item \func{PathElement} (ős),
+    \item \func{MoveToElement},
+    \item \func{LineToElement},
+    \item \func{CloseSubpathElement},
+    \item \func{QuadraticCurveToElement},
+    \item \func{BezierCurveToElement},
+    \item \func{ArcElement}.
+  \end{itemize}
 Nézzük meg részletesebben ezeket a struktúrákat.
 
 A \func{PathElement} mint ős definiálja a közös információkat. Minden
@@ -857,8 +855,9 @@ memóriarégiók is használhatók; persze ha ennek hasznosságát mérések is
 alátámasztják.
 
 Most pedig nézzük át a \func{Path} osztályhoz tartozó függvényeket
-(\emph{\ref{dataflow-path-API-diagram}. ábra}). Vannak egyrészt az elemeket hozzáadó,
-illetve a már hozzáadott elemek bejárását és átalakítását biztosító függvények.
+(\emph{\ref{dataflow-path-API-diagram}. ábra}). Vannak egyrészt az elemeket
+hozzáadó, illetve a már hozzáadott elemek bejárását és átalakítását biztosító
+függvények.
 
   \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
     \begin{center}
@@ -896,13 +895,12 @@ memóriacímére. Ha nem üres, és az utolsó elem a listában egy hasonló
 koordinátát tartalmazó adattagját módosítani az új elem értékeivel.
 
 Az \func{addLineToElement} függvény egy egyenes vonal elemet ad a listához.
-Vizsgálnia kell, hogyha még nincs elem a listában, akkor úgy kell
-viselkednie, mintha egy \func{addMoveToElement} hívás történt volna. Vagyis
-az elem által meghatározott (végpont) koordináta lesz az első pont. Ha nem üres a
-lista, és a hozzáadni kívánt elem végpontja megegyezik az utolsó elem
-végpontjával, azaz egy nulla hosszúságú vonalat kéne hozzáadni, akkor
-azt figyelmen kívül lehet hagyni. Minden más esetben egy újabb
-\func{LineToElement}-et adunk a listához.
+Vizsgálnia kell, hogyha még nincs elem a listában, akkor úgy kell viselkednie,
+mintha egy \func{addMoveToElement} hívás történt volna. Vagyis az elem által
+meghatározott (végpont) koordináta lesz az első pont. Ha nem üres a lista, és a
+hozzáadni kívánt elem végpontja megegyezik az utolsó elem végpontjával, azaz
+egy nulla hosszúságú vonalat kéne hozzáadni, akkor azt figyelmen kívül lehet
+hagyni. Minden más esetben egy újabb \func{LineToElement}-et adunk a listához.
 
 Az \func{addCloseSubpathElement} függvény egy alakzatot bezáró elemet ad hozzá
 az listához. Ha a lista üres a függvény hívásakor, vagy az utolsó elem szintén
@@ -918,25 +916,24 @@ végénél és a csatlakozási pontokban definiált lekerekítési stílusok
 eltérhetnek, vagyis más eredményt kaphatunk a kezdő pontba húzott vagy ott be
 is zárt path esetén.
 
-Az \func{addQuadaraticCurveToElement} függvény egy másodrendű
-Bézier-görbe elemet add a listához. Ha a lista üres, akkor a görbe
-végpontját kezdő pontnak kell tekinteni. Illetve egyszerűsítés az is,
-hogy ha a kontroll pont és a végpont azonos, akkor az alakzatelem egy egyenes
-vonalra egyszerűsödik.
+Az \func{addQuadaraticCurveToElement} függvény egy másodrendű Bézier-görbe
+elemet add a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak
+kell tekinteni. Illetve egyszerűsítés az is, hogy ha a kontroll pont és a
+végpont azonos, akkor az alakzatelem egy egyenes vonalra egyszerűsödik.
 
-Az \func{addBezierCurveToElement} függvény egy harmadrendű
-Bézier-görbe elemet add a listához. Ha a lista üres, akkor a görbe
-végpontját kezdő pontnak kell tekinteni.
+Az \func{addBezierCurveToElement} függvény egy harmadrendű Bézier-görbe elemet
+add a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak kell
+tekinteni.
 
 Az \func{addArcElement} függvény egy körcikk elemet ad az alakzatot leíró
 listához. Ha a lista üres, akkor kezdőpontnak a kör középpontját meghatározó
 koordinátát kell választani. Ha a körcikk elfajuló, azaz nulla a sugara, vagy a
 kezdő- és végszöge azonos, akkor csak egy egyenes vonalat kell húzni a kezdő
 pontba, amit a kezdő szög határoz meg. Ha az utolsó elem koordinátája nem
-egyenlő a körcikk kezdő pontjával, akkor szintén egyenes vonalat kell
-húzni a kezdő pontba, de értelemszerűen az alakzatot leíró elemet már a
-listába kell szúrni. A körcikk esetén még kisebb, a szögekkel kapcsolatos
-egyszerűsítéseket lehet alkalmazni.
+egyenlő a körcikk kezdő pontjával, akkor szintén egyenes vonalat kell húzni a
+kezdő pontba, de értelemszerűen az alakzatot leíró elemet már a listába kell
+szúrni. A körcikk esetén még kisebb, a szögekkel kapcsolatos egyszerűsítéseket
+lehet alkalmazni.
 
 Az \func{addArcToElement} függvény elméletileg egy speciális körcikk elemet ad
 a listához, valójában azonban ehhez a függvényhez nem tartozik külön struktúra.
@@ -958,16 +955,16 @@ körcikkhez.
     \subsection[A körvonal visszavezetése]{A körvonal visszavezetése kitöltésre}
 
 A körvonal visszavezetését egy külön osztály (\func{StrokePathBuilder}) kezeli,
-mégis a \func{Path} osztály leírásának részeként mutatjuk be. Ugyanis
-magának a visszavezetést kezelő osztálynak szerkezete igen hasonló
-\func{Path}-éra. A kitöltéskor egyszerűen bejárjuk az elemeket tartalmazó
-listát, és a későbbiekben ismertetett módon trapézokká (végül is háromszögekké)
-alakítjuk az alakzatot. A körvonal esetében egy köztes lépést alkalmazunk. Egy
-alakzat körvonala felfogható egy adott vastagságú vonalakból álló, bonyolultabb
-alakzat kitöltésével. Magyarán, az eredeti alakzatunkból képezünk egy olyan
-újabb path-t, aminek a kitöltése az eredeti alakzat körvonalát adja. Ezt az
-újabb alakzatot továbbra is a \func{Path} osztállyal határozzuk meg. Ezért is
-tartjuk indokoltnak, hogy ehhez az alfejezethez tartozóan beszéljünk róla.
+mégis a \func{Path} osztály leírásának részeként mutatjuk be. Ugyanis magának a
+visszavezetést kezelő osztálynak szerkezete igen hasonló \func{Path}-éra. A
+kitöltéskor egyszerűen bejárjuk az elemeket tartalmazó listát, és a
+későbbiekben ismertetett módon trapézokká (végül is háromszögekké) alakítjuk az
+alakzatot. A körvonal esetében egy köztes lépést alkalmazunk. Egy alakzat
+körvonala felfogható egy adott vastagságú vonalakból álló, bonyolultabb alakzat
+kitöltésével. Magyarán, az eredeti alakzatunkból képezünk egy olyan újabb
+path-t, aminek a kitöltése az eredeti alakzat körvonalát adja. Ezt az újabb
+alakzatot továbbra is a \func{Path} osztállyal határozzuk meg. Ezért is tartjuk
+indokoltnak, hogy ehhez az alfejezethez tartozóan beszéljünk róla.
 
 Tehát a körvonal kirajzolását indukáló hívás (\emph{stroke}) hatására először a
 visszavezetés történik meg. Az így kapott alakzat úgy áll elő, mint az eredeti
@@ -981,8 +978,8 @@ eredeti path-ban, akkor az utolsó elemhez egy \emph{végpont elemet} vagy egy
 \emph{csatlakozási elemet} kell hozzáfűzzünk. Az egyenes vonalelem esetén egy
 azzal párhuzamos téglalapot kell hozzáadnunk úgy, hogy a téglalap vastagsága
 értelemszerűen a megadott értékkel egyenlő, hossza a vonaléval egyenlő, és a
-téglalapot megadó vonalra úgy illeszkedik, hogy a vonal hosszmentén felezi
-a téglalapot.
+téglalapot megadó vonalra úgy illeszkedik, hogy a vonal hosszmentén felezi a
+téglalapot.
 
 A nem egyenes vonalak esetén elméletileg úgy kell eljárni, hogy a vonalelemre
 merőlegesen egy szakaszt helyezünk a középpontjával. A szakasz hossza a
@@ -994,15 +991,15 @@ alakzatelemet.
 
 Az eredeti path elemeinek végpontjában (az elemek sajátosságai miatt) mindig
 értelmezhetünk egy párhuzamos vektort. Egy kezdő- vagy végelem esetén
-lehetséges, hogy záróformát kell illesszünk az adott elemhez. Ha kell, akkor ez egy a
-vastagságot kipótoló \emph{téglalap} vagy egy abba illeszkedő félkör
-kell legyen. Ezeknek a kiegészítő formáknak az irányultságát
-határozzák meg az adott pontban ismert vektorok.
+lehetséges, hogy záróformát kell illesszünk az adott elemhez. Ha kell, akkor ez
+egy a vastagságot kipótoló \emph{téglalap} vagy egy abba illeszkedő félkör kell
+legyen. Ezeknek a kiegészítő formáknak az irányultságát határozzák meg az adott
+pontban ismert vektorok.
 
-Két vonal csatlakozásakor is úgy kell eljárni, a ,,hézagokat'' töltsük
-fel a meghatározott módon. Egy háromszög forma pont összekapcsolja a két
-elem végét. Ha pedig szükséges, akkor egy újabb háromszög, vagy körcikk
-kiegészíti az összekapcsolás pontját.
+Két vonal csatlakozásakor is úgy kell eljárni, hogy a hézagokat töltsük fel a
+meghatározott módon. Egy háromszög forma pont összekapcsolja a két elem végét.
+Ha pedig szükséges, akkor egy újabb háromszög, vagy körcikk kiegészíti az
+összekapcsolás pontját.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
