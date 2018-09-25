@@ -383,7 +383,7 @@ módszerekről, amelyek biztosítják számunkra, hogy tetszőlegesen bonyolult 
 szerencsénkre zárt -- alakzatok kitöltését helyesen elvégezhessük. Össze
 kellett kapcsolni a választott GLES2 szabta megkötést~\footnote { Az OpenGL 2.0
 legfeljebb háromszögeket rajzol. } a Canvas Path~API elvárásaival~\footnote {
-Elvárás a tetszőleges számú körcikk, szakasz és Bézier-görbe alkotta -- akár
+Elvárás a tetszőleges számú körcikk, szakasz és Bézier görbe alkotta -- akár
 önmetsző -- alakzat mérethelyes megjelenítése. }. Ehhez több lépésbeli
 megközelítést (\inenglish{approximation}) alkalmaztunk. Ezekről a lépésekről is
 érdemes lesz beszélni.
@@ -541,20 +541,51 @@ ezeket \emph{seprő sávokként}, és ez miért lesz hasznos számunkra.
     \item[Becsült oldalszám] 1.
   \end{description}
 
-    \subsection*{Bézier-görbe és a de Casteljau felbontás}
-    \label{Bézier-görbe és a de Casteljau felbontás}
+    \subsection*{\emph{Bézier} görbe és a \emph{de Casteljau} felbontás}
+    \label{Bézier görbe és a de Casteljau felbontás}
 
-A másod- és harmadrendű Bézier-görbék bemutatása. A görbe felosztásának ismert
-gyors eljárása a De Casteljau algoritmusa, amit használunk, hogy közel
-szakasz-szerű görbedarabokkal közelítsük az eredetit.
+A \emph{Bézier} (vagy \emph{de Casteljau}) görbecsalád használatának története
+összenőtt~\footnote{TODO: Foley oldalszámos hívatkozás} a számítógépes
+grafikáéval. Nem véletlen, hogy a Canvas API előírja a másod- és harmadrendű
+Bézier görbék használatát. A következőkben általánosan bemutatjuk a
+Bézier görbéket és azok tulajdonságait. Megvizsgáljuk a de Casteljau felbontást,
+és bemutatjuk néhány olyan előnyét, amely indokolja a használatát.
+
+Az alábbiakban definiáljuk a Bézier-görbéket. A definícióban a ,,pont'' fogalmát
+nem szűkítjük a síkra, ugyanakkor világos, hogy a dolgozat esetében elégséges
+erre a speciális esetre gondolnunk.
+
+\begin{defi}\label{Bézier}\cite[Kurusa]{Kurusa:1999:szamitogepes}
+Legyen adott az ($n+1$)-darab $p_0,...,p_n$ pont. Ezeket Bézier, vagy kontroll
+pontoknak, az általuk meghatározott poligont pedig kontroll poligonnak nevezzük.
+Indukcióval definiáljuk a következő pontokat, minden $t \in [0,1], k \in
+\{{0,1,2,...,n\}}$ és $i \in \{{0,1,2,...,n-k\}}$ esetére:
+\[p^0_i(t)=p_i,\]
+\[p^k_i(t):=(1-t)p^{k-1}_i(t) + tp^{k-1}_{i+1}(t).\]
+Ekkor azt a görbét, amit a $p^n_0(t)$ pont leír, amint a $t$ végig fut a $[0,1]$
+intervallumon, Bézier görbének nevezzük, és $B(t)$-vel jelöljük. A $p^k_i(t)$
+pontokat de Casteljau pontoknak, az $n$ számot pedig a görbe rendjének hívjuk.
+\end{defi}
+
+A definícióból következik néhány tulajdonság. Nézzük ezek közül a
+számunkra legfontosabbakat:
+\begin{itemize}
+  \item a poligon mindig az első pontjától ($t=0$) kezdődik, és az utolsó
+  pontjánál ($t=1$) ér véget,
+  \item a $k$-adik rendű kontroll poligon $t/(1-t)$-ad felosztása megadja a
+  ($k-1$)-edik kontroll poligont, amit tovább osztva a $t/(1-t)$ aránnyal, s
+  ezzel eggyel csökkentve a kontroll poligon oldalainak számát, végül már csak
+  egy pontot kapunk, ami a Bézier görbe $t$ paraméteréhez tartozó pontja, és az
+  eljárást pedig \emph{de Casteljau felbontásnak} nevezzük,
+\end{itemize}
 
   \begin{description}[noitemsep]
-    \item[Kulcsszavak] Másodrendű-, harmadrendű Bézier-görbe, De
+    \item[Kulcsszavak] Másod- és harmadrendű Bézier görbe, De
     Casteljau algoritmusa.
     \item[Becsült oldalszám] 2.
   \end{description}
 
-    \subsection*{Körívek közelítése Bézier-görbékkel}
+    \subsection*{Körívek közelítése Bézier görbékkel}
     \label{}
 
 Itt támaszkodunk egy cikkre, alapvetően annak a számunkra legfontosabb
@@ -804,10 +835,10 @@ vonalat határoz meg az utolsó elem végpontjától a saját végpontjáig. A
 \func{MoveToElement} pontjából indított alakzatot. Mindhárom struktúra csak
 annyiban tér el az őstől, hogy markerként hordozza a típusát.
 
-A \func{QuadaraticCurveToElement} egy másodrendű Bézier-görbét határoz meg az
+A \func{QuadaraticCurveToElement} egy másodrendű Bézier görbét határoz meg az
 előző elem végpontjától a saját végpontjáig az újabb adattagként megjelenő
 kontrollpont szerint. A \func{BezierCurveToElement} egy harmadrendű
-Bézier-görbét határoz meg az előző elem végpontjától a saját végpontjáig a két
+Bézier görbét határoz meg az előző elem végpontjától a saját végpontjáig a két
 újabb adattagként megjelenő kontrollpontok szerint.
 
 Az \func{ArcElement} struktúra leír egy körcikket. Ez a struktúra több
@@ -910,12 +941,12 @@ végénél és a csatlakozási pontokban definiált lekerekítési stílusok
 eltérhetnek, vagyis más eredményt kaphatunk a kezdő pontba húzott vagy ott be
 is zárt path esetén.
 
-Az \func{addQuadaraticCurveToElement} függvény egy másodrendű Bézier-görbe
+Az \func{addQuadaraticCurveToElement} függvény egy másodrendű Bézier görbe
 elemet add a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak
 kell tekinteni. Illetve egyszerűsítés az is, hogy ha a kontroll pont és a
 végpont azonos, akkor az alakzatelem egy egyenes vonalra egyszerűsödik.
 
-Az \func{addBezierCurveToElement} függvény egy harmadrendű Bézier-görbe elemet
+Az \func{addBezierCurveToElement} függvény egy harmadrendű Bézier görbe elemet
 add a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak kell
 tekinteni.
 
