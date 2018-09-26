@@ -588,20 +588,38 @@ pontokat de Casteljau pontoknak, az $n$ számot pedig a görbe rendjének hívju
   \psfrag{Q11}[b][B][0.8]{\bf{$p_{1}^{1}$}}
     \centering
     \includegraphics[width=.95\textwidth]{img/built/beziers_eps}
-    \caption{\label{beziers} Hogy használjuk a Gepardot.}
+    \caption{\label{beziers} Bézier görbék. Az \emph{a. ábra} harmadrendű, a
+    \emph{b. ábra} másodrendű görbe képét, kontroll poligonját és de
+    Casteljau pontjait mutatja.}
   \end{figure}
 
 A definícióból következik néhány tulajdonság. Nézzük ezek közül a
-számunkra legfontosabbakat:
-\begin{itemize}
-  \item a poligon mindig az első pontjától ($t=0$) kezdődik, és az utolsó
-  pontjánál ($t=1$) ér véget,
+számunkra legfontosabbakat\footnote{TODO: Bizonyítások a Kurusa könyvében,
+oldalak}:
+\begin{itemize}[noitemsep]
+  \item a Bézier görbe mindig a kontroll poligon első pontjától ($t=0$)
+  kezdődik, és az utolsó pontjánál ($t=1$) ér véget,
   \item a $k$-adik rendű kontroll poligon $t/(1-t)$-ad felosztása megadja a
   ($k-1$)-edik kontroll poligont, amit tovább osztva a $t/(1-t)$ aránnyal, s
   ezzel eggyel csökkentve a kontroll poligon oldalainak számát, végül már csak
   egy pontot kapunk, ami a Bézier görbe $t$ paraméteréhez tartozó pontja, és az
-  eljárást pedig \emph{de Casteljau felbontásnak} nevezzük,
+  eljárást pedig \emph{de Casteljau felbontásnak} neveztük
+  (\emph{\ref{beziers}. ábra}),
+  \item az elsőrendű Bézier görbe egy \emph{egyenes},
+  \item a másodrendű Bézier görbe egy \emph{parabola} (\emph{\ref{beziers}.
+  ábra b.} pontja),
+  \item a Bézier görbe mindig a kontroll poligon konvex burkában van,
+  \item a Bézier görbe az affin transzformációkra invariáns, azaz a görbe
+  affin képe megegyezik a kontroll poligon affin képe által meghatározott
+  Bézier görbével.
 \end{itemize}
+
+A fenti tulajdonságokból is jól látszik, hogy miért lett népszerű a
+számítógépes grafikában ez a görbecsalád.
+
+Egy $n$-ed rendű Bézier görbét a $t$ paramétere által meghatározott
+pontja a görbét két, ugyancsak $n$-ed rendű görbére osztja. A
+két új Bézier görbét meghatározó kontroll pontokat
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Másod- és harmadrendű Bézier görbe, De
