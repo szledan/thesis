@@ -617,9 +617,19 @@ oldalak}:
 A fenti tulajdonságokból is jól látszik, hogy miért lett népszerű a
 számítógépes grafikában ez a görbecsalád.
 
-Egy $n$-ed rendű Bézier görbét a $t$ paramétere által meghatározott
-pontja a görbét két, ugyancsak $n$-ed rendű görbére osztja. A
-két új Bézier görbét meghatározó kontroll pontokat
+A $t$ paraméterhez tartozó pont az $n$-ed rendű Bézier görbét két, ugyancsak
+$n$-ed rendű görbére osztja. A két görbe kontroll pontjai pedig az eredeti görbe
+de Casteljau pontjai közül kerülnek ki. A fenti tulajdonságokat és a
+definícióban leírt indukciós elnevezést figyelembe véve a két $n$-ed rendű görbe
+kontroll pontjai a következők:
+\begin{equation}\label{eq:1}
+B_{0\mapsto t}^n(t): p_0, p_0^1, ..., p_0^{n-1}, p_0^n; \qquad
+B_{t\mapsto 1}^n(t): p_0^n, p_1^{n-1}, ..., p_{n-1}^1, p_n.
+\end{equation}
+
+\Aref{eq:1} felbontást később majd használni fogjuk. Világos, hogy a felbontást
+tovább alkalmazva a görbe darabokon, végül a görbe darabok végpontjait sorban
+összekötő egyenesek megközelítik az eredeti görbét.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Másod- és harmadrendű Bézier görbe, De
