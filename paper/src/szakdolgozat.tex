@@ -711,8 +711,38 @@ tovább alkalmazva a görbe darabokon, végül a görbe darabok végpontjait sor
     \subsection*{Körívek közelítése Bézier görbékkel}
     \label{}
 
-Itt támaszkodunk egy cikkre, alapvetően annak a számunkra legfontosabb
-tartalmát vesszük át.
+Az alakzatokat trapézokkal fedjük le. Ezért szükséges a köríveket
+szakaszokkal közelíteni. A Bézier görbéket a de Casteljau felbontással
+gyorsan közelíthetjük szakaszokkal. A köríveket pedig gyorsan
+közelíthetjük Bézier görbékkel. Néhány lépésben megállapítható,
+hogy egy adott sugarú körcikket hány darab harmadrendű Bézier görbével
+fedhetünk le egy $\epsilon$ hibahatáron belül.
+
+Egy $\alpha$ szögű körcikk tökéletesen nem fedhető le Bézier
+görbékkel.\footnote{Lásd M. Goldapp \emph{Approximation of circular arcs by
+cubic polynomials} (North Holland, 1991, Elsevier, 227–238.
+p.)\cite{Goldapp:1991:approximation}}
+
+  \begin{figure}[!htb]
+  \psfrag{0}[b][B][0.8]{\bf{$0$}}
+  \psfrag{1}[b][B][0.8]{\bf{$1$}}
+  \psfrag{x}[b][B][0.8]{\bf{$x$}}
+  \psfrag{y}[b][B][0.8]{\bf{$y$}}
+  \psfrag{a}[b][B][0.8]{\bf{$\alpha$}}
+  \psfrag{C}[b][B][0.8]{\bf{$\epsilon$}}
+  \psfrag{P0}[b][B][0.8]{\bf{$\begin{bmatrix} 1 \\ 0 \end{bmatrix}$}}
+  \psfrag{P1}[b][B][0.8]{\bf{$\begin{bmatrix} 1 \\ h \end{bmatrix}$}}
+  \psfrag{P2}[b][B][0.8]{\bf{$\hspace{3cm}\begin{bmatrix} \cos\alpha \\ \sin\alpha
+                              \end{bmatrix} + h \begin{bmatrix} \sin\alpha \\
+                              -\cos\alpha \end{bmatrix}$}}
+  \psfrag{P3}[b][B][0.8]{\bf{$\begin{bmatrix} \cos\alpha \\ \sin\alpha
+                              \end{bmatrix}$}}
+    \centering
+    \includegraphics[width=.5\textwidth]{img/built/circle_eps}
+    \caption{\label{circle} Körcikk (szaggatott vonal) és a hozzá
+    maximum $\epsilon$ eltérésben illeszkedő harmadrendű Bézier görbe
+    (sima vonal).}
+  \end{figure}
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Kör, körív.
