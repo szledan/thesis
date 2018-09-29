@@ -556,14 +556,59 @@ Az előbbi részekben már ismertetett kényszer miatt leírom, hogy az egyik r�
 megközelítést fogom kissé tágabban értelmezve használni. Így a következő
 egymásra épülő és használt matematikai fogalmakkal kell megismerkedni.
 
-    \subsection*{Seprő-egyenesek}
-    \label{Seprő-egyenesek}
+    \subsection*{Pásztázó-egyenesek}
+    \label{Pásztázó-egyenesek}
 
-Mit értünk pontosan matematikailag seprő egyeneseknek, hogyan értelmezhetjük
-ezeket \emph{seprő sávokként}, és ez miért lesz hasznos számunkra.
+A \emph{pásztázó egyenesek módszere} (\inenglish{scan-line algorithm}) egy
+grafikai algoritmus alakzatok kitöltésére, vagy pont tartalmazásának
+eldöntésére.\footnote{Foley link}
+
+Az algoritmus jól ismert a számítógépes ábrázolás területén. Egyszerű módszer,
+ezért nagy vonalakban ismertetjük. Kifejezetten kiemelve azokat a tényezőket,
+amelyek a dolgozat szempontjából fontosabbak.
+
+Legyen az alakzatokat leíró elemek listája. Fontos, hogy mindig zárt
+alakzatokról van szó, ha a módszert vizsgáljuk. Az egyszerűség kedvéért a
+leírást végezzük síkban. Ugyanakkor belátható, hogy a módszer térben is
+működne. Vegyük az alakzatokat leíró elemek koordinátáit. Válasszuk ki
+valamelyik dimenziót (például az $y$-t). Keressük meg a választott dimenzió
+mentén a koordináták közül a legkisebbet. Ezután válasszunk egy olyan pontot a
+síkon aminek a választott dimenziójú értéke még ennél is kisebb. Indítsunk
+pásztázó vonalakat minden irányba ebből a pontból. Ekkor lesznek olyan vonalak,
+amelyek nem érintik semelyik alakzatot sem. Viszont lesznek olyanok amelyek
+metszik valamelyik alakzatelemet. A metszések és azok sorrendje a pásztázó
+egyenesen kulcsfontosságúak. Aszerint, hogy milyen kitöltési stratégiát
+választunk, nyernek értelmet a metszéspontok.
+
+Vegyük elsőnek a \emph{paritás szabályt} (\inenglish{even-odd fill rule}). A
+kiindulási ponttól egészen az első metszéspontig a pásztázó egyenes által
+érintett pontokat nem jelöljük. Az első metszésponttól a következőig minden
+pontot jelölünk, majd megint nem jelöljük a rákövetkezőig, és így
+tovább. Egy pont az alakzat része, ha meg van jelölve. A megjelölt pontok
+összességének képe a kitöltött alakzatok képe.
+
+A másik elterjedt a \emph{nem-zérus szabály} (\inenglish{non-zero fill
+rule}). Ahhoz azonban, hogy ezt a szabályt alkalmazni tudjuk, ismernünk kell
+az alkatokat leíró elemeknek az irányítását. Ez lehet például a definiálás
+sorrendje szerinti, stb. Itt a kiindulási pontól minden pontot zérussal
+jelölünk, majd az első metszéspontnál vesszük a pásztázó vonal és az
+elem irányításának keresztszorzatát. Az előjel szerint az eddigi zérus
+értékhez hozzáadunk vagy kivonunk egyet, és a következő metszéspontig
+ezzel az értékkel jelöljük a pontokat. A következő metszéspontban
+hasonlóan járunk el, és az addigi értéket szintén eggyel módosítjuk.
+Egy pont az alakzat része, ha nem zérus. Minden nem zérus pont együttes
+képe a kitöltött alakzatok képe.
+
+Természetesen a számítógépes ábrázolásban nem egy pontból indítjuk a pásztázó
+vonalakat. A raszterkép valamelyik oldalára merőlegesen minden pontsorhoz
+rendelünk egy a végtelenből jövő pásztázó vonalat. Ezek a vonalak teljesen
+ekvivalensek a geometriaiakkal. Viszont azzal a megkötéssel igaze ez, hogy a
+raszterpontok megjelölésére olyan szabályt kell alkalmazni, hogy a nem
+raszterpont-határra eső, és érintkező alakzatok pontjai ne jelöljék meg
+ugyanazt a raszterpontot kétszer.
 
   \begin{description}[noitemsep]
-    \item[Kulcsszavak] Seprő egyenes, seprő sáv.
+    \item[Kulcsszavak] pásztázó egyenes, pásztázó sáv.
     \item[Becsült oldalszám] 1.
   \end{description}
 
