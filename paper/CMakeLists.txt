@@ -39,7 +39,7 @@ foreach(file ${EPS_FILES})
     set(EPS_FILE ${BUILT_IMG_DIR}/${SVG_FILENAME}_eps.eps)
     add_custom_command(
         OUTPUT ${EPS_FILE}
-        COMMAND inkscape ARGS --export-margin=3mm ${file} --export-eps=${EPS_FILE}
+        COMMAND inkscape ARGS --export-area-drawing --export-margin=0mm ${file} --export-eps=${EPS_FILE}
         DEPENDS ${file}
     )
     add_custom_target(${SVG_FILENAME}_eps ALL DEPENDS ${EPS_FILE})

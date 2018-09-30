@@ -48,8 +48,22 @@
 
 \usepackage{cite}
 
-\usepackage{enumitem}
 \usepackage{enumerate}
+\usepackage{enumitem}
+
+\setlist[enumerate]{%
+    topsep=1ex,%
+    itemsep=-1ex,%
+    partopsep=1ex,%
+    parsep=1ex,%
+}
+\setlist[itemize]{%
+    noitemsep,%
+    topsep=1ex,%
+}
+\setlist[description]{%
+    noitemsep,%
+}
 
 % Színek
 \usepackage{color}
@@ -122,7 +136,6 @@
 
 \usepackage[labelfont=it,justification=centering]{caption}
 
-\usepackage{graphicx}
 \usepackage{epigraph}
 %\epigraphfontsize{\small\itshape}
 
@@ -139,13 +152,16 @@
 \newtheorem{megj}[tét]{Megjegyzés}
 \newtheorem{pld}[tét]{Példa}
 
-%%% Saját parancsok
-% Az angol kifejezések kiemelése
+%%% Saját parancsok %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Az angol kifejezések kiemelése.
 \newcommand{\inenglish}[1]{\textsl{#1}}
 \newcommand{\inenglishfn}[1]{\footnotesize{\inenglish{#1}}}
-% A függvények a szövegben
-\newcommand{\func}[1]{{\textsf{\footnotesize{#1}}}}
 
+%%% A függvények a szövegben.
+\newcommand{\func}[1]{{\textsl{#1}}}
+
+%%% Globális beállítás a WRAPFIGUREnak.
 % A WRAPFIGUREnak adhatjuk meg az egész dolgozatban, hogy milyen globális
 % stratégia szerint helyezze el a képeket: r - right, o - outside, l - left,
 % i - inside, stb. A magyar makrónév melletti érv a lehetséges ütközések
@@ -155,7 +171,51 @@
 \newcommand{\melyikoldalra}{r}
 %\newcommand{\melyikoldalra}{o} % az oldal külső felére
 
+%%% Az INCLUDEGRAPHICS kivágások globális eltolása.
+% A néhány sorral lentebbi \setpdfoffset{0pt}{0pt} átállításával a
+% a kivágást globálisan eltolhatjuk.
+\makeatletter
+\define@key{Gin}{xviewport}[]{%
+  \begingroup\edef\x{%
+    \endgroup\noexpand\setkeys{Gin}{viewport=\x@viewport}%
+  }\x
+}
+\newlength{\Xoffset}
+\newlength{\Yoffset}
+\newcommand*{\setpdfoffset}[2]{%
+  \setlength{\Xoffset}{#1}%
+  \setlength{\Yoffset}{#2}%
+}
+\newcommand*{\setviewport}[4]{%
+  \def\x@viewport{%
+    {\the\dimexpr#1-\Xoffset}
+    {\the\dimexpr#2-\Yoffset}
+    {\the\dimexpr#3-\Xoffset}
+    {\the\dimexpr#4-\Yoffset}%
+  }%
+}
+\makeatother
+% Paraméterek:
+%   #1 - llx, alsó bal sarok x érték,
+%   #2 - lly, alsó bal sarok y érték,
+%   #3 - urx, felső jobb sarok x érték,
+%   #4 - ury, felső jobb sarok y érték,
+%   #5 - szabad lokális beállítások,
+%   #6 - a beszúrandó kép.
+\newcommand{\includegraphicskivagas}[6]{
+    \setpdfoffset{0pt}{0pt}
+    \setviewport{#1}{#2}{#3}{#4}
+    \includegraphics[xviewport,clip,#5]{#6}
+}
+% Az 'img/built/dataflow_eps' képre specializált INCLUDEGRAPHICSKIVAGAS.
+\newcommand{\includedataflowkivagas}[5]{
+    \includegraphicskivagas{#1}{#2}{#3}{#4}{scale=0.6,#5}
+    {img/built/dataflow_eps}
+}
+
 %\hyphenation{sza-bály el-kü-lö-ní-tett}
+
+%%% Saját parancsok %%% VÉGE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Margók:
 \hoffset -1in
@@ -489,26 +549,28 @@ vászonnak megkönnyíti a transzformációk alkalmazását egy-egy alakzatra, v
 képre, esetleg szövegre. Ugyanakkor az állapot elmentése nem érinti az épített
 alakzatot. Vagyis nincs hatással a path-ra. A context mindig egy path-t
 tartalmaz, határoz meg. Ha például egy ilyen alakzatot több különböző színnel
-és helyen akarunk a vászonra rajzolni, de nem akarjuk elveszíteni az aktuális
-állapot szín és koordináta beállításait, akkor egy mentés után könnyedén
-módosíthatjuk az attribútumokat, és tolhatjuk el az alakzatot. Majd a
+és helyen szeretnénk a vászonra rajzolni, de nem akarjuk elveszíteni az
+aktuális állapot szín- és koordináta-beállításait, akkor egy mentés után
+könnyedén módosíthatjuk az attribútumokat, és tolhatjuk el az alakzatot. Majd a
 kirajzolások után visszaállíthatjuk az elmentett állapotot.
 
-Minket két színbeállítás érint. Az egyik az alakzat kitöltésekor használt
-\func{fillStyle} attribútum. A másik az alakzat körvonalának színét meghatározó
-\func{strokeStyle} attribútum. Ezek az attribútumok nem csak színek lehetnek,
-hanem például leírhatnak egy gradiens színezést is. Illetve nem csak néhány
-névvel előre definiált színt (\func{red}, \func{green}, \func{blue} stb.)
-adhatunk meg, hanem különböző színterekből csatornánként saját színt is
-beállíthatunk. Ilyen például az \emph{RGBA} (\func{rgb(red, green, blue,
-alpha)}) vagy az \emph{HSV} (\func{hsv(hue, saturation, value)}) színtér. Sőt,
-lehetőségünk van használni a webes környezetekben megszokott úgynevezett
-hexa-kódokat. Ekkor az RGB színtérből választhatunk, és kétféle mintát
-használhatunk: a hosszabb \func{\#rrggbb}-t és a rövidebb \func{\#rgb}-t. A két
-attribútum viselkedését a CSS ajánlás\footnote{link} írja le. A beállítást
-szöveges (\func{string}) formában kell megadni, amit aztán értelmezni kell, és
-aszerint megadni az értékeket. Később részletesen lesz szó arról, hogy
-milyen módon oldottuk meg a hasonló viselkedést C++-os környezetben.
+A dolgozatunkat két színbeállítás érinti. Az egyik az alakzat kitöltésekor
+használt \func{fillStyle} attribútum. A másik az alakzat körvonalának színét
+meghatározó \func{strokeStyle} attribútum. Ezek az attribútumok nem csak színek
+lehetnek, hanem például leírhatnak egy gradiens színezést is. Illetve nem csak
+néhány névvel előre definiált színt (\func{red}, \func{green}, \func{blue}
+stb.) adhatunk meg, hanem különböző színterekből csatornánként saját színt is
+beállíthatunk. Ilyen például az \emph{RGBA} vagy az \emph{HSV}\footnote{Az
+említett színterekhez tartozó hívások: \func{rgba(red, green, blue, alpha)},
+\func{hsv(hue, saturation, value)}.} színtér. Sőt, lehetőségünk van használni a
+webes környezetekben megszokott úgynevezett hexa-kódokat. Ekkor az RGB
+színtérből választhatunk, és kétféle mintát használhatunk: a hosszabb
+\func{\#rrggbb}-t és a rövidebb \func{\#rgb}-t. A két attribútum viselkedését a
+CSS ajánlás\footnote {A W3C CSS Color Module Level 3:\footnotesize{
+\url{https://www.w3.org/TR/css-color-3/}}.} írja le. A beállítást szöveges
+(\func{string}) formában kell megadni, amit aztán értelmezni kell, és aszerint
+megadni az értékeket. Később részletesen lesz szó arról, hogy milyen módon
+oldottuk meg a hasonló viselkedést C++-os környezetben.
 
 A színekhez hasonlóan az alakzat körvonalának tulajdonságát leíró
 attribútumokat is szöveg formájában kell megadni. Itt viszont van egy kis
@@ -517,8 +579,75 @@ váró attribútumok esetében (pl. \func{lineWidth}) azért elfogadhatunk majd
 ténylegesen szám típust is. Erről is lesz szó az alakzatépítés
 működését leíró fejezetben.
 
-    \section[GLES2 API]{Az OpenGL~ES~2.0 API}
-    \label{GLES2 API}
+A Canvas állapotaihoz mindig tartozik egy affin-transzformációt leíró
+hatelemű mátrix. Ezt a mátrixot módosíthatjuk a \func{scale(x, y)},
+a \func{rotate(angle)}, a \func{translate(x, y)},  a \func{transform(a, b, c, d,
+e, f)}
+és a \func{setTransform(a, b, c, d, e, f)} függvényekkel. Az utolsó két
+függvény esetén a változók a homogén transzformációs mátrix módosítható értékeit
+reprezentálják\footnote{Cabanier et al.: \emph{{HTML}
+Canvas {2D} Context}, 2015, W3C\\ \footnotesize{
+\url{https://www.w3.org/TR/2dcontext/}}, 6. fejezet.}:
+\[\begin{pmatrix}a & c & e \\ b & d & f \\ 0 & 0 & 1 \\ \end{pmatrix}\]
+
+Végül nézzük a Path API részt. A Canvas-ben a \emph{Path API} két részből áll.
+Egyrészt a Path-t építő és az azt kirajzoló részből. Az építő
+rész\footnote{Cabanier et al.: i. m., 5. fejezet.} függvényei a következők:
+\begin{itemize}
+  \item a \func{moveTo(x, y)} egy új alakzatrészt kezd el a megadott ponttal,
+  \item a \func{closePath()} bezárja az addig épített alakzatrészt (ha volt
+  ilyen),
+  \item a \func{lineTo(x, y)} egy szakaszt ad hozzá az utolsó pont és
+  a megadott koordináta között,
+  \item a \func{quadraticCurveTo(cpx, cpy, x, y)} egy másodrendű Bézier
+  görbét határoz meg az utolsó pont, a megadott kontroll- és végpont között,
+  \item a \func{bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)} egy harmadrendű
+  Bézier görbét jelent az utolsó pont és a megadott kontrollpontok és végpont
+  között,
+  \item az \func{arcTo(x1, y1, x2, y2, radius)} megad egy \func{radius} sugarú
+  körcikket az utolsó
+  pont és a megadott két koordináta által meghatározott szögben úgy,
+  hogy ha kell, akkor egy szakaszt is húz az utolsó pont és körcikk kezdő
+  pontja között,
+  \item az \func{arc(x, y, radius, startAngle, endAngle, counterclockwise)} a
+  változók szerint meghatároz egy körcikket, szükség esetén egy összekötő
+  szakasszal,
+  \item \func{a rect(x, y, w, h)} pedig egy külön téglalap alakzatrészt ad a
+  Path-hoz.
+\end{itemize}
+
+A fenti függvényekkel tetszőlegesen bonyolult alakzatok adhatók meg. Ez elemek
+egy listáját jelenti, ahol az elemek pontjait egyenes vagy speciális görbe
+vonal köti össze, esetleg az elem azt jelöli, hogy egy-egy alakzat zárt. A
+függvények paraméterei -- egy kivételével -- mind lebegőpontos típusok
+(\func{float}). A kivétel a körcikk körbejárásának irányát leíró logikai
+paraméter, a \func{counterclockwise}.
+
+A rajzoló rész függvényei pedig a következők\footnote{Cabanier et al.: i.
+m., 11. fejezet.}:
+\begin{itemize}
+  \item a \func{beginPath()} új Path-t definiál, azaz, ha már volt épített
+  alakzat, akkor azt eldobja,
+  \item a \func{fill()} hívására az épített alakzat kitöltött képét a
+  megadott beállításokkal kirajzolja,
+  \item a \func{stroke()} az épített alakzat körvonalának képét a
+  megadott beállításokkal kirajzolja,
+  \item a \func{drawFocusIfNeeded(element)} az aktuális alakzat kirajzolásával
+   informál, ha az adott elem fókuszban van (nem támogatott függvény),
+  \item a \func{clip()} az aktuális alakzat képével kivág a
+  rajzolóvásznon (jelenleg nem támogatott függvény),
+  \item az \func{isPointInPath(x, y)} megállapítja az adott pontról, hogy az
+  alakzat rész-e (jelenleg nem támogatott függvény).
+\end{itemize}
+
+  \begin{description}[noitemsep]
+    %\setlength{\itemsep}{0pt plus 1pt}
+    \item[Kulcsszavak] Canvas, bitmap, path, zárt alakzat, fill, stroke.
+    \item[Becsült oldalszám] 3.
+  \end{description}
+
+    \section{Az OpenGL~ES~2.0 API}
+    \label{GLES2:API}
 
 Az OpenGL~ES~2.0 (GLES2) azaz az \emph{Open Graphics Library for Embeded System
 2.0}-ás verziója a \emph{Khronos Group} által felügyelt grafikus
@@ -528,10 +657,12 @@ használhatjuk. Viszont maga az OpenGL egy hatalmas, komplex függvénykönyvtá
 Kisebb, hordozható eszközök esetén nincs szükség ekkora komplexitásra. Részben
 ezért is vezették be az ,,asztali'' OpenGL megrostálása és egyszerűsítése révén
 az ES API verziókat. Az ES verziók közül a 2.0-ás lett a
-legelterjedtebb\footnote{TODO: hivatkozas}.  Viszonylag szigorú megkötések és a
-kevés számú függvény ellenére jól használható. Ettől a verziótól már lehetővé
-vált a \emph{programozható grafikus végrehajtási modell}
-(\inenglish{programmable graphics pipeline}). Ami azt jelenti, hogy a
+legelterjedtebb\footnote{The Khronos Group: \emph{OpenGL ES Overview}, 2018,
+\footnotesize{\url{https://www.khronos.org/opengles/}}\label{fn:GLES2}}.
+Viszonylag szigorú megkötések és a kevés számú függvény ellenére jól
+használható. Ettől a verziótól már lehetővé vált a \emph{programozható grafikus
+végrehajtási modell} (\inenglish{programmable graphics
+pipeline}).\textsuperscript{\ref{fn:GLES2}} Ami azt jelenti, hogy a
 végrehajtási sorrendbe ugyan nem lehet belenyúlni, de az egyes lépésekben futó
 részek programozhatók.
 
@@ -549,27 +680,35 @@ Bármilyen megjelenítéshez írni kell legalább két programot, ami a grafikus
 egységen fog lefutni. Az első program kódját adja meg az ún. \emph{vertex
 shader}, a másodikét a \emph{fragment shader}.
 
+  \begin{description}[noitemsep]
+    \item[Kulcsszavak] Állapotgép, shader, vertex, fragment, pipeline, batching
+    queue, texturák.
+    \item[Becsült oldalszám] 4.
+  \end{description}
+
     \section[Matematikai háttér]{Matematikai háttér}
     \label{Matematikai háttér}
 
-Az előbbi részekben már ismertetett kényszer miatt leírom, hogy az egyik régi
-megközelítést fogom kissé tágabban értelmezve használni. Így a következő
-egymásra épülő és használt matematikai fogalmakkal kell megismerkedni.
+Az előző két fejezetrészben láthattuk, hogy tetszőlegesen bonyolult (akár
+önmetsző) alakzatokat is ki kell tudjunk rajzolni, renderelni. Ehhez viszont
+maximum csak háromszögeket használhatunk. Ebben a részben azt a néhány
+fontosabb matematikai hátterű fogalmat, tulajdonságot vagy módszert mutatjuk
+be, amit az implementáció során felhasználtunk.
 
-    \subsection*{Pásztázó-egyenesek}
-    \label{Pásztázó-egyenesek}
+    \subsection*{Pásztázó egyenesek}
+    \label{Pásztázó egyenesek}
 
 A \emph{pásztázó egyenesek módszere} (\inenglish{scan-line algorithm}) egy
 grafikai algoritmus alakzatok kitöltésére, vagy pont tartalmazásának
 eldöntésére.
 
 Az algoritmus jól ismert a számítógépes ábrázolás területén.\footnote{Foley et
-al.: Computer Graphics: Principles and Practice (2Nd Ed.), Boston, 1990,
-Addison-Wesley Longman, 209. és 431. p.} Egyszerű módszer, ezért nagy
-vonalakban ismertetjük. Kifejezetten kiemelve azokat a tényezőket, amelyek a
-dolgozat szempontjából fontosabbak.
+al.: \emph{Computer Graphics: Principles and Practice (2Nd Ed.)}, Boston, 1990,
+Addison-Wesley Longman, 209. és 431. o.} Bár a módszer igen egyszerű és
+közismert, azért nagy vonalakban ismertetjük. Kiemelve azokat a tényezőket,
+amelyek a dolgozat szempontjából fontosabbak.
 
-Legyen az alakzatokat leíró elemek listája. Fontos, hogy mindig zárt
+Vegyük az alakzatokat leíró elemek listáját. Fontos, hogy mindig zárt
 alakzatokról van szó, ha a módszert vizsgáljuk. Az egyszerűség kedvéért a
 leírást végezzük síkban. Ugyanakkor belátható, hogy a módszer térben is
 működne. Vegyük az alakzatokat leíró elemek koordinátáit. Válasszuk ki
@@ -577,7 +716,7 @@ valamelyik dimenziót (például az $y$-t). Keressük meg a választott dimenzi�
 mentén a koordináták közül a legkisebbet. Ezután válasszunk egy olyan pontot a
 síkon aminek a választott dimenziójú értéke még ennél is kisebb. Indítsunk
 pásztázó vonalakat minden irányba ebből a pontból. Ekkor lesznek olyan vonalak,
-amelyek nem érintik semelyik alakzatot sem. Viszont lesznek olyanok amelyek
+amelyek nem érintik egyik alakzatot sem. Viszont lesznek olyanok, amelyek
 metszik valamelyik alakzatelemet. A metszések és azok sorrendje a pásztázó
 egyenesen kulcsfontosságúak. Aszerint, hogy milyen kitöltési stratégiát
 választunk, nyernek értelmet a metszéspontok.
@@ -585,44 +724,40 @@ választunk, nyernek értelmet a metszéspontok.
 Vegyük elsőnek a \emph{paritás szabályt} (\inenglish{even-odd fill rule}). A
 kiindulási ponttól egészen az első metszéspontig a pásztázó egyenes által
 érintett pontokat nem jelöljük. Az első metszésponttól a következőig minden
-pontot jelölünk, majd megint nem jelöljük a rákövetkezőig, és így
-tovább. Egy pont az alakzat része, ha meg van jelölve. A megjelölt pontok
-összességének képe a kitöltött alakzatok képe.
-
-A másik elterjedt a \emph{nem-zérus szabály} (\inenglish{non-zero fill
-rule}). Ahhoz azonban, hogy ezt a szabályt alkalmazni tudjuk, ismernünk kell
-az alkatokat leíró elemeknek az irányítását. Ez lehet például a definiálás
-sorrendje szerinti, stb. Itt a kiindulási pontól minden pontot zérussal
-jelölünk, majd az első metszéspontnál vesszük a pásztázó vonal és az
-elem irányításának keresztszorzatát. Az előjel szerint az eddigi zérus
-értékhez hozzáadunk vagy kivonunk egyet, és a következő metszéspontig
-ezzel az értékkel jelöljük a pontokat. A következő metszéspontban
-hasonlóan járunk el, és az addigi értéket szintén eggyel módosítjuk.
-Egy pont az alakzat része, ha nem zérus. Minden nem zérus pont együttes
+pontot jelölünk, majd megint nem jelöljük a rákövetkezőig, és így tovább. Egy
+pont az alakzat része, ha meg van jelölve. A megjelölt pontok összességének
 képe a kitöltött alakzatok képe.
+
+A másik elterjedt a \emph{nem-zérus szabály} (\inenglish{non-zero fill rule}).
+Ahhoz azonban, hogy ezt a szabályt alkalmazni tudjuk, ismernünk kell az
+alakzatokat leíró elemeknek az irányítását. Ez lehet például a definiálás
+sorrendje szerinti haladásirány. Itt a kiindulási pontól minden pontot zérussal
+jelölünk, majd az első metszéspontnál vesszük a pásztázó vonal és az elem
+irányításának keresztszorzatát. Az előjel szerint az eddigi zérus értékhez
+hozzáadunk vagy kivonunk egyet, és a következő metszéspontig ezzel az értékkel
+jelöljük a pontokat. A következő metszéspontban hasonlóan járunk el, és az
+addigi értéket szintén eggyel módosítjuk. Egy pont az alakzat része, ha nem
+zérus. Minden nem zérus pont együttes képe a kitöltött alakzatok képe.
 
 Természetesen a számítógépes ábrázolásban nem egy pontból indítjuk a pásztázó
 vonalakat. A raszterkép valamelyik oldalára merőlegesen minden pontsorhoz
 rendelünk egy a végtelenből jövő pásztázó vonalat. Ezek a vonalak teljesen
-ekvivalensek a geometriaiakkal. Viszont azzal a megkötéssel igaze ez, hogy a
-raszterpontok megjelölésére olyan szabályt kell alkalmazni, hogy a nem
-raszterpont-határra eső, és érintkező alakzatok pontjai ne jelöljék meg
-ugyanazt a raszterpontot kétszer.
-
-  \begin{description}[noitemsep]
-    \item[Kulcsszavak] pásztázó egyenes, pásztázó sáv.
-    \item[Becsült oldalszám] 1.
-  \end{description}
+ekvivalensek a geometriaiakkal. Azzal a megkötéssel, hogy a raszterpontok
+megjelölésére olyan szabályt kell alkalmazni, hogy a nem raszterpont-határra
+eső és érintkező alakzatok ne jelöljék meg kétszer ugyanazt a raszterpontot.
+Természetesen nem is pásztázó egyenesekről, hanem adott magasságú
+\emph{pásztázó sávokról} beszélünk. A pásztázó sávok fogalma még fontos lesz a
+dolgozat szempontjából.
 
     \subsection*{\emph{Bézier} görbe és a \emph{de Casteljau} felbontás}
     \label{Bézier görbe és a de Casteljau felbontás}
 
-A \emph{Bézier} (vagy \emph{de Casteljau}) görbecsalád használatának története
-összenőtt~\footnote{TODO: Foley oldalszámos hívatkozás} a számítógépes
-grafikáéval. Nem véletlen, hogy a Canvas API előírja a másod- és harmadrendű
-Bézier görbék használatát. A következőkben általánosan bemutatjuk a
-Bézier görbéket és azok tulajdonságait. Megvizsgáljuk a de Casteljau felbontást,
-és bemutatjuk néhány olyan előnyét, amely indokolja a használatát.
+A \emph{Bézier} (vagy \emph{de Casteljau}) görbecsalád jó tulajdonságai miatt
+népszerű~\footnote{Foley et al.: i. m., 598. o.} a számítógépes
+grafikában. Nem véletlen, hogy a Canvas API előírja a másod- és harmadrendű
+Bézier görbék használatát. A következőkben általánosan bemutatjuk a Bézier
+görbéket és azok tulajdonságait. Megvizsgáljuk a de Casteljau felbontást, és
+bemutatjuk néhány olyan előnyét, amely indokolja a használatát.
 
 Az alábbiakban definiáljuk a Bézier-görbéket. A definícióban a ,,pont'' fogalmát
 nem szűkítjük a síkra, ugyanakkor világos, hogy a dolgozat esetében elégséges
@@ -668,22 +803,24 @@ pontokat de Casteljau pontoknak, az $n$ számot pedig a görbe rendjének hívju
 
 A definícióból következik néhány tulajdonság. Nézzük ezek közül a
 számunkra legfontosabbakat:
-\begin{itemize}[noitemsep]
+\begin{itemize}[noitemsep,topsep=0pt]
   \item a Bézier görbe mindig a kontrollpoligon első pontjától ($t=0$)
   kezdődik, és az utolsó pontjánál ($t=1$) ér véget\footnote{Kurusa --
   Szemők: \emph{A számítógépes ábrázoló geometria alapjai}, Szeged,
-  1999, Polygon, 42. p.},
+  1999, Polygon, 42. o.},
   \item a $k$-adik rendű kontrollpoligon $t/(1-t)$-ad felosztása megadja a
   ($k-1$)-edik kontrollpoligont, amit tovább osztva a $t/(1-t)$ aránnyal, s
   ezzel eggyel csökkentve a kontrollpoligon oldalainak számát, végül már csak
   egy pontot kapunk, ami a Bézier görbe $t$ paraméteréhez tartozó pontja, és az
   eljárást pedig \emph{de Casteljau felbontásnak} neveztük
   (\emph{\ref{beziers}. ábra})\footnote{Kurusa --
-  Szemők: i. m. 41--42. p.},
-  \item az elsőrendű Bézier görbe egy \emph{egyenes}\footnote{Kurusa --
-  Szemők: i. m. 43. p.\label{fn:Kurusa:43p}},
-  \item a másodrendű Bézier görbe egy \emph{parabola} (\emph{\ref{beziers}.
-  ábra b.} pontja)\textsuperscript{\ref{fn:Kurusa:43p}},
+  Szemők: i. m. 41--42. o.},
+  \item az elsőrendű Bézier görbe alakja egy \emph{egyenes}\footnote{Kurusa --
+  Szemők: i. m. 43. o.\label{fn:Kurusa:43p}},
+  \item az egy egyenesre eső kontrollpontok által meghatározott Bézier görbe
+  alakja szintén egy egyenes\textsuperscript{\ref{fn:Kurusa:43p}},
+  \item a másodrendű Bézier görbe alakja egy \emph{parabola}
+  (\emph{\ref{beziers}. ábra b.} pontja)\textsuperscript{\ref{fn:Kurusa:43p}},
   \item a Bézier görbe mindig a kontrollpoligon konvex burkában
   van\textsuperscript{\ref{fn:Kurusa:43p}},
   \item a Bézier görbe az affin transzformációkra invariáns, azaz a görbe
@@ -696,7 +833,7 @@ számítógépes grafikában ez a görbecsalád.
 
 A $t$ paraméterhez tartozó pont az $n$-ed rendű Bézier görbét két, ugyancsak
 $n$-ed rendű görbére osztja\footnote{Kurusa --
-  Szemők: i. m. 47. p.}. A két görbe kontrollpontjai pedig az eredeti görbe
+  Szemők: i. m. 47. o.}. A két görbe kontrollpontjai pedig az eredeti görbe
 de Casteljau pontjai közül kerülnek ki. A fenti tulajdonságokat és a
 definícióban leírt indukciós elnevezést figyelembe véve a két $n$-ed rendű görbe
 kontrollpontjai a következők:
@@ -709,12 +846,6 @@ B_{t\mapsto 1}^n(t): p_0^n, p_1^{n-1}, ..., p_{n-1}^1, p_n.
 tovább alkalmazva a görbe darabokon, végül a görbe darabok végpontjait sorban
 összekötő egyenesek megközelítik az eredeti görbét.
 
-  \begin{description}[noitemsep]
-    \item[Kulcsszavak] Másod- és harmadrendű Bézier görbe, De
-    Casteljau algoritmusa.
-    \item[Becsült oldalszám] 2.
-  \end{description}
-
     \subsection*{Körívek közelítése Bézier görbékkel}
     \label{}
 
@@ -726,10 +857,18 @@ sugarú körcikket hány darab harmadrendű Bézier görbével fedhetünk le egy
 $\epsilon$ hibahatáron belül.
 
 Egy $\alpha$ szögű körcikk tökéletesen nem fedhető le Bézier
-görbékkel.\footnote{M. Goldapp: \emph{Approximation of circular arcs by
-cubic polynomials}, North Holland, 1991, Elsevier, 227–238. p.} Azonban jól és
-gyorsan közelíthető
-harmadrendű Bézier görbékkel \cite[Goldapp]{Goldapp:1991:approximation}.
+görbékkel\cite[Goldapp]{Goldapp:1991:approximation}. Azonban jól és gyorsan
+közelíthető harmadrendű Bézier görbékkel.
+
+Az említett \cite[Goldapp]{Goldapp:1991:approximation} tanulmány bemutat egy
+lehetséges stratégiát a körcikkek közelítésére. Egy $\alpha$ szögű körcikk
+esetén meghatározhatunk egy harmadrendű Bézier görbét, és megadhatjuk a két
+görbe közti eltérését leíró $\epsilon_{\alpha,h}(t)$ függvényt\footnote{M.
+Goldapp: \emph{Approximation of circular arcs by cubic polynomials}, North
+Holland, 1991, Elsevier, 231. o.}. Az eltérést leíró függvény képe függ a
+Bézier görbe alakjától. Ha azonban az \emph{\ref{circle}. ábrán} látható módon
+szimmetrikusan határozzuk meg a Bézier görbét, akkor a maximális eltérés a
+$t=\frac{1}{2}$ értéknél adódik.\footnote{M. Goldapp: i. m., 230. o.}
 
   \begin{figure}[!htb]
   \psfrag{0}[b][B][0.8]{\bf{$0$}}
@@ -737,7 +876,7 @@ harmadrendű Bézier görbékkel \cite[Goldapp]{Goldapp:1991:approximation}.
   \psfrag{x}[b][B][0.8]{\bf{$x$}}
   \psfrag{y}[b][B][0.8]{\bf{$y$}}
   \psfrag{a}[b][B][0.8]{\bf{$\alpha$}}
-  \psfrag{C}[b][B][0.8]{\bf{$\epsilon$}}
+  \psfrag{C}[b][B][0.8]{\bf{$\epsilon_{\alpha,h}(\frac{1}{2})$}\qquad}
   \psfrag{P0}[b][B][0.8]{\bf{$\begin{bmatrix} 1 \\ 0 \end{bmatrix}$}}
   \psfrag{P1}[b][B][0.8]{\bf{$\begin{bmatrix} 1 \\ h \end{bmatrix}$}}
   \psfrag{P2}[b][B][0.8]{\bf{$\hspace{3cm}\begin{bmatrix} \cos\alpha \\ \sin\alpha
@@ -748,14 +887,33 @@ harmadrendű Bézier görbékkel \cite[Goldapp]{Goldapp:1991:approximation}.
     \centering
     \includegraphics[width=.5\textwidth]{img/built/circle_eps}
     \caption{\label{circle} Körcikk (szaggatott vonal) és a hozzá
-    maximum $\epsilon$ eltérésben illeszkedő harmadrendű Bézier görbe
-    (sima vonal).}
+    $\epsilon(t=\frac{1}{2})$, maximális eltérésben illeszkedő harmadrendű
+    Bézier görbe (sima vonal).}
   \end{figure}
 
-  \begin{description}[noitemsep]
-    \item[Kulcsszavak] Kör, körív.
-    \item[Becsült oldalszám] 2.
-  \end{description}
+Vegyünk egy $\alpha$ szögű egységsugarú körcikket, ekkor a fenti módon leírt
+Bézier görbe kontrollpontjai a következők:
+\[p_0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix},\quad
+  p_1 = \begin{bmatrix} 1 \\ h \end{bmatrix},\quad
+  p_2 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix} + h
+        \begin{bmatrix} \sin\alpha \\ -\cos\alpha \end{bmatrix},\quad
+  p_3 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix}, \]
+ahol a $h$ egy szabad paraméter. Pontosabban $h$ függ a körcikk $r$ sugarától.
+Az is világos, hogy adott $\alpha$ szögnél nagyobb körcikk kellő pontosságú
+megközelítéséhez nem elégséges egy darab harmadrendű Bézier görbe.
+
+Legyen $h_1$ a $h$ egy speciális értéke az egységsugarú körcikk
+esetén\footnote{M. Goldapp: i. m., 230. o.}:
+$h_1=\frac{4}{3}\tan{\frac{1}{4}\alpha}$. Ekkor a
+\cite[Goldapp]{Goldapp:1991:approximation} tanulmányban említett\footnote{M.
+Goldapp: i. m., 231. o., (16)-os képlet.} képlet segítségével megkaphatjuk a
+maximális eltérés mértékét: \[|\epsilon_{max}=\max_{{t\in[0, 1]}}\epsilon(t)|=
+\frac{4}{27}\frac{\sin^6{\frac{1}{4}\alpha}}{\cos^2{\frac{1}{4}\alpha}}.\] Ha a
+kapott $\epsilon_{max}$ nem kellően kicsi, akkor a körcikk felbontásával (pl.
+felezésével) csökkenthetjük az eltérések mértékét. A folyamatot egészen addig
+újra elvégezhetjük, amíg minden körcikk-darabnál nem lesz kellően kicsi az
+eltérés. Ezután $h_1$ és a szögek ismeretében megkaphatjuk a Bézier görbék
+kontrollpontjait.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -845,10 +1003,9 @@ https://www.itu.dk/courses/BPRD/E2009/fundamental-1967.pdf} biztosítja. A
 bonyolultabb értékadásokat (pl. függvény leírás) pedig egy a példányosításkor
 bekötött elemző-értelmező függvény végzi.
   \begin{wrapfigure}{\melyikoldalra}{0.3\textwidth}
-  \begin{center}
-    \includegraphics[scale=0.6,bb=0 210 160 590,
-    clip=true]{img/built/dataflow_eps}
-  \end{center}
+    \begin{center}
+      \includedataflowkivagas{0pt}{210pt}{160pt}{590pt}{}
+    \end{center}
     \caption{\label{dataflow-API-diagram} A \emph{felső} réteg, vagyis
     a Gepard interfész függvényei és adattagjai}
   \end{wrapfigure}
@@ -968,7 +1125,7 @@ alakzatot leíró listához.
 Minden speciális alakzatelemet definiáló struktúra egy közös ős
 (\func{PathElement}) struktúrából származik. Tehát a megvalósított struktúrák a
 következők:
-  \begin{itemize}[noitemsep]
+  \begin{itemize}
     \item \func{PathElement} (ős),
     \item \func{MoveToElement},
     \item \func{LineToElement},
@@ -1040,16 +1197,15 @@ memóriarégiók is használhatók; persze ha ennek hasznosságát mérések is
 alátámasztják.
 
 Most pedig nézzük át a \func{Path} osztályhoz tartozó függvényeket
-(\emph{\ref{dataflow-path-API-diagram}. ábra}). Vannak egyrészt az elemeket
+(\emph{\ref{dataflow-path}. ábra}). Vannak egyrészt az elemeket
 hozzáadó, illetve a már hozzáadott elemek bejárását és átalakítását biztosító
 függvények.
 
   \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
     \begin{center}
-      \includegraphics[scale=0.6,bb=153 355 345 595,
-      clip=true]{img/built/dataflow_eps}
+      \includedataflowkivagas{153pt}{355pt}{345pt}{595pt}{}
     \end{center}
-    \caption{\label{dataflow-path-API-diagram} A belső Path API részei}
+    \caption{\label{dataflow-path} A belső Path API részei}
   \end{wrapfigure}
 
 Az átalakításra azért van szükség, mert az alakzat építése közben lehetőség van
@@ -1197,13 +1353,84 @@ Ha pedig szükséges, akkor egy újabb háromszög, vagy körcikk kiegészíti a
 
   \section{Szakaszra bontás}
 
-Ez a lelke az algoritmusomnak. Beszélnem kell az algoritmus vázáról, majd
-az egyes részeket megvilágítva: mi történik a listához adott
-szakaszokkal (segments), hogyan kezelem a metszéspontokat, milyen nem
-ábrázolható folytonossági problémák merülhetnek fel metszések
-esetén, ezeket hogyan próbáltam meg orvosolni.
+A felépített alakzatot fel kell bontanunk, hogy kirajzolhassuk. A több
+lehetséges módszer közül mi a trapézokká alakítást választottuk. Ahhoz azonban,
+hogy az alakzatot lefedő trapézokat megadhassuk, előbb az alakzatot megközelítő
+szakaszokra bontjuk a path-t. Ezt a lépést valósítja meg a
+\func{SegmentApproximator} osztály. Az osztály -- mint arról nár volt szó --
+effektív a \emph{köztes réteghez} tartozik. Hiszen ezt a modellt bármelyik
+rajzoló egység használhatja. Ugyanakkor jelenleg csak a GLES2-es rajzoló egység
+használja.
 
-  \begin{description}[noitemsep]
+Az osztály API-t és a függvényeket részletesen nem tárgyaljuk. Inkább a
+megvalósításra, mint egészre koncentrálunk. Természetesen bizonyos
+fontosabb részeket pontosan átnézünk.
+
+A path kirajzolását indukáló függvények egyikének hatására a
+\func{TrapezoidTessellator} osztály \func{trapezoidList} függvénye (lásd
+később) bejárja az alakzatot, és első körben a \func{SegmentApproximator}
+segítségével felbontja azt. A felbontás lépései a következők.
+  \begin{enumerate}
+    \item Az alakzatot leíró lista bejárása, és az elemekhez tartózó
+    \emph{szakaszra bontó függvények} meghívása.
+    \item Szakaszok beszúrása egy speciális struktúrába (\func{SegmentTree}).
+    \item A struktúrában az érintett szakaszok kettévágása a metszéspontok
+    mentén.
+    \item A már nem metsző szakaszok rendezése.
+  \end{enumerate}
+Nézzük meg részletesebben ezeket a lépéseket.
+
+A path bejárása effektív a \func{TrapezoidTessellator} osztályban történik,
+ugyanakkor ez mind a \func{SegmentApproximator} osztály hívásait és a
+szakaszokat tároló struktúráit érinti. Az alakzat bejárásakor érvényesíteni
+kell az aktuális állapothoz tartozó transzformációt. Ezt a legészszerűbb ebben
+a lépésben megtenni. Hiszen később a metszések révén sokkal több pontot kellene
+bejárni ugyanezért. A transzformációk érvényesítése után az egyes elemek
+szerint meghívjuk a \func{SegmentApproximator} megfelelő függvényét. Az egyenes
+vonal esetén ez egy megfelelő szakasz beszúrását jelenti. Ekkor a szakaszokat
+megfelelő módon tároló \func{SegmentTree}\footnote{Ez egy \func{std::map<int,
+SegmentList>} struktúra.} struktúrában két új bejegyzés jön létre. Először a
+szakasz kezdő- és végkoordináták $y$ értékének megfelelően két új üres
+\func{SegmentList} lista jön létre, ha még nincs ilyen az adott $y$
+bármelyikére. Ezután a kisebbik $y$-hoz tartozó listába kerül egy új
+\func{Segment} struktúra, ami leírja az adott szakasz értékeit és irányát. A
+következő hasonló szakasz beszúrása esetén hasonlóan kell eljárni. Világos,
+hogy így egy szakaszokat (\func{Segment}) tartalmazó listák egy $y$-ok szerint
+rendezett listáját, leképezését kapjuk. Ekkor még a szakaszok se nem
+rendezettek, és nem vizsgáltak a metszéspontok sem.
+
+Ha nem egy egyenes vonalat kell beszúrni, hanem egy bonyolultabb görbe vonalat,
+akkor kerülnek képbe \aref{Háttér} fejezetben tárgyalt matematikai
+visszavezetések.
+
+Egy Bézier görbe esetében ez a következőket jelenti. A görbét az
+\func{insertBezierCurve} függvény fogja feldarabolni, és a megközelítési kritériumnak
+megfelelő görbedarabokat szakaszokként a struktúrához adni.
+Az algoritmust a harmadrendű Bézier görbén mutatjuk be. A másodrendű
+párjára is teljesen hasonló az eljárás.
+
+A módszer az felosztás mentén rekurzív. De ezt bizonyos mélységig egy $16$
+görbe leírásának megfelelő méretű veremmel szimuláljuk. A görbék felbontását
+\aref{eq:1} képletnek megfelelően mindig a $t=\frac{1}{2}$ pontban hajtjuk
+végre. Nézzük meg az egyes lépéseket.
+  \begin{enumerate}
+    \item Foglalunk $16$ görbének elegendő helyet.
+    \item A kapott görbét a verembe tesszük.
+    \item Megvizsgáljuk, hogy a legfelső görbe leírható-e szakszként.
+    \begin{description}[topsep=0ex]
+      \item[Igen] .
+      \item[Nem] .
+    \end{description}
+  \end{enumerate}
+
+  \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
+    \begin{center}
+      \includedataflowkivagas{345pt}{400pt}{525pt}{590pt}{}
+    \end{center}
+    \caption{\label{dataflow-segment} A belső Path API részei}
+  \end{wrapfigure}
+
+  \begin{description}
     \item[Kulcsszavak] Szakasz - segment, metszéspontok.
     \item[Becsült oldalszám] 6.
   \end{description}
@@ -1214,6 +1441,13 @@ Ebben e részben a halomra hányt szakaszokból a kitöltési metódus
 alapján trapézokat hozok létre. Ezt az algoritmust is részletesen be kell
 mutatnom. A trapéz építése, majd horizontális, végül vertikális
 összevonásukról is kell beszélnem.
+
+  \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
+    \begin{center}
+      \includedataflowkivagas{345pt}{200pt}{525pt}{393pt}{}
+    \end{center}
+    \caption{\label{dataflow-trapezoid} A belső Path API részei}
+  \end{wrapfigure}
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Trapéz, horizontális összevonás, vertikális összevonás.
