@@ -561,11 +561,13 @@ egymásra épülő és használt matematikai fogalmakkal kell megismerkedni.
 
 A \emph{pásztázó egyenesek módszere} (\inenglish{scan-line algorithm}) egy
 grafikai algoritmus alakzatok kitöltésére, vagy pont tartalmazásának
-eldöntésére.\footnote{Foley link}
+eldöntésére.
 
-Az algoritmus jól ismert a számítógépes ábrázolás területén. Egyszerű módszer,
-ezért nagy vonalakban ismertetjük. Kifejezetten kiemelve azokat a tényezőket,
-amelyek a dolgozat szempontjából fontosabbak.
+Az algoritmus jól ismert a számítógépes ábrázolás területén.\footnote{Foley et
+al.: Computer Graphics: Principles and Practice (2Nd Ed.), Boston, 1990,
+Addison-Wesley Longman, 209. és 431. p.} Egyszerű módszer, ezért nagy
+vonalakban ismertetjük. Kifejezetten kiemelve azokat a tényezőket, amelyek a
+dolgozat szempontjából fontosabbak.
 
 Legyen az alakzatokat leíró elemek listája. Fontos, hogy mindig zárt
 alakzatokról van szó, ha a módszert vizsgáljuk. Az egyszerűség kedvéért a
@@ -628,12 +630,12 @@ erre a speciális esetre gondolnunk.
 
 \begin{defi}\label{Bézier}\cite[Kurusa]{Kurusa:1999:szamitogepes}
 Legyen adott az ($n+1$)-darab $p_0,...,p_n$ pont. Ezeket Bézier, vagy kontroll
-pontoknak, az általuk meghatározott poligont pedig kontroll poligonnak nevezzük.
+pontoknak, az általuk meghatározott poligont pedig kontrollpoligonnak nevezzük.
 Indukcióval definiáljuk a következő pontokat, minden $t \in [0,1], k \in
 \{{0,1,2,...,n\}}$ és $i \in \{{0,1,2,...,n-k\}}$ esetére:
 \[p^0_i(t)=p_i,\]
 \[p^k_i(t):=(1-t)p^{k-1}_i(t) + tp^{k-1}_{i+1}(t).\]
-Ekkor azt a görbét, amit a $p^n_0(t)$ pont leír, amint a $t$ végig fut a $[0,1]$
+Ekkor azt a görbét, amit a $p^n_0(t)$ pont leír, ahogy a $t$ végig fut a $[0,1]$
 intervallumon, Bézier görbének nevezzük, és $B(t)$-vel jelöljük. A $p^k_i(t)$
 pontokat de Casteljau pontoknak, az $n$ számot pedig a görbe rendjének hívjuk.
 \end{defi}
@@ -660,39 +662,44 @@ pontokat de Casteljau pontoknak, az $n$ számot pedig a görbe rendjének hívju
     \centering
     \includegraphics[width=.95\textwidth]{img/built/beziers_eps}
     \caption{\label{beziers} Bézier görbék. Az \emph{a. ábra} harmadrendű, a
-    \emph{b. ábra} másodrendű görbe képét, kontroll poligonját és de
+    \emph{b. ábra} másodrendű görbe képét, kontrollpoligonját és de
     Casteljau pontjait mutatja.}
   \end{figure}
 
 A definícióból következik néhány tulajdonság. Nézzük ezek közül a
-számunkra legfontosabbakat\footnote{TODO: Bizonyítások a Kurusa könyvében,
-oldalak}:
+számunkra legfontosabbakat:
 \begin{itemize}[noitemsep]
-  \item a Bézier görbe mindig a kontroll poligon első pontjától ($t=0$)
-  kezdődik, és az utolsó pontjánál ($t=1$) ér véget,
-  \item a $k$-adik rendű kontroll poligon $t/(1-t)$-ad felosztása megadja a
-  ($k-1$)-edik kontroll poligont, amit tovább osztva a $t/(1-t)$ aránnyal, s
-  ezzel eggyel csökkentve a kontroll poligon oldalainak számát, végül már csak
+  \item a Bézier görbe mindig a kontrollpoligon első pontjától ($t=0$)
+  kezdődik, és az utolsó pontjánál ($t=1$) ér véget\footnote{Kurusa --
+  Szemők: \emph{A számítógépes ábrázoló geometria alapjai}, Szeged,
+  1999, Polygon, 42. p.},
+  \item a $k$-adik rendű kontrollpoligon $t/(1-t)$-ad felosztása megadja a
+  ($k-1$)-edik kontrollpoligont, amit tovább osztva a $t/(1-t)$ aránnyal, s
+  ezzel eggyel csökkentve a kontrollpoligon oldalainak számát, végül már csak
   egy pontot kapunk, ami a Bézier görbe $t$ paraméteréhez tartozó pontja, és az
   eljárást pedig \emph{de Casteljau felbontásnak} neveztük
-  (\emph{\ref{beziers}. ábra}),
-  \item az elsőrendű Bézier görbe egy \emph{egyenes},
+  (\emph{\ref{beziers}. ábra})\footnote{Kurusa --
+  Szemők: i. m. 41--42. p.},
+  \item az elsőrendű Bézier görbe egy \emph{egyenes}\footnote{Kurusa --
+  Szemők: i. m. 43. p.\label{fn:Kurusa:43p}},
   \item a másodrendű Bézier görbe egy \emph{parabola} (\emph{\ref{beziers}.
-  ábra b.} pontja),
-  \item a Bézier görbe mindig a kontroll poligon konvex burkában van,
+  ábra b.} pontja)\textsuperscript{\ref{fn:Kurusa:43p}},
+  \item a Bézier görbe mindig a kontrollpoligon konvex burkában
+  van\textsuperscript{\ref{fn:Kurusa:43p}},
   \item a Bézier görbe az affin transzformációkra invariáns, azaz a görbe
-  affin képe megegyezik a kontroll poligon affin képe által meghatározott
-  Bézier görbével.
+  affin képe megegyezik a kontrollpoligon affin képe által meghatározott
+  Bézier görbével\textsuperscript{\ref{fn:Kurusa:43p}}.
 \end{itemize}
 
 A fenti tulajdonságokból is jól látszik, hogy miért lett népszerű a
 számítógépes grafikában ez a görbecsalád.
 
 A $t$ paraméterhez tartozó pont az $n$-ed rendű Bézier görbét két, ugyancsak
-$n$-ed rendű görbére osztja. A két görbe kontroll pontjai pedig az eredeti görbe
+$n$-ed rendű görbére osztja\footnote{Kurusa --
+  Szemők: i. m. 47. p.}. A két görbe kontrollpontjai pedig az eredeti görbe
 de Casteljau pontjai közül kerülnek ki. A fenti tulajdonságokat és a
 definícióban leírt indukciós elnevezést figyelembe véve a két $n$-ed rendű görbe
-kontroll pontjai a következők:
+kontrollpontjai a következők:
 \begin{equation}\label{eq:1}
 B_{0\mapsto t}^n(t): p_0, p_0^1, ..., p_0^{n-1}, p_0^n; \qquad
 B_{t\mapsto 1}^n(t): p_0^n, p_1^{n-1}, ..., p_{n-1}^1, p_n.
@@ -711,17 +718,18 @@ tovább alkalmazva a görbe darabokon, végül a görbe darabok végpontjait sor
     \subsection*{Körívek közelítése Bézier görbékkel}
     \label{}
 
-Az alakzatokat trapézokkal fedjük le. Ezért szükséges a köríveket
-szakaszokkal közelíteni. A Bézier görbéket a de Casteljau felbontással
-gyorsan közelíthetjük szakaszokkal. A köríveket pedig gyorsan
-közelíthetjük Bézier görbékkel. Néhány lépésben megállapítható,
-hogy egy adott sugarú körcikket hány darab harmadrendű Bézier görbével
-fedhetünk le egy $\epsilon$ hibahatáron belül.
+A dolgozatban tárgyalt módszerrel az alakzatokat trapézokkal fedjük le. Ezért
+szükséges a köríveket szakaszokkal közelíteni. A Bézier görbéket a de Casteljau
+felbontással gyorsan közelíthetjük szakaszokkal. A köríveket pedig gyorsan
+közelíthetjük Bézier görbékkel. Néhány lépésben megállapítható, hogy egy adott
+sugarú körcikket hány darab harmadrendű Bézier görbével fedhetünk le egy
+$\epsilon$ hibahatáron belül.
 
 Egy $\alpha$ szögű körcikk tökéletesen nem fedhető le Bézier
-görbékkel.\footnote{Lásd M. Goldapp \emph{Approximation of circular arcs by
-cubic polynomials} (North Holland, 1991, Elsevier, 227–238.
-p.)\cite{Goldapp:1991:approximation}}
+görbékkel.\footnote{M. Goldapp: \emph{Approximation of circular arcs by
+cubic polynomials}, North Holland, 1991, Elsevier, 227–238. p.} Azonban jól és
+gyorsan közelíthető
+harmadrendű Bézier görbékkel \cite[Goldapp]{Goldapp:1991:approximation}.
 
   \begin{figure}[!htb]
   \psfrag{0}[b][B][0.8]{\bf{$0$}}
@@ -1095,7 +1103,7 @@ is zárt path esetén.
 
 Az \func{addQuadaraticCurveToElement} függvény egy másodrendű Bézier görbe
 elemet add a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak
-kell tekinteni. Illetve egyszerűsítés az is, hogy ha a kontroll pont és a
+kell tekinteni. Illetve egyszerűsítés az is, hogy ha a kontrollpont és a
 végpont azonos, akkor az alakzatelem egy egyenes vonalra egyszerűsödik.
 
 Az \func{addBezierCurveToElement} függvény egy harmadrendű Bézier görbe elemet
@@ -1275,6 +1283,7 @@ példát.
 %%   Irodalomjegyzék                                                %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+    \nocite{Foley:1990:CGP:83821}
     \bibliography{bib/cites}{}
     \bibliographystyle{bib/huplain}
     \addtocontents{toc}{\ }
