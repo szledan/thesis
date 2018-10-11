@@ -879,10 +879,10 @@ $t=\frac{1}{2}$ értéknél adódik.\footnote{M. Goldapp: i. m., 230. o.}
   \psfrag{C}[b][B][0.8]{\bf{$\epsilon_{\alpha,h}(\frac{1}{2})$}\qquad}
   \psfrag{P0}[b][B][0.8]{\bf{$\begin{bmatrix} 1 \\ 0 \end{bmatrix}$}}
   \psfrag{P1}[b][B][0.8]{\bf{$\begin{bmatrix} 1 \\ h \end{bmatrix}$}}
-  \psfrag{P2}[b][B][0.8]{\bf{$\hspace{3cm}\begin{bmatrix} \cos\alpha \\ \sin\alpha
+  \psfrag{P2}[b][B][0.8]{\bf{$\hspace{3cm}\begin{bmatrix}\cos\alpha\\ \sin\alpha
                               \end{bmatrix} + h \begin{bmatrix} \sin\alpha \\
                               -\cos\alpha \end{bmatrix}$}}
-  \psfrag{P3}[b][B][0.8]{\bf{$\begin{bmatrix} \cos\alpha \\ \sin\alpha
+  \psfrag{P3}[b][B][0.8]{\bf{$\begin{bmatrix}\cos\alpha\\ \sin\alpha
                               \end{bmatrix}$}}
     \centering
     \includegraphics[width=.5\textwidth]{img/built/circle_eps}
@@ -1404,22 +1404,31 @@ akkor kerülnek képbe \aref{Háttér} fejezetben tárgyalt matematikai
 visszavezetések.
 
 Egy Bézier görbe esetében ez a következőket jelenti. A görbét az
-\func{insertBezierCurve} függvény fogja feldarabolni, és a megközelítési kritériumnak
-megfelelő görbedarabokat szakaszokként a struktúrához adni.
-Az algoritmust a harmadrendű Bézier görbén mutatjuk be. A másodrendű
-párjára is teljesen hasonló az eljárás.
+\func{insertBezierCurve} függvény fogja feldarabolni, és a megközelítési
+kritériumnak megfelelő görbedarabokat szakaszokként a struktúrához adni. Az
+algoritmus logikája azonos mindkét rendű Bézier görbénél.
 
-A módszer az felosztás mentén rekurzív. De ezt bizonyos mélységig egy $16$
+A metódus a görbefelosztás mentén rekurzív. De ezt bizonyos mélységig egy $16$
 görbe leírásának megfelelő méretű veremmel szimuláljuk. A görbék felbontását
 \aref{eq:1} képletnek megfelelően mindig a $t=\frac{1}{2}$ pontban hajtjuk
 végre. Nézzük meg az egyes lépéseket.
   \begin{enumerate}
-    \item Foglalunk $16$ görbének elegendő helyet.
+    \item Lefoglalunk egy $16$ görbének elegendő puffert (\emph{verem}).
     \item A kapott görbét a verembe tesszük.
-    \item Megvizsgáljuk, hogy a legfelső görbe leírható-e szakszként.
+    \item Kivesszük a legfelső görbedarabot, és megvizsgáljuk, hogy leírható-e
+    szakaszként.
     \begin{description}[topsep=0ex]
-      \item[Igen] .
-      \item[Nem] .
+      \item[Ha igen] A görbedarabot a végpontjait összekötő szakaszként
+      beszúrjuk a \func{SegmentTree} struktúrába, és folytatjuk a $3$-as
+      ponttal.
+      \item[Különben] A görbét a $t=\frac{1}{2}$ pontban kettévágjuk, és
+      a két görbedarabot a verembe tesszük.
+    \end{description}
+    \item Megvizsgáljuk, hogy betelt-e a verem.
+    \begin{description}[topsep=0ex,noitemsep]
+      \item[Ha igen] A görbedarabbal újrakezdjük az $1$-es pontban. (Rekurzív
+      rész. Ritkán hívódik.\footnote{TODO: Mérés})
+      \item[Különben] Folytatjuk a $3$-as ponttal.
     \end{description}
   \end{enumerate}
 
