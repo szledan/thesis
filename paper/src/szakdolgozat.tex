@@ -691,9 +691,9 @@ shader}, a másodikét a \emph{fragment shader}.
 
 Az előző két fejezetrészben láthattuk, hogy tetszőlegesen bonyolult (akár
 önmetsző) alakzatokat is ki kell tudjunk rajzolni, renderelni. Ehhez viszont
-maximum csak háromszögeket használhatunk. Ebben a részben azt a néhány
-fontosabb matematikai hátterű fogalmat, tulajdonságot vagy módszert mutatjuk
-be, amit az implementáció során felhasználtunk.
+maximum csak háromszögeket használhatunk. Ebben a részben azt a néhány fontosabb
+matematikai hátterű fogalmat, tulajdonságot vagy módszert mutatjuk be, amit az
+implementáció során felhasználtunk.
 
     \subsection*{Pásztázó egyenesek}
     \label{Pásztázó egyenesek}
@@ -710,23 +710,23 @@ amelyek a dolgozat szempontjából fontosabbak.
 
 Vegyük az alakzatokat leíró elemek listáját. Fontos, hogy mindig zárt
 alakzatokról van szó, ha a módszert vizsgáljuk. Az egyszerűség kedvéért a
-leírást végezzük síkban. Ugyanakkor belátható, hogy a módszer térben is
-működne. Vegyük az alakzatokat leíró elemek koordinátáit. Válasszuk ki
-valamelyik dimenziót (például az $y$-t). Keressük meg a választott dimenzió
-mentén a koordináták közül a legkisebbet. Ezután válasszunk egy olyan pontot a
-síkon aminek a választott dimenziójú értéke még ennél is kisebb. Indítsunk
-pásztázó vonalakat minden irányba ebből a pontból. Ekkor lesznek olyan vonalak,
-amelyek nem érintik egyik alakzatot sem. Viszont lesznek olyanok, amelyek
-metszik valamelyik alakzatelemet. A metszések és azok sorrendje a pásztázó
-egyenesen kulcsfontosságúak. Aszerint, hogy milyen kitöltési stratégiát
-választunk, nyernek értelmet a metszéspontok.
+leírást végezzük síkban. Ugyanakkor belátható, hogy a módszer térben is működne.
+Vegyük az alakzatokat leíró elemek koordinátáit. Válasszuk ki valamelyik
+dimenziót (például az $y$-t). Keressük meg a választott dimenzió mentén a
+koordináták közül a legkisebbet. Ezután válasszunk egy olyan pontot a síkon
+aminek a választott dimenziójú értéke még ennél is kisebb. Indítsunk pásztázó
+vonalakat minden irányba ebből a pontból. Ekkor lesznek olyan vonalak, amelyek
+nem érintik egyik alakzatot sem. Viszont lesznek olyanok, amelyek metszik
+valamelyik alakzatelemet. A metszések és azok sorrendje a pásztázó egyenesen
+kulcsfontosságúak. Aszerint, hogy milyen kitöltési stratégiát választunk,
+nyernek értelmet a metszéspontok.
 
 Vegyük elsőnek a \emph{paritás szabályt} (\inenglish{even-odd fill rule}). A
 kiindulási ponttól egészen az első metszéspontig a pásztázó egyenes által
 érintett pontokat nem jelöljük. Az első metszésponttól a következőig minden
 pontot jelölünk, majd megint nem jelöljük a rákövetkezőig, és így tovább. Egy
-pont az alakzat része, ha meg van jelölve. A megjelölt pontok összességének
-képe a kitöltött alakzatok képe.
+pont az alakzat része, ha meg van jelölve. A megjelölt pontok összességének képe
+a kitöltött alakzatok képe.
 
 A másik elterjedt a \emph{nem-zérus szabály} (\inenglish{non-zero fill rule}).
 Ahhoz azonban, hogy ezt a szabályt alkalmazni tudjuk, ismernünk kell az
@@ -743,37 +743,35 @@ Természetesen a számítógépes ábrázolásban nem egy pontból indítjuk a p
 vonalakat. A raszterkép valamelyik oldalára merőlegesen minden pontsorhoz
 rendelünk egy a végtelenből jövő pásztázó vonalat. Ezek a vonalak teljesen
 ekvivalensek a geometriaiakkal. Azzal a megkötéssel, hogy a raszterpontok
-megjelölésére olyan szabályt kell alkalmazni, hogy a nem raszterpont-határra
-eső és érintkező alakzatok ne jelöljék meg kétszer ugyanazt a raszterpontot.
-Természetesen nem is pásztázó egyenesekről, hanem adott magasságú
-\emph{pásztázó sávokról} beszélünk. A pásztázó sávok fogalma még fontos lesz a
-dolgozat szempontjából.
+megjelölésére olyan szabályt kell alkalmazni, hogy a nem raszterpont-határra eső
+és érintkező alakzatok ne jelöljék meg kétszer ugyanazt a raszterpontot.
+Természetesen nem is pásztázó egyenesekről, hanem adott magasságú \emph{pásztázó
+sávokról} beszélünk. A pásztázó sávok fogalma még fontos lesz a dolgozat
+szempontjából.
 
     \subsection*{\emph{Bézier} görbe és a \emph{de Casteljau} felbontás}
     \label{Bézier görbe és a de Casteljau felbontás}
 
 A \emph{Bézier} (vagy \emph{de Casteljau}) görbecsalád jó tulajdonságai miatt
-népszerű~\footnote{Foley et al.: i. m., 598. o.} a számítógépes
-grafikában. Nem véletlen, hogy a Canvas API előírja a másod- és harmadrendű
-Bézier görbék használatát. A következőkben általánosan bemutatjuk a Bézier
-görbéket és azok tulajdonságait. Megvizsgáljuk a de Casteljau felbontást, és
-bemutatjuk néhány olyan előnyét, amely indokolja a használatát.
+népszerű~\footnote{Foley et al.: i. m., 598. o.} a számítógépes grafikában. Nem
+véletlen, hogy a Canvas API előírja a másod- és harmadrendű Bézier görbék
+használatát. A következőkben általánosan bemutatjuk a Bézier görbéket és azok
+tulajdonságait. Megvizsgáljuk a de Casteljau felbontást, és bemutatjuk néhány
+olyan előnyét, amely indokolja a használatát.
 
 Az alábbiakban definiáljuk a Bézier-görbéket. A definícióban a ,,pont'' fogalmát
 nem szűkítjük a síkra, ugyanakkor világos, hogy a dolgozat esetében elégséges
 erre a speciális esetre gondolnunk.
 
-\begin{defi}\label{Bézier}\cite[Kurusa]{Kurusa:1999:szamitogepes}
-Legyen adott az ($n+1$)-darab $p_0,...,p_n$ pont. Ezeket Bézier, vagy kontroll
-pontoknak, az általuk meghatározott poligont pedig kontrollpoligonnak nevezzük.
-Indukcióval definiáljuk a következő pontokat, minden $t \in [0,1], k \in
-\{{0,1,2,...,n\}}$ és $i \in \{{0,1,2,...,n-k\}}$ esetére:
-\[p^0_i(t)=p_i,\]
-\[p^k_i(t):=(1-t)p^{k-1}_i(t) + tp^{k-1}_{i+1}(t).\]
-Ekkor azt a görbét, amit a $p^n_0(t)$ pont leír, ahogy a $t$ végig fut a $[0,1]$
-intervallumon, Bézier görbének nevezzük, és $B(t)$-vel jelöljük. A $p^k_i(t)$
-pontokat de Casteljau pontoknak, az $n$ számot pedig a görbe rendjének hívjuk.
-\end{defi}
+\begin{defi}\label{Bézier}\cite[Kurusa]{Kurusa:1999:szamitogepes} Legyen adott
+az ($n+1$)-darab $p_0,...,p_n$ pont. Ezeket Bézier, vagy kontroll pontoknak, az
+általuk meghatározott poligont pedig kontrollpoligonnak nevezzük.  Indukcióval
+definiáljuk a következő pontokat, minden $t \in [0,1], k \in \{{0,1,2,...,n\}}$
+és $i \in \{{0,1,2,...,n-k\}}$ esetére: \[p^0_i(t)=p_i,\]
+\[p^k_i(t):=(1-t)p^{k-1}_i(t) + tp^{k-1}_{i+1}(t).\] Ekkor azt a görbét, amit a
+$p^n_0(t)$ pont leír, ahogy a $t$ végig fut a $[0,1]$ intervallumon, Bézier
+görbének nevezzük, és $B(t)$-vel jelöljük. A $p^k_i(t)$ pontokat de Casteljau
+pontoknak, az $n$ számot pedig a görbe rendjének hívjuk.  \end{defi}
 
   \begin{figure}[!htb]
   \psfrag{a}[b][B][0.9]{\emph{a.}}
@@ -801,20 +799,18 @@ pontokat de Casteljau pontoknak, az $n$ számot pedig a görbe rendjének hívju
     Casteljau pontjait mutatja.}
   \end{figure}
 
-A definícióból következik néhány tulajdonság. Nézzük ezek közül a
-számunkra legfontosabbakat:
+A definícióból következik néhány tulajdonság. Nézzük ezek közül a számunkra
+legfontosabbakat:
 \begin{itemize}[noitemsep,topsep=0pt]
-  \item a Bézier görbe mindig a kontrollpoligon első pontjától ($t=0$)
-  kezdődik, és az utolsó pontjánál ($t=1$) ér véget\footnote{Kurusa --
-  Szemők: \emph{A számítógépes ábrázoló geometria alapjai}, Szeged,
-  1999, Polygon, 42. o.},
+  \item a Bézier görbe mindig a kontrollpoligon első pontjától ($t=0$) kezdődik,
+  és az utolsó pontjánál ($t=1$) ér véget\footnote{Kurusa -- Szemők: \emph{A
+  számítógépes ábrázoló geometria alapjai}, Szeged, 1999, Polygon, 42. o.},
   \item a $k$-adik rendű kontrollpoligon $t/(1-t)$-ad felosztása megadja a
   ($k-1$)-edik kontrollpoligont, amit tovább osztva a $t/(1-t)$ aránnyal, s
   ezzel eggyel csökkentve a kontrollpoligon oldalainak számát, végül már csak
   egy pontot kapunk, ami a Bézier görbe $t$ paraméteréhez tartozó pontja, és az
-  eljárást pedig \emph{de Casteljau felbontásnak} neveztük
-  (\emph{\ref{beziers}. ábra})\footnote{Kurusa --
-  Szemők: i. m. 41--42. o.},
+  eljárást pedig \emph{de Casteljau felbontásnak} neveztük (\emph{\ref{beziers}.
+  ábra})\footnote{Kurusa -- Szemők: i. m. 41--42. o.},
   \item az elsőrendű Bézier görbe alakja egy \emph{egyenes}\footnote{Kurusa --
   Szemők: i. m. 43. o.\label{fn:Kurusa:43p}},
   \item az egy egyenesre eső kontrollpontok által meghatározott Bézier görbe
@@ -823,23 +819,21 @@ számunkra legfontosabbakat:
   (\emph{\ref{beziers}. ábra b.} pontja)\textsuperscript{\ref{fn:Kurusa:43p}},
   \item a Bézier görbe mindig a kontrollpoligon konvex burkában
   van\textsuperscript{\ref{fn:Kurusa:43p}},
-  \item a Bézier görbe az affin transzformációkra invariáns, azaz a görbe
-  affin képe megegyezik a kontrollpoligon affin képe által meghatározott
-  Bézier görbével\textsuperscript{\ref{fn:Kurusa:43p}}.
+  \item a Bézier görbe az affin transzformációkra invariáns, azaz a görbe affin
+  képe megegyezik a kontrollpoligon affin képe által meghatározott Bézier
+  görbével\textsuperscript{\ref{fn:Kurusa:43p}}.
 \end{itemize}
 
-A fenti tulajdonságokból is jól látszik, hogy miért lett népszerű a
-számítógépes grafikában ez a görbecsalád.
+A fenti tulajdonságokból is jól látszik, hogy miért lett népszerű a számítógépes
+grafikában ez a görbecsalád.
 
 A $t$ paraméterhez tartozó pont az $n$-ed rendű Bézier görbét két, ugyancsak
-$n$-ed rendű görbére osztja\footnote{Kurusa --
-  Szemők: i. m. 47. o.}. A két görbe kontrollpontjai pedig az eredeti görbe
-de Casteljau pontjai közül kerülnek ki. A fenti tulajdonságokat és a
-definícióban leírt indukciós elnevezést figyelembe véve a két $n$-ed rendű görbe
-kontrollpontjai a következők:
-\begin{equation}\label{eq:1}
-B_{0\mapsto t}^n(t): p_0, p_0^1, ..., p_0^{n-1}, p_0^n; \qquad
-B_{t\mapsto 1}^n(t): p_0^n, p_1^{n-1}, ..., p_{n-1}^1, p_n.
+$n$-ed rendű görbére osztja\footnote{Kurusa -- Szemők: i. m. 47. o.}. A két
+görbe kontrollpontjai pedig az eredeti görbe de Casteljau pontjai közül kerülnek
+ki. A fenti tulajdonságokat és a definícióban leírt indukciós elnevezést
+figyelembe véve a két $n$-ed rendű görbe kontrollpontjai a következők:
+\begin{equation}\label{eq:1} B_{0\mapsto t}^n(t): p_0, p_0^1, ..., p_0^{n-1},
+p_0^n; \qquad B_{t\mapsto 1}^n(t): p_0^n, p_1^{n-1}, ..., p_{n-1}^1, p_n.
 \end{equation}
 
 \Aref{eq:1} felbontást később majd használni fogjuk. Világos, hogy a felbontást
@@ -865,8 +859,8 @@ lehetséges stratégiát a körcikkek közelítésére. Egy $\alpha$ szögű kö
 esetén meghatározhatunk egy harmadrendű Bézier görbét, és megadhatjuk a két
 görbe közti eltérését leíró $\epsilon_{\alpha,h}(t)$ függvényt\footnote{M.
 Goldapp: \emph{Approximation of circular arcs by cubic polynomials}, North
-Holland, 1991, Elsevier, 231. o.}. Az eltérést leíró függvény képe függ a
-Bézier görbe alakjától. Ha azonban az \emph{\ref{circle}. ábrán} látható módon
+Holland, 1991, Elsevier, 231. o.}. Az eltérést leíró függvény képe függ a Bézier
+görbe alakjától. Ha azonban az \emph{\ref{circle}. ábrán} látható módon
 szimmetrikusan határozzuk meg a Bézier görbét, akkor a maximális eltérés a
 $t=\frac{1}{2}$ értéknél adódik.\footnote{M. Goldapp: i. m., 230. o.}
 
