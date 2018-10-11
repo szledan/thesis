@@ -841,7 +841,7 @@ tovább alkalmazva a görbe darabokon, végül a görbe darabok végpontjait sor
 összekötő egyenesek megközelítik az eredeti görbét.
 
     \subsection*{Körívek közelítése Bézier görbékkel}
-    \label{}
+    \label{arctobezier}
 
 A dolgozatban tárgyalt módszerrel az alakzatokat trapézokkal fedjük le. Ezért
 szükséges a köríveket szakaszokkal közelíteni. A Bézier görbéket a de Casteljau
@@ -897,13 +897,13 @@ Az is világos, hogy adott $\alpha$ szögnél nagyobb körcikk kellő pontosság
 megközelítéséhez nem elégséges egy darab harmadrendű Bézier görbe.
 
 Legyen $h_1$ a $h$ egy speciális értéke az egységsugarú körcikk
-esetén\footnote{M. Goldapp: i. m., 230. o.}:
-$h_1=\frac{4}{3}\tan{\frac{1}{4}\alpha}$. Ekkor a
-\cite[Goldapp]{Goldapp:1991:approximation} tanulmányban említett\footnote{M.
-Goldapp: i. m., 231. o., (16)-os képlet.} képlet segítségével megkaphatjuk a
-maximális eltérés mértékét: \[|\epsilon_{max}=\max_{{t\in[0, 1]}}\epsilon(t)|=
-\frac{4}{27}\frac{\sin^6{\frac{1}{4}\alpha}}{\cos^2{\frac{1}{4}\alpha}}.\] Ha a
-kapott $\epsilon_{max}$ nem kellően kicsi, akkor a körcikk felbontásával (pl.
+esetén\footnote{M. Goldapp: i. m., 230. o.}: $h_1 = \frac{4}{3} \tan{\frac{1}{4}
+\alpha}$. Ekkor a \cite[Goldapp]{Goldapp:1991:approximation} tanulmányban
+említett\footnote{M.  Goldapp: i. m., 231. o., (16)-os képlet.} képlet
+segítségével megkaphatjuk a maximális eltérés mértékét: \begin{equation}
+\label{eq:2} |\epsilon_{max} = \max_{{t\in[0, 1]}} \epsilon(t)| = \frac{4}{27}
+\frac{\sin^6{\frac{1}{4} \alpha}}{\cos^2{\frac{1}{4} \alpha}}. \end{equation} Ha
+a kapott $\epsilon_{max}$ nem kellően kicsi, akkor a körcikk felbontásával (pl.
 felezésével) csökkenthetjük az eltérések mértékét. A folyamatot egészen addig
 újra elvégezhetjük, amíg minden körcikk-darabnál nem lesz kellően kicsi az
 eltérés. Ezután $h_1$ és a szögek ismeretében megkaphatjuk a Bézier görbék
@@ -1357,8 +1357,8 @@ rajzoló egység használhatja. Ugyanakkor jelenleg csak a GLES2-es rajzoló egy
 használja.
 
 Az osztály API-t és a függvényeket részletesen nem tárgyaljuk. Inkább a
-megvalósításra, mint egészre koncentrálunk. Természetesen bizonyos
-fontosabb részeket pontosan átnézünk.
+megvalósításra, mint egészre koncentrálunk. Természetesen bizonyos fontosabb
+részeket pontosan átnézünk.
 
 A path kirajzolását indukáló függvények egyikének hatására a
 \func{TrapezoidTessellator} osztály \func{trapezoidList} függvénye (lásd
@@ -1393,6 +1393,14 @@ hogy így egy szakaszokat (\func{Segment}) tartalmazó listák egy $y$-ok szerin
 rendezett listáját, leképezését kapjuk. Ekkor még a szakaszok se nem
 rendezettek, és nem vizsgáltak a metszéspontok sem.
 
+  \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
+    \begin{center}
+      \includedataflowkivagas{345pt}{400pt}{525pt}{590pt}{}
+    \end{center}
+    \caption{\label{dataflow-segment} A szakasszá alakítás és a megközelítő
+    visszavezetések lépései.}
+  \end{wrapfigure}
+
 Ha nem egy egyenes vonalat kell beszúrni, hanem egy bonyolultabb görbe vonalat,
 akkor kerülnek képbe \aref{Háttér} fejezetben tárgyalt matematikai
 visszavezetések.
@@ -1426,12 +1434,47 @@ végre. Nézzük meg az egyes lépéseket.
     \end{description}
   \end{enumerate}
 
-  \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
-    \begin{center}
-      \includedataflowkivagas{345pt}{400pt}{525pt}{590pt}{}
-    \end{center}
-    \caption{\label{dataflow-segment} A belső Path API részei}
-  \end{wrapfigure}
+A felbontás mértékét két tényező befolyásolja. Az egyik egy \emph{tolerancia
+érték}. Azt fejezi ki, hogy mi az az érték, ami alatti különbséget már nem
+tekintjük mérvadónak. Ez az érték jelenleg $1$, ami egy raszterpont méretének
+felel meg. A másik tényező az \emph{élsimítás} (\inenglish{anti-aliasing})
+mértékét kifejező szám. Ez a szám jelenleg $16$, ami azt jelenti, hogy a
+raszterpontok méretéhez képest egy tizenhatoddal kisebb értéket tekintünk
+raszterpontnak, és ezt \emph{alpixelnek} (\inenglish{subpixel}) hívjuk. Erre a
+felbontásra azért van szükség, hogy információnk legyen arról, hogy az alakzat
+nagyjából hány százalékát takarja ki a valódi raszterpontnak. Ha egy félig
+kitakart raszterpontot nem gyújtunk ki teljesen, hanem csak fél intenzitással,
+akkor a kapott alakzat élei kevésbé lesznek ,,szálkásak''. A használt
+színcsatornák méretei egy-egy bájt ($8$ bit). Ami azt jelenti, hogy az
+intenzitás mértéke 256 különböző értéket vehet fel. Ez egy $16\times16$-os
+felbontást tesz lehetővé, vagyis ez indokolja az élsimítás mértékét.
+Természetesen ennél kisebb érték is választható, és persze nagyobb is, bár ez
+utóbbinak nem sok értelme van a jelenlegi színcsatorna-méretek tükrében.
+
+Az élsimítás és a tolerancia mértéke nem csak a felbontásokra van hatással. Az
+egymást metsző szakaszok esetében is figyelembe kell venni. Erről majd később
+még lesz szó.
+
+A másik nem egyenes vonal a körív. Mint arról már volt szó, a köríveket Bézier
+görbékkel közelítjük. \Aref{arctobezier} alfejezetben bemutatott matematikai
+módszert követve osztjuk a körcikket harmadrendű görbékre. A felosztás menete a
+következő. Miután alkalmaztuk a körcikkre az aktuális transzformációt, meg kell
+határozni a körcikk kezdő- és végpontját. Ha szükséges, akkor az utolsó végpont
+és a körcikk kezdőpontja közé egy szakaszt szúrunk be, biztosítva az alakzat
+folytonosságát. Az világos, hogy a transzformációk révén a körcikkünk akár egy
+ellipszis-cikk formájába is átmehet. Az ismertetett matematikai képletek
+ugyanakkor körre értelmezettek. A Bézier görbék affin invarianciája miatt ez a
+megközelítést nem módosítja. Ugyanakkor a megközelítés mértékét befolyásoló
+sugár helyett az ellipszis két tengelye közül a nagyobbikat kell választanunk. A
+tolerancia érték és a kapott nagytengely aránya határozza meg az $\epsilon$
+értéket. Ennél az értéknél kell kisebb legyen \aref{eq:2} képletben kapott
+$\epsilon_{max}$. Ez viszont a körcikk szögétől függ. Ha nem elég kicsi, akkor a
+szöget elfelezzük, és megvizsgáljuk újra a különbséget, ha továbbra sem
+elégséges, akkor addig ismételjük, amíg nem lesz igaz, hogy $\epsilon_{max} <
+\epsilon$. Ezzel pedig megkapjuk, hogy hány darabra kell osztanunk az eredeti
+körcikket. Ha $k$ részre osztjuk az $\alpha$ szögű körcikket, akkor egy darabkát
+megközelítő Bézier görbe adatait a $h_1 = \frac{4}{3} \tan{\frac{1}{4} \beta}$
+értékkel megadhatjuk, ahol $\beta = \frac{\alpha}{k}$.
 
   \begin{description}
     \item[Kulcsszavak] Szakasz - segment, metszéspontok.
