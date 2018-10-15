@@ -662,9 +662,9 @@ legelterjedtebb\footnote{The Khronos Group: \emph{OpenGL ES Overview}, 2018,
 Viszonylag szigorú megkötések és a kevés számú függvény ellenére jól
 használható. Ettől a verziótól már lehetővé vált a \emph{programozható grafikus
 végrehajtási modell} (\inenglish{programmable graphics
-pipeline}).\textsuperscript{\ref{fn:GLES2}} Ami azt jelenti, hogy a
-végrehajtási sorrendbe ugyan nem lehet belenyúlni, de az egyes lépésekben futó
-részek programozhatók.
+pipeline}).\textsuperscript{\ref{fn:GLES2}} Ami azt jelenti, hogy a végrehajtási
+sorrendbe ugyan nem lehet belenyúlni, de az egyes lépésekben futó részek
+programozhatók (lásd az \emph{\ref{opengles_20_pipeline2}. ábrát}).
 
 Nézzük meg röviden a dolgozat szempontjából fontos GLES2 megkötéseit.
 
@@ -674,11 +674,54 @@ csak a háromszöget használhatjuk. Három típusát engedi a szabvány:
 \emph{háromszög}, \emph{háromszögszalag} (\inenglish{triangle strip}) és
 \emph{háromszög-legyező} (\inenglish{triangle fan}). Tehát az egyik és a
 számunkra legfontosabb megkötés az, hogy a megjeleníteni kívánt alakzatot
-háromszögekre kell bontanunk.
+háromszögekkel kell lefednünk.
+
+  \begin{figure}[!htb]
+    \includegraphics[scale=0.7]{img/opengles_20_pipeline2}
+    \caption{\label{opengles_20_pipeline2} Az OpenGL ES 2.0 programozható
+    grafikus végrehajtási modellje. A \emph{vertex shader} és a \emph{fragment
+    shader} lépéseket programozhatjuk. \\%
+    (Forrás:
+    \footnotesize{\url{https://www.khronos.org/api/opengles/2_X}}.)
+    }
+  \end{figure}
 
 Bármilyen megjelenítéshez írni kell legalább két programot, ami a grafikus
 egységen fog lefutni. Az első program kódját adja meg az ún. \emph{vertex
-shader}, a másodikét a \emph{fragment shader}.
+shader}, a másodikét pedig a \emph{fragment shader}. Ezeket a leírásokat a
+grafikus meghajtónak át kell adjuk, hogy az \emph{lefordíthassa}
+(\inenglish{compile shader}) és \emph{összekapcsolhassa} (\inenglish{link
+programs}) azokat. Hibátlan fordítás és összekapcsolás esetén visszakapunk egy
+\emph{program azonosítót}.  Később erre az azonosítóra hivatkozva állíthatjuk be
+a végrehajtási modell \emph{állapotát} (pipeline \inenglish{state}).
+
+A vertex shader segítségével határozhatjuk meg a \emph{csúcspontokra}
+(\inenglish{vertex points}) lefutó programot. A programmal adhatjuk meg a
+csúcspont végleges helyét.  Lehetőségünk van az adott csúcsponthoz tartozóan
+változókat (\inenglish{varyings}) beállítani, amiket a később lefutó fragment
+shaderben felhasználhatunk. Ahhoz, hogy a program lefusson a GPU oldalon, előbb
+még be kell állítanunk néhány dolgot a CPU oldalon. Egyrészt össze kell állítani
+egy puffert vagy tömböt a csúcspontokhoz tartozó adatokkal. A vertex shaderben
+az \func{attribute} kulcsszóval különböző bemeneti paramétereket határozhatunk
+meg.  Ezeket be kell ,,kössük'' a CPU oldalon. Azaz a grafikus meghajtót
+értesítenünk kell róla, hogy milyen néven milyen típusú adatot keressen a vertex
+programot leíró shader kódban. Ezeknek az attribútumoknak a közös méretét
+\emph{lépéshossznak} (\inenglish{stride length}) nevezzük, és minden
+csúcsponthoz tartoznia kell egy ekkora méretű leírásnak az előbb említett
+tömbben. Nem kötelező azonban egy attribútum tömböt használni.  Lehetőség van
+minden bemeneti attribútumhoz külön tömböt lefoglalni és bekötni.  A feladathoz
+érdemes igazítani. Ha több csúcsponthoz is ugyanazokat az értékeket adnánk át,
+akkor érdemes az egy tömböt alkalmazó modellt használni. Ilyenkor azonban meg
+kell adnunk egy indextömböt is. Minden csúcsponthoz hozzá kell rendelni az
+attribútum tömb egy lépéshossznyi elemét. Az indextömb esetén is két lehetőség
+közül választhatunk. Egyrészt megadhatjuk a rendereléskor. Másrészt egy egészen
+korai szakaszban készíthetünk egy viszonylag nagy (akár $65536$ elemű)
+indextömböt, és ezt feltölthetjük a GPU oldalra. Ha pedig a renderelés
+pillanatában nem adunk meg indextömböt, akkor sorra ebből feltöltött index
+pufferből veszi az indexeket. Ez az utóbbi megoldás akkor lehet hasznos, ha
+nagyon sok hasonló geometriai elemet (pl. trapézokat) szeretnénk ismétlődő
+attribútumokkal kirajzolni. Ilyenkor az indextömböt könnyedén generálhatjuk, és
+többször is felhasználhatjuk.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Állapotgép, shader, vertex, fragment, pipeline, batching
