@@ -1517,7 +1517,23 @@ elégséges, akkor addig ismételjük, amíg nem lesz igaz, hogy $\epsilon_{max}
 \epsilon$. Ezzel pedig megkapjuk, hogy hány darabra kell osztanunk az eredeti
 körcikket. Ha $k$ részre osztjuk az $\alpha$ szögű körcikket, akkor egy darabkát
 megközelítő Bézier görbe adatait a $h_1 = \frac{4}{3} \tan{\frac{1}{4} \beta}$
-értékkel megadhatjuk, ahol $\beta = \frac{\alpha}{k}$.
+értékkel megadhatjuk, ahol $\beta = \frac{\alpha}{k}$. A görbéket pedig az
+előzőekben ismertetett függvény hívásával tovább bontjuk, így megkapjuk a
+körcikk (vagy ellipsziscikk) szakaszokból álló képét.
+
+Az alakzat elemeinek a felbontása után a szakaszok egymást metsző pontjait kell
+megtaláljuk. Ehhez bejárjuk az $y$ koordináta mentén létrehozott listákat.
+Kezdve a két legkisebb $y_0$ (aho a lista legyen az $L_0$) és $y_1$ ($L_1$)
+értéknél. A legkisebb $y_0$-hoz tartozó $L_0$ (\func{SegmenList}) elemein
+végigmegyünk. Ezek az elemek szakaszok (\func{Segment}), és igaz rájuk, hogy
+vagy a következő legkisebb $y_1$ vagy egy további $y_i$ ($y_i > y_1$) értékig
+nyúlnak. Ha az $L_0$ listában egy $y_1$-en túllógó elemhez érünk, azt
+kettévágjuk az $y_1$ mentén. Az előző elemmel egybevágó két új elem úgy áll
+elő, hogy az eredeti elemet $y_1$-ig rövidítjük, majd a maradék résznek
+megfelelően egy új elemet szúrunk az $L_1$ listába. Az aktuális lista (a
+példában $L_0$) elemeinek bejárásakor vizsgáljuk, hogy metszik-e egymást. Ha
+találunk metszéspontot, akkor az $y_{metszéspont}$ értékhez beszúrunk egy újabb
+listát, majd az egész folyamatot újra kezdjük az aktuális listán ($L_0$).
 
   \begin{description}
     \item[Kulcsszavak] Szakasz - segment, metszéspontok.
