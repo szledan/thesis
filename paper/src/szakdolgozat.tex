@@ -436,23 +436,23 @@ előírás (Canvas) elvárásait teljesíteni.
 
 Ez a fejezet mutatja be azokat a technológiákat és kihívásokat, amelyek keretet
 szabtak a téma megvalósításának. Szót kell ejteni magáról a Canvas 2D Context
-API\footnote{Az alkalmazásprogramozási felület/interfész (Application
-Programming Interface) kifejezésre a továbbiakban mint \emph{API} hivatkozunk.}
-előírásról, a GLES2 szabvány nyújtotta lehetőségekről, azokról a matematikai
-módszerekről, amelyek biztosítják számunkra, hogy tetszőlegesen bonyolult --
-szerencsénkre zárt -- alakzatok kitöltését helyesen elvégezhessük. Össze
-kellett kapcsolni a választott GLES2 szabta megkötést~\footnote { Az OpenGL 2.0
-legfeljebb háromszögeket rajzol. } a Canvas Path~API elvárásaival~\footnote {
-Elvárás a tetszőleges számú körcikk, szakasz és Bézier görbe alkotta -- akár
-önmetsző -- alakzat mérethelyes megjelenítése. }. Ehhez több lépésbeli
-megközelítést (\inenglish{approximation}) alkalmaztunk. Ezekről a lépésekről is
-érdemes lesz beszélni.
+API\footnote{Az \emph{alkalmazásprogramozási felület/interfész}
+(\inenglish{Application Programming Interface}) kifejezésre a továbbiakban mint
+\emph{API} hivatkozunk.} előírásról, a GLES2 szabvány nyújtotta lehetőségekről,
+azokról a matematikai módszerekről, amelyek biztosítják számunkra, hogy
+tetszőlegesen bonyolult -- szerencsénkre zárt -- alakzatok kitöltését helyesen
+elvégezhessük. Össze kellett kapcsolni a választott GLES2 szabta
+megkötést~\footnote { Az OpenGL 2.0 legfeljebb háromszögeket rajzol. } a Canvas
+Path~API elvárásaival~\footnote { Elvárás a tetszőleges számú körcikk, szakasz
+és Bézier görbe alkotta -- akár önmetsző -- alakzat mérethelyes megjelenítése.
+}. Ehhez több lépésbeli megközelítést (\inenglish{approximation}) alkalmaztunk.
+Ezekről a lépésekről is érdemes lesz beszélni.
 
     \section[A Canvas előírás]{A W3C Canvas 2D Context előírás}
     \label{A Canvas előírás}
 
 A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C első
-HTML5 szabvány-vázlata:\\ \footnotesize{
+HTML5 szabvány vázlata:\\ \footnotesize{
 \url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. Az előírás leír
 egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{Canvas}-nek
 neveznek. A Canvas definíció szerint nem más mint egy adott \emph{szélességgel}
@@ -467,36 +467,36 @@ pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
 Az előíráson belül definiált Path API rész amúgy egy régebbi, elterjedt
 alakzatszerkesztő eljáráson alapul. Az eljárás lényege, hogy bizonyos alap
 eszközökkel definiálunk egy bonyolultabb formát. Ezt a folyamatot hívjuk
-alakzat építésnek (\inenglish{shape/path building}). Az építés fázis után
-különböző parancsokkal rajzolhatjuk ki a definiált alakzatot, akár kitöltve
+alakzat építésnek (\inenglish{shape/path building}). Az építés után különböző
+parancsokkal rajzolhatjuk ki a definiált alakzatot, akár kitöltve
 (\emph{fill}), akár körvonalként (\emph{stroke}), de lehetőségünk van az adott
-alakzattal kivágni (\emph{clip}) is a Canvas-en már meglévő képből.
+alakzattal kivágni (\emph{clip}) is a rajzvásznon már meglévő képből.
 
 A Canvas előír néhány megkötést. Ezekről látni fogjuk, hogy természetes
 korlátok. Hiszen józan ésszel felfogható, hogy egy egyenes szakaszból definiált
-alakzatra értelmetlen a kitöltés, azaz a fill parancsot meghívni. Hasonlóan nem
-mond semmit a nulla vastagságú vonal a stroke parancs esetén. Érdekes
-belegondolni abba is, hogy mi legyen egy definiált alakzat sorsa, ha már
-kirajzoltuk. Vessük el, vagy tartsuk meg. A szabvány megalkotói -- amúgy
-programozási szempontból jól indokolható módon -- a megtartás mellett
-döntöttek. Így viszont az a fontos megkötés is megjelent, hogy mindig
-egyértelműen jelezni kell, ha új alakzatot akarunk definiálni.
+alakzatra értelmetlen a \emph{kitöltés} (\func{fill}) parancsot meghívni.
+Hasonlóan nem mond semmit a nulla vastagságú vonal a \emph{körvonal rajzolása}
+(\func{stroke}) parancs esetén. Érdekes belegondolni abba is, hogy mi legyen
+egy definiált alakzat sorsa, ha már kirajzoltuk. Vessük el, vagy tartsuk meg. A
+szabvány megalkotói -- amúgy programozási szempontból jól indokolható módon --
+a megtartás mellett döntöttek. Így viszont az a fontos megkötés is megjelent,
+hogy mindig egyértelműen jelezni kell, ha új alakzatot akarunk definiálni.
 
 A W3C-féle Canvas felfogható egy állapotgépnek. Ami ebben a esetben azt
 jelenti, hogy bizonyos beállítások (kitöltőszín, betűméret, vonalvastagság,
-transzformációk, stb.) érvényben maradnak mindaddig, amíg meg nem változtatjuk
+transzformációk stb.) érvényben maradnak mindaddig, amíg meg nem változtatjuk
 azokat. Ezt már az előbb említett felépített vonal esetén is érezhettük. Mint
 később látni fogjuk, ez erősen megköti a kezünket, hogy milyen rajzoló program
 is lehet a Gepard. Persze a Gepard idővel kibővülhet további
-funkcionalitásokkal (pl. \emph{flush}, \emph{finish}, stb.), amik egy sokkal
+funkcionalitásokkal (pl. \emph{flush}, \emph{finish} stb.), amik egy sokkal
 kötetlenebb rajzoló eszközhöz vezethetnek.
 
-Térjünk vissza egy kis példa erejéig a Path építéshez. Feltételezzük, hogy a
-kedvünkre beállítottuk a rajzolás színét, a méreteket és minden szükséges módon
-felkészítettük a vásznunkat, hogy arra felvigyük a kívánt alakzatot. Ez most
-legyen egy háromszög, mint az egyik legegyszerűbb, ám a szabványban külön nem
-definiált forma, ellentétben a téglalappal (\emph{rect}, \emph{fillRect},
-\emph{strokeRect}).
+Térjünk vissza egy kis példa erejéig a Path építéshez. Feltételezzük, hogy
+kedvünkre beállítottuk a rajzolás színét, a méreteket stb. Valamint minden
+szükséges módon felkészítettük a vásznunkat arra, hogy felvigyük rá a kívánt
+alakzatot. Ez most legyen egy háromszög, mint az egyik legegyszerűbb, ám a
+szabványban külön nem definiált forma, ellentétben a téglalappal (\emph{rect},
+\emph{fillRect}, \emph{strokeRect}).
 
   \begin{figure}[!htb]
     \hspace{0.1\textwidth}
@@ -522,15 +522,14 @@ definiált forma, ellentétben a téglalappal (\emph{rect}, \emph{fillRect},
     alakzatok körvonalai és kitöltései }
   \end{figure}
 
-A fenti ábrán (\ref{triangles-code-and-image}) látható egy kis példakód,
+A fenti ábrán (\emph{\ref{triangles-code-and-image}}) látható egy kis példakód,
 illetve ennek hat különböző eredménye. Az első sorban olyan alakzatokat látunk,
-ahol a \emph{closePath} parancsot meghívtuk (hármoszög), a másodikban pedig nem
-(V alak). Az első oszlopban a \emph{fill}-t, a harmadikban pedig a
-\emph{stroke}-ot nem hívtuk meg. Az előírás~\cite{Cabanier:14:HCC} ugyanakkor
-rendelkezik arról, hogy minden Path zárt alakzat kell legyen, így mindig
-kitölthető is. Ezért lett a második sor utolsó két V-nek definiált alakzata
-mégis kitöltött háromszög. Nézzük meg, hogy milyen konkrét eszközöket biztosít
-az előírás.
+ahol a \func{closePath} parancsot meghívtuk (hármoszög), a másodikban pedig nem
+(V alak). Az első oszlopban a \func{fill}-t, a harmadikban pedig a
+\func{stroke}-ot nem hívtuk meg. Az előírás ugyanakkor rendelkezik arról, hogy
+minden Path zárt alakzat kell legyen, így mindig kitölthető is. Ezért lett a
+második sor utolsó két V-nek definiált alakzata mégis kitöltött háromszög.
+Nézzük meg, hogy milyen konkrét eszközöket biztosít az előírás.
 
 Ebben a fejezetben nem térünk ki részletesen a teljes előírásra. A legfontosabb
 rész a dolgozatunk témája a Path. Ugyanakkor a munkához szorosan kapcsolódott a
@@ -574,21 +573,20 @@ oldottuk meg a hasonló viselkedést C++-os környezetben.
 
 A színekhez hasonlóan az alakzat körvonalának tulajdonságát leíró
 attribútumokat is szöveg formájában kell megadni. Itt viszont van egy kis
-játéktér, mert az ajánlások ugyan szöveget várnak, de a számértéket
-váró attribútumok esetében (pl. \func{lineWidth}) azért elfogadhatunk majd
-ténylegesen szám típust is. Erről is lesz szó az alakzatépítés
-működését leíró fejezetben.
+játéktér, mert az ajánlások ugyan szöveget várnak, de a számértéket váró
+attribútumok esetében (pl. \func{lineWidth}) azért elfogadhatunk majd
+ténylegesen szám típust is. Erről is lesz szó az alakzatépítés működését leíró
+fejezetben.
 
-A Canvas állapotaihoz mindig tartozik egy affin-transzformációt leíró
-hatelemű mátrix. Ezt a mátrixot módosíthatjuk a \func{scale(x, y)},
-a \func{rotate(angle)}, a \func{translate(x, y)},  a \func{transform(a, b, c, d,
-e, f)}
-és a \func{setTransform(a, b, c, d, e, f)} függvényekkel. Az utolsó két
-függvény esetén a változók a homogén transzformációs mátrix módosítható értékeit
-reprezentálják\footnote{Cabanier et al.: \emph{{HTML}
-Canvas {2D} Context}, 2015, W3C\\ \footnotesize{
-\url{https://www.w3.org/TR/2dcontext/}}, 6. fejezet.}:
-\[\begin{pmatrix}a & c & e \\ b & d & f \\ 0 & 0 & 1 \\ \end{pmatrix}\]
+A Canvas állapotaihoz mindig tartozik egy affin-transzformációt leíró hatelemű
+mátrix. Ezt a mátrixot módosíthatjuk a \func{scale(x, y)}, a
+\func{rotate(angle)}, a \func{translate(x, y)},  a \func{transform(a, b, c, d,
+e, f)} és a \func{setTransform(a, b, c, d, e, f)} függvényekkel. Az utolsó két
+függvény esetén a változók a homogén transzformációs mátrix módosítható
+értékeit reprezentálják\footnote{Cabanier et al.: \emph{{HTML} Canvas {2D}
+Context}, 2015, W3C\\ \footnotesize{ \url{https://www.w3.org/TR/2dcontext/}},
+6. fejezet.}: \[\begin{pmatrix}a & c & e \\ b & d & f \\ 0 & 0 & 1 \\
+\end{pmatrix}\]
 
 Végül nézzük a Path API részt. A Canvas-ben a \emph{Path API} két részből áll.
 Egyrészt a Path-t építő és az azt kirajzoló részből. Az építő
@@ -701,27 +699,59 @@ csúcspont végleges helyét.  Lehetőségünk van az adott csúcsponthoz tartoz
 változókat (\inenglish{varyings}) beállítani, amiket a később lefutó fragment
 shaderben felhasználhatunk. Ahhoz, hogy a program lefusson a GPU oldalon, előbb
 még be kell állítanunk néhány dolgot a CPU oldalon. Egyrészt össze kell állítani
-egy puffert vagy tömböt a csúcspontokhoz tartozó adatokkal. A vertex shaderben
-az \func{attribute} kulcsszóval különböző bemeneti paramétereket határozhatunk
-meg.  Ezeket be kell ,,kössük'' a CPU oldalon. Azaz a grafikus meghajtót
-értesítenünk kell róla, hogy milyen néven milyen típusú adatot keressen a vertex
-programot leíró shader kódban. Ezeknek az attribútumoknak a közös méretét
+egy puffert (tömböt) a csúcspontokhoz tartozó adatokkal. A vertex shaderben az
+\func{attribute} kulcsszóval különböző bemeneti paramétereket határozhatunk meg.
+Ezeket be kell ,,kössük'' a CPU oldalon. Azaz a grafikus meghajtót értesítenünk
+kell róla, hogy milyen néven és milyen típusú adatot keressen a vertex programot
+leíró shaderkódban. Ezeknek az attribútumoknak a közös méretét
 \emph{lépéshossznak} (\inenglish{stride length}) nevezzük, és minden
 csúcsponthoz tartoznia kell egy ekkora méretű leírásnak az előbb említett
-tömbben. Nem kötelező azonban egy attribútum tömböt használni.  Lehetőség van
-minden bemeneti attribútumhoz külön tömböt lefoglalni és bekötni.  A feladathoz
-érdemes igazítani. Ha több csúcsponthoz is ugyanazokat az értékeket adnánk át,
-akkor érdemes az egy tömböt alkalmazó modellt használni. Ilyenkor azonban meg
-kell adnunk egy indextömböt is. Minden csúcsponthoz hozzá kell rendelni az
-attribútum tömb egy lépéshossznyi elemét. Az indextömb esetén is két lehetőség
-közül választhatunk. Egyrészt megadhatjuk a rendereléskor. Másrészt egy egészen
-korai szakaszban készíthetünk egy viszonylag nagy (akár $65536$ elemű)
-indextömböt, és ezt feltölthetjük a GPU oldalra. Ha pedig a renderelés
-pillanatában nem adunk meg indextömböt, akkor sorra ebből feltöltött index
-pufferből veszi az indexeket. Ez az utóbbi megoldás akkor lehet hasznos, ha
-nagyon sok hasonló geometriai elemet (pl. trapézokat) szeretnénk ismétlődő
-attribútumokkal kirajzolni. Ilyenkor az indextömböt könnyedén generálhatjuk, és
-többször is felhasználhatjuk.
+tömbben. Nem kötelező azonban, hogy csak egy attribútum tömböt használjunk.
+Lehetőség van minden bemeneti attribútumhoz külön tömböt lefoglalni és bekötni.
+A feladathoz érdemes igazítani. Ha több csúcsponthoz is ugyanazokat az értékeket
+adnánk át, akkor érdemes az egy tömböt alkalmazó modellt használni.  Ilyenkor
+azonban meg kell adnunk egy indextömböt is. Minden csúcsponthoz hozzá kell
+rendelni az attribútumtömb egy lépéshossznyi elemét. Az indextömb esetén is két
+lehetőség közül választhatunk. Egyrészt megadhatjuk a rendereléskor\footnote{A
+renderelést a \func{glDrawElements} vagy a \func{glDrawArrays} függvények hívása
+jelenti.}.  Másrészt egy egészen korai szakaszban készíthetünk egy viszonylag
+nagy (akár $65536$ elemű) indextömböt, és ezt feltölthetjük a GPU oldalra. Ha
+pedig a renderelés pillanatában nem adunk meg indextömböt, akkor sorra ebből a
+feltöltött pufferből veszi az indexeket. Ez az utóbbi megoldás akkor lehet
+hasznos, ha nagyon sok hasonló geometriai elemet (pl. trapézokat) szeretnénk
+ismétlődő attribútumokkal kirajzolni. Ilyenkor az indextömböt könnyedén
+generálhatjuk, és többször is felhasználhatjuk.
+
+Hasonlóan a vertex shaderhez, a \emph{fragment shader} esetében is be kell
+állítanunk a megfelelő értékeket. A shaderkódban használt \emph{texturák}
+(\inenglish{textures}) vagy \emph{egyedi változók} (\inenglish{uniform})
+elnevezését szintén be kell kössük CPU oldalon. Az egyedi változókat fel kell
+tölteni a megfelelő értékkel. A fragment shader kódjából fordított program a
+csúcspontok által kifeszített háromszögek területére eső raszterpontokra fog
+lefutni.  Ha lefut a program, az azt jelenti, hogy a raszterpont egy ilyen
+csúcspont-hármas által meghatározott háromszögbe esik. A bemenő paraméterek
+értékei közül a változók (\inenglish{varyings}) interpolálva lesznek feltöltve.
+Ha a raszterpont valamelyik csúcspontra esik, akkor annak a csúcspontnak
+megfelelő értékeket kapja meg. Ha a háromszögbe esik, akkor az interpoláció
+típusának megfelelően a három ponttól vett távolságainak függvényében kap
+értékeket az adott változókba.
+
+Ha megadtuk a shader kódokat, lefordítottuk, és bekötöttük azokat, akkor a már
+említett puffereket (attribútum, index stb.) kell feltöltenünk. Meg kell adnunk
+egy eredmény puffert is, ahová a kirenderelt képet várjuk. Ez egy úgynevezett
+\func{Frame Buffer} típusú tömb lesz. Ezek után valamelyik renderelést kiváltó
+függvény hatására a grafikus meghajtó összegyűjti a rajzoláshoz szükséges
+adatokat, és átmásolja a GPU oldalra. Majd elkezdi feldolgozni.
+
+Az eredményt nem azonnal kapjuk meg, a folyamat a grafikus meghajtótól függ.
+Ugyanakkor vannak bizonyos CPU oldali függvények, amik blokkoló hatásúak, azaz
+bevárják az eredmény elkészültét. Ilyen például a \func{glReadPixels}. Hiszen
+ahhoz, hogy valós adatot olvashassunk ki az eredmény tömbből, garantálnunk kell,
+hogy abban a végső kép el is készült.
+
+Ahhoz, hogy minél hatékonyabban kihasználjuk a CPU oldaltól függetlenül
+renderelő GPU nyújtotta lehetőséget, annál több adatot kell egyszerre, vagyis
+csokorban (\inenglish{batching}) átadnunk.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Állapotgép, shader, vertex, fragment, pipeline, batching
