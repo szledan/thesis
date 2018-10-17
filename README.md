@@ -5,7 +5,7 @@ Bachelor's thesis
 Title: OpenGL-ES 2.0 alapú Path API
 Author: LEDÁN Szilárd
 Supervisor: KISS Ákos, PhD, assistant professor
-Department of Software Enginering, University of Szeged
+Department of Software Engineering, University of Szeged
 ```
 
 ### Getting started
