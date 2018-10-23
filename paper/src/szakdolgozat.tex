@@ -1667,10 +1667,17 @@ szakaszokat már könnyedén trapézokká alakíthatjuk.
 
   \section{Trapézzá alakítás}
 
-Ebben e részben a halomra hányt szakaszokból a kitöltési metódus
-alapján trapézokat hozok létre. Ezt az algoritmust is részletesen be kell
-mutatnom. A trapéz építése, majd horizontális, végül vertikális
-összevonásukról is kell beszélnem.
+Az előző fejezetben bemutattuk, hogy hogyan kapjuk meg az alakzatunk
+szakaszokból megközelített képét. Azt is láthattuk, hogy nem csak az
+alakzatot bontottuk fel szakaszokra, hanem magukat a szakaszokat is
+felosztottuk az $y$ értékek mentén. Ennek a felosztásnak a célja az volt,
+hogy a szakaszokat tartalmazó listákat bejárva, az eredeti alakzatot lefedő
+trapézokat alakíthassunk ki. A trapézokra a renderelés során lesz
+szükségünk. Minden trapéz leírható két háromszögként. Ezeket a
+háromszögeket tudjuk majd kirajzolni.
+
+Nézzük meg részletesebben a trapézzá alakítás folyamatait.
+
 
   \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
     \begin{center}
