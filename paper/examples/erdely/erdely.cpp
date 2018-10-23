@@ -36,6 +36,7 @@
 #define PARSE_FLAG(SFLAG, LFLAG, DEFAULT, ARGC, ARGV) PARSE_FLAG_VALUE(SFLAG, LFLAG, DEFAULT, 1, ARGC, ARGC, ARGV);
 
 class SzeklerWriter {
+    static constexpr float kPi = 2.0 * std::asin(1.0);
 public:
     static const std::string kLower;
     static const std::string kUpper;
@@ -80,6 +81,7 @@ public:
             else if (str.find("t") == 0) { t(); }
             else if (str.find(" ") == 0) { _(); }
             else if (str.find("*") == 0) { STAR(); }
+            else if (str.find("#") == 0) { KonyaSTAR(); }
             else if (str.find(")") == 0) { MOON(); }
 
             str.erase(0, adv);
@@ -320,28 +322,35 @@ public:
         return flush();
     }
 
-    SzeklerWriter& STAR(const float size = 0.8)
+    SzeklerWriter& KonyaSTAR(const float size = 0.8)
     {
+        return STAR(true, size);
+    }
+
+    SzeklerWriter& STAR(const bool isKonyaStar = false, const float size = 0.8)
+    {
+        const float kPi8 = kPi / 8.0;
+
         begin();
         leading(1.5);
         _ctx.save();
 
         const float s = _fs * size;
-        const float _1p6 = s * 0.5 / 3.0;
-        const float _2p6 = s * 1.0 / 3.0;
-        const float _3p6 = s * 0.5;
-        const float kPi = 2.0 * std::asin(1.0);
+        const float _a = 0.5 * s;
+        const float _a2 = _a / 2.0;
+        const float _b2 = _a2 * std::tan(kPi8);
 
         _ctx.translate(0.0, 0.5 * _fs);
-        _ctx.moveTo(-_1p6, -_2p6);
-        for (int i = 0; i < 4; ++i) {
-            _ctx.lineTo(-_1p6, -_3p6);
-            _ctx.lineTo(0.0, -_2p6);
-            _ctx.lineTo(_1p6, -_3p6);
-            _ctx.lineTo(_1p6, -_1p6);
-            _ctx.rotate(kPi / 2.0);
+        for (int i = 0; i < 8; ++i) {
+            _ctx.lineTo(0.0, _a);
+            _ctx.lineTo(-_b2, _a2);
+            _ctx.rotate(kPi / 4.0);
+            _ctx.lineTo(_b2, _a2);
         }
         _ctx.closePath();
+        if (isKonyaStar) {
+            _ctx.rotate(kPi8);
+        }
         _ctx.translate(0.0, -0.5 * _fs);
 
         _ctx.restore();
@@ -359,10 +368,9 @@ public:
         const float s = _fs * size;
 
         _ctx.translate(0.0, 0.5 * _fs);
-        _ctx.moveTo(0.5 * s, 0.0 * s);
-        _ctx.bezierCurveTo(0.5 * s, 0.5 * s,-0.05 * s, 0.6 * s,  -0.1 * s, 0.48 * s);
-        _ctx.bezierCurveTo(0.25 * s, 0.2 * s, 0.25 * s, -0.2 * s, -0.1 * s, -0.48 * s);
-        _ctx.bezierCurveTo(-0.05 * s, -0.6 * s, 0.5 * s, -0.5 * s, 0.5 * s, 0.0 * s);
+        _ctx.moveTo(0.5 * s * cos(4.0 / 3.0 * kPi), 0.5 * s * sin(4.0 / 3.0 * kPi));
+        _ctx.arc(0.0, 0.0, 0.5 * s, 4.0 / 3.0 * kPi, 2.0 / 3.0 * kPi);
+        _ctx.arc(-0.2 * _fs, 0.0, 0.4 * s, 1.5 / 3.0 * kPi, 4.5 / 3.0 * kPi, true);
         _ctx.closePath();
         _ctx.translate(0.0, -0.5 * _fs);
 
@@ -447,7 +455,7 @@ int main(int argc, char* argv[])
     ctx.translate(1800, 120);
     SzeklerWriter szw(ctx, 250);
 
-    szw.text(") Szabad x Erdélyt *");
+    szw.text(") Szabad x Erdélyt #");
 
     std::string pngFile = argc > 1 ? argv[1] : "./paper/src/img/erdely.png";
     surface.save(pngFile);
