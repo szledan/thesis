@@ -686,13 +686,13 @@ csak a háromszöget használhatjuk. Három típusát engedi a szabvány:
 számunkra legfontosabb megkötés az, hogy a megjeleníteni kívánt alakzatot
 háromszögekkel kell lefednünk.
 
-  \begin{figure}[!htb]
-    \includegraphics[scale=0.7]{img/opengles_20_pipeline2}
+  \begin{figure}
+    \includegraphics[scale=0.5]{img/built/gles2pipeline_eps}
     \caption{\label{opengles_20_pipeline2} Az OpenGL ES 2.0 programozható
     grafikus végrehajtási modellje. A \emph{vertex shader} és a \emph{fragment
     shader} lépéseket programozhatjuk. \\%
-    (Forrás:
-    \footnotesize{\url{https://www.khronos.org/api/opengles/2_X}}.)
+    (A \footnotesize{\url{https://www.khronos.org/api/opengles/2_X}} forrás
+    alapján.)
     }
   \end{figure}
 
@@ -700,8 +700,8 @@ Bármilyen megjelenítéshez írni kell legalább két programot, ami a grafikus
 egységen fog lefutni. Az első program kódját adja meg az ún. \emph{vertex
 shader}, a másodikét pedig a \emph{fragment shader}. Ezeket a leírásokat a
 grafikus meghajtónak át kell adjuk, hogy az \emph{lefordíthassa}
-(\inenglish{compile shader}) és \emph{összekapcsolhassa} (\inenglish{link
-programs}) azokat. Hibátlan fordítás és összekapcsolás esetén visszakapunk egy
+(\inenglish{compiling shader}) és \emph{összeköthesse} (\inenglish{linking
+programs}) azokat. Hibátlan fordítás és összekötés esetén visszakapunk egy
 \emph{program azonosítót}.  Később erre az azonosítóra hivatkozva állíthatjuk be
 a végrehajtási modell \emph{állapotát} (pipeline \inenglish{state}).
 
@@ -858,7 +858,7 @@ $p^n_0(t)$ pont leír, ahogy a $t$ végig fut a $[0,1]$ intervallumon, Bézier
 görbének nevezzük, és $B(t)$-vel jelöljük. A $p^k_i(t)$ pontokat de Casteljau
 pontoknak, az $n$ számot pedig a görbe rendjének hívjuk.  \end{defi}
 
-  \begin{figure}[!htb]
+  \begin{figure}
   \psfrag{a}[b][B][0.9]{\emph{a.}}
   \psfrag{P0}[b][B][0.8]{\bf{$p_{0}$}}
   \psfrag{P1}[b][B][0.8]{\bf{$p_{1}$}}
@@ -949,7 +949,7 @@ görbe alakjától. Ha azonban az \emph{\ref{circle}. ábrán} látható módon
 szimmetrikusan határozzuk meg a Bézier görbét, akkor a maximális eltérés a
 $t=\frac{1}{2}$ értéknél adódik.\footnote{M. Goldapp: i. m., 230. o.}
 
-  \begin{figure}[!htb]
+  \begin{figure}
   \psfrag{0}[b][B][0.8]{\bf{$0$}}
   \psfrag{1}[b][B][0.8]{\bf{$1$}}
   \psfrag{x}[b][B][0.8]{\bf{$x$}}
@@ -1060,7 +1060,7 @@ könnyen megadható.
 A másik csoport a módosítható adattagoké (\inenglish{attributes}). Itt a
 viselkedés kényelmes biztosításához saját osztályt kellett írni. Ez lett az
 \func{Attribute} osztály. A bevezetésének szükségességét a \func{fillStyle}
-adattagon keresztül mutatom be.
+adattagon keresztül mutatjuk be.
 
 A \func{fillStyle} definíció szerint egy CSS attribútum\footnote{TODO: link
 CSS-Style} vagyis adattag. Ez azt jelenti, hogy igen sokféleképpen lehet
@@ -1081,28 +1081,30 @@ működni az \func{Attribute} osztály. Az értékadás sokféleségét egyrész
 https://www.itu.dk/courses/BPRD/E2009/fundamental-1967.pdf} biztosítja. A
 bonyolultabb értékadásokat (pl. függvény leírás) pedig egy a példányosításkor
 bekötött elemző-értelmező függvény végzi.
-  \begin{wrapfigure}{\melyikoldalra}{0.3\textwidth}
+  \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
     \begin{center}
       \includedataflowkivagas{0pt}{210pt}{160pt}{590pt}{}
     \end{center}
-    \caption{\label{dataflow-API-diagram} A \emph{felső} réteg, vagyis
-    a Gepard interfész függvényei és adattagjai}
+    \caption{\label{dataflow-API-diagram} A \emph{felső} réteg (Gepard
+    interfész) függvényei és adattagjai. \\ (Részlet a
+    \emph{\ref{dataflow}. folyamatábrából}.)}
   \end{wrapfigure}
 Az így bekötött függvény az értékadáskor meghívódik (visszahívódik,
 \inenglish{callback}), és a kapott szöveget értelmezi, majd a megfelelő
 adattagot immáron a középső rétegben vagyis a \func{Gepard Engine}-ben
 beállítja.
 
-\Aref{dataflow-API-diagram}. ábrán a Canvas API-nak a Geprad interfészben
-általam megvalósított függvényei és adattagjai láthatók. A függvényeket a nevük
-utáni zárójelpár jelzi. Az egyes függvények paramétereit itt nem tüntettük fel,
-ezek úgy is megtalálhatók részletesebben is kifejtve az API dokumentációjában.
-A zárójelpár nélküli nevek az egyes adattagok. Ezekről is tartalmaz bővebb
-leírást a dokumentáció. A megvalósított API részek -- a gradiens színezést és a
-szaggatott vonallal rajzolást leszámítva -- teljes körű alakzatrajzolást
-biztosítanak számunkra. Erre láthatunk majd példát az eredményeket bemutató
-fejezetben (\ref{Eredmények}). Az ábrán nem tüntettük fel a többi -- a
-dolgozatot nem érintő API függvényt és adattagot.
+\Aref{dataflow-API-diagram}. ábrán a Canvas API-nak a Geprad interfészben az
+alakzatrajzoláshoz szükséges és szorosan kapcsolódó függvényei és adattagjai
+láthatók. A függvényeket a nevük utáni zárójelpár jelzi. Az egyes függvények
+paramétereit itt nem tüntettük fel, ezek úgy is megtalálhatók részletesebben is
+kifejtve az API dokumentációjában. A zárójelpár nélküli nevek az egyes
+adattagok. Ezekről is tartalmaz bővebb leírást a dokumentáció. A megvalósított
+API részek -- a gradiens színezést és a szaggatott vonallal rajzolást
+leszámítva -- teljes körű alakzatrajzolást biztosítanak számunkra. Erre
+láthatunk majd példát az eredményeket bemutató fejezetben (\ref{Eredmények}).
+Az ábrán nem tüntettük fel a többi -- a dolgozatot nem érintő API függvényt és
+adattagot.
 
 Tehát az itt bemutatott \emph{felső} réteg vagyis a \func{Gepard} egy C++
 interfész, ami egy jól bevált Canvas API-ra támaszkodik, és teremt kapcsolatot
@@ -1284,7 +1286,8 @@ függvények.
     \begin{center}
       \includedataflowkivagas{153pt}{355pt}{345pt}{595pt}{}
     \end{center}
-    \caption{\label{dataflow-path} A belső Path API részei}
+    \caption{\label{dataflow-path} A belső Path API részei. \\ (Részlet a
+    \emph{\ref{dataflow}. folyamatábrából}.)}
   \end{wrapfigure}
 
 Az átalakításra azért van szükség, mert az alakzat építése közben lehetőség van
@@ -1483,7 +1486,8 @@ rendezettek, és nem vizsgáltak a metszéspontok sem.
       \includedataflowkivagas{345pt}{400pt}{525pt}{590pt}{}
     \end{center}
     \caption{\label{dataflow-segment} A szakasszá alakítás és a megközelítő
-    visszavezetések lépései.}
+    visszavezetések. \\ (Részlet a \emph{\ref{dataflow}.
+    folyamatábrából}.)}
   \end{wrapfigure}
 
 Ha nem egy egyenes vonalat kell beszúrni, hanem egy bonyolultabb görbe vonalat,
@@ -1593,7 +1597,8 @@ mutatnom. A trapéz építése, majd horizontális, végül vertikális
     \begin{center}
       \includedataflowkivagas{345pt}{200pt}{525pt}{393pt}{}
     \end{center}
-    \caption{\label{dataflow-trapezoid} A belső Path API részei}
+    \caption{\label{dataflow-trapezoid} A trapézzá alakítás és
+    összevonás lépései. \\ (Részlet a \emph{\ref{dataflow}. folyamatábrából}.)}
   \end{wrapfigure}
 
   \begin{description}[noitemsep]
@@ -1690,7 +1695,7 @@ példát.
   \begin{center}
     \includegraphics[scale=0.8]{img/built/dataflow_eps}
   \end{center}
-    \caption{\label{dataflow_eps} A rajzolás folyamatai}
+    \caption{\label{dataflow} A rajzolás folyamatai}
   \end{figure}
 
 
