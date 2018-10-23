@@ -639,11 +639,22 @@ m., 11. fejezet.}:
   alakzat rész-e (jelenleg nem támogatott függvény).
 \end{itemize}
 
-  \begin{description}[noitemsep]
-    %\setlength{\itemsep}{0pt plus 1pt}
-    \item[Kulcsszavak] Canvas, bitmap, path, zárt alakzat, fill, stroke.
-    \item[Becsült oldalszám] 3.
-  \end{description}
+Arról már volt szó, hogy az alakzat önmetsző is lehet. Az önmetszés kérdése a
+kitöltéskor válik fontossá. A kérdés az, hogy az alakzat által határolt
+részekből és az önmetszés alkalmával létrejövő lyukakból pontosan melyeket kell
+kitölteni. A Canvas API korábbi verziói támogatták\footnote{TODO: hivat} a két
+legelterjedtebb kitöltési stratégiát, szabályt. Ezek a \emph{paritás szabály}
+(\inenglish{even-odd fill rule}) és a \emph{nem-zérus szabály}
+(\inenglish{non-zero fill rule}). A végső API ugyanakkor már csak az utóbbi,
+nem-zérus szabályt írja elő. Mivel a 2D alakzatrajzolásban mindkettő igen
+elterjedt, ezért -- mint később látni fogjuk -- a Gepard API mindkettőt
+támogatja. A két szabályt a Pásztázó egyenesek (\ref{Pásztázó egyenesek}.)
+részben részletesen ismertetjük.
+
+A itt ismertetett API elvárásokból (is) látszik, hogy a Canvas által
+biztosított alakzatrajzolás jó néhány nem triviális formát is lehetővé tesz.
+Ezért is fontos, hogy milyen módszerrel közelítjük majd meg az alakzatok
+renderelését.
 
     \section{Az OpenGL~ES~2.0 API}
     \label{GLES2:API}
