@@ -450,7 +450,7 @@ Path~API elvárásaival~\footnote { Elvárás a tetszőleges számú körcikk, s
 }. Ehhez több lépésbeli megközelítést (\inenglish{approximation}) alkalmaztunk.
 Ezekről a lépésekről is érdemes lesz beszélni.
 
-    \section[A Canvas előírás]{A W3C Canvas 2D Context előírás}
+    \section[A Canvas 2D Context előírás]{A W3C Canvas 2D Context előírás}
     \label{A Canvas előírás}
 
 A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C első
@@ -511,9 +511,9 @@ szabványban külön nem definiált forma, ellentétben a téglalappal (\emph{re
         ctx.moveTo(5, 0);
         ctx.lineTo(6, 9);
         ctx.lineTo(0, 3);
-        ctx.closePath();  // felső sor
-        ctx.fill();  // utolsó két oszlop
-        ctx.stroke();  // első két oszlop
+        ctx.closePath();  // top line
+        ctx.fill();  // last two columns
+        ctx.stroke();  // first two columns
       \end{lstlisting}
     \endminipage
     \hfill
@@ -574,11 +574,10 @@ megadni az értékeket. Később részletesen lesz szó arról, hogy milyen mód
 oldottuk meg a hasonló viselkedést C++-os környezetben.
 
 A színekhez hasonlóan az alakzat körvonalának tulajdonságát leíró
-attribútumokat is szöveg formájában kell megadni. Itt viszont van egy kis
-játéktér, mert az ajánlások ugyan szöveget várnak, de a számértéket váró
-attribútumok esetében (pl. \func{lineWidth}) azért elfogadhatunk majd
-ténylegesen szám típust is. Erről is lesz szó az alakzatépítés működését leíró
-fejezetben.
+attribútumokat (pl. \func{lineWidth}) is szöveg formájában kell megadni. Itt
+viszont van egy kis játéktér, mert az ajánlás ugyan szöveget várna, de mivel
+itt számértékekről van szó, ezért elfogadhatunk majd ténylegesen szám típust
+is. Erről is lesz szó az alakzatépítés működését leíró fejezetben.
 
 A Canvas állapotaihoz mindig tartozik egy affin-transzformációt leíró hatelemű
 mátrix. Ezt a mátrixot módosíthatjuk a \func{scale(x, y)}, a
@@ -590,7 +589,7 @@ Context}, 2015, W3C\\ \footnotesize{ \url{https://www.w3.org/TR/2dcontext/}},
 6. fejezet.}: \[\begin{pmatrix}a & c & e \\ b & d & f \\ 0 & 0 & 1 \\
 \end{pmatrix}\]
 
-Végül nézzük a Path API részt. A Canvas-ben a \emph{Path API} két részből áll.
+Végül nézzük a \emph{Path API} részt. A Canvas-ben a Path API két részből áll.
 Egyrészt a Path-t építő és az azt kirajzoló részből. Az építő
 rész\footnote{Cabanier et al.: i. m., 5. fejezet.} függvényei a következők:
 \begin{itemize}
