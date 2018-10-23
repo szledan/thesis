@@ -1571,12 +1571,12 @@ körcikk (vagy ellipsziscikk) szakaszokból álló képét.
     \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
     160pt,clip]{img/built/sunmoon_eps}
     \caption{\label{sunmoon} Beszúrt
-    szakaszok ($S_i$) és azokat tartalmazó listák ($L_i$). A \emph{csillag}
-    formánál két szakasz ($S_1$ és $S_2$) metszéspontja által létrehozott új
-    listára ($L_m$) láthatunk példát. Az $S_1$ és $S_2$ szakaszok
+    szakaszok $(S_i)$ és azokat tartalmazó listák $(L_i)$. A \emph{csillag}
+    formánál két szakasz $(S_1$ és $S_2)$ metszéspontja által létrehozott új
+    listára $(L_m)$ láthatunk példát. Az $S_1$ és $S_2$ szakaszok
     lerövidülnek, maradék részüket már az $S_m^1$ és $S_m^2$ szakaszok
-    tartalmazzák. A \emph{hold} formánál pedig egy szakasz ($S_5$)
-    végpontja által definiált lista ($L_1$) miatt az $S_4$ szakaszt is fel
+    tartalmazzák. A \emph{hold} formánál pedig egy szakasz $(S_5)$
+    végpontja által definiált lista $(L_1)$ miatt az $S_4$ szakaszt is fel
     kell bontani.}
   \end{figure}
 
@@ -1668,16 +1668,13 @@ szakaszokat már könnyedén trapézokká alakíthatjuk.
   \section{Trapézzá alakítás}
 
 Az előző fejezetben bemutattuk, hogy hogyan kapjuk meg az alakzatunk
-szakaszokból megközelített képét. Azt is láthattuk, hogy nem csak az
-alakzatot bontottuk fel szakaszokra, hanem magukat a szakaszokat is
-felosztottuk az $y$ értékek mentén. Ennek a felosztásnak a célja az volt,
-hogy a szakaszokat tartalmazó listákat bejárva, az eredeti alakzatot lefedő
-trapézokat alakíthassunk ki. A trapézokra a renderelés során lesz
-szükségünk. Minden trapéz leírható két háromszögként. Ezeket a
-háromszögeket tudjuk majd kirajzolni.
-
-Nézzük meg részletesebben a trapézzá alakítás folyamatait.
-
+szakaszokból megközelített képét. Azt is láthattuk, hogy nem csak az alakzatot
+bontottuk fel szakaszokra, hanem magukat a szakaszokat is felosztottuk az $y$
+értékek mentén. Ennek a felosztásnak a célja az volt, hogy a szakaszokat
+tartalmazó listákat bejárva, az eredeti alakzatot lefedő trapézokat
+alakíthassunk ki. A trapézokra a renderelés során lesz szükségünk. Minden
+trapéz leírható két háromszögként. Ezeket a háromszögeket tudjuk majd
+kirajzolni.
 
   \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
     \begin{center}
@@ -1687,10 +1684,94 @@ Nézzük meg részletesebben a trapézzá alakítás folyamatait.
     összevonás lépései. \\ (Részlet a \emph{\ref{dataflow}. folyamatábrából}.)}
   \end{wrapfigure}
 
-  \begin{description}[noitemsep]
-    \item[Kulcsszavak] Trapéz, horizontális összevonás, vertikális összevonás.
-    \item[Becsült oldalszám] 4.
-  \end{description}
+Nézzük meg részletesebben a trapézzá alakítás folyamatait. Három fontos lépést
+különíthetünk el (lásd a \emph{\ref{dataflow-trapezoid}. ábrát}).
+  \begin{enumerate}
+    \item A szakaszokból a kitöltési stratégia (\emph{nem-zérus} vagy
+    \emph{paritás} szabály) szerint trapézokat alakítunk ki (építünk).
+    \item Ha lehetséges, a trapézokat horizontálisan összevonjuk.
+    \item Ha lehetséges, a trapézokat vertikálisan is összevonjuk.
+  \end{enumerate}
+Bár külön pontként tüntettük fel az építést és a horizontális összevonást,
+valójában ezt egyszerre hajtjuk végre.
+
+Kezdjük a trapézok építésével. Az eljárás a következő. Bejárjuk a szakaszokat
+tartalmazó listákat, kezdve az elsővel (legkisebb $y$ értékű). Vegyük az első
+szakaszt a listában. A képzeletbeli pásztázó egyenesek elsőre ebbe a szakaszba
+üköznének, vagyis a szakasz utáni területet renderelnünk kell majd. Ezért ez a
+szakasz lesz az első trapéz bal szára. Ezután haladunk a következő szakaszra.
+Ez a szakasz lehet a trapéz jobb szára, és így e két első szakasz adhatja ki az
+első trapézt. A feltételes mód azért van, mert a kitöltési szabály és a két
+szakasz geometriai viszonya még felülírhatja ezt. Ha a paritás szabály
+érvényes, és a két szakasz nem esik egybe, akkor trapéz lesz belőle. Ha
+egybeesik, akkor elvetjük a két szakaszt, és folytatjuk mintha nem is létezett
+volna ez a két szakasz. Ha azonban a nem-zérus szabály van érvényben, akkor az
+első és a második szakasz irányultságának viszonya határozza meg, hogy mi
+történik. Ha ellentétes irányultságúak, és nem esnek egybe, akkor trapéz lesz
+belőlük; ha egybeesnek (továbbra is ellentétes irányultsággal), akkor elvetjük
+őket. Ha azonos irányultságúak, akkor marad továbbra is az első szakasz a
+trapéz bal szára, és feljegyezzük egy változóba, hogy két azonos irányultságú
+szakaszon vagyunk túl. Ezt mindaddig folytatjuk, amíg ez az érték nem csökken
+zérusra. Ekkor az utolsó szakasz lesz a trapéz jobb szára. Az elkészült trapézt
+egy listába tesszük. Majd haladunk tovább a következő szakaszra, mintha az
+lenne az első, és így elölről kezdjük az említett eljárást.
+
+  \begin{figure}
+    \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
+    160pt,clip]{img/built/sunmoontrapezoids_eps}
+    \caption{\label{sunmoontrapezoids} Az épített $(t_i)$ és az összevont végső
+    $(T_i)$ trapézok. A sima $+$ jel a horizontális, a $\oplus$ jel a
+    vertikális összevonásokat jelenti. Pl. a $T_5$ esetében jól látszik, hogy
+    az $L_2$ és az $L_m^1$ listákhoz tartozó szakaszokból épített és
+    vízszintesen összevont trapézokat később még vertikálisan is egyesítjük.}
+  \end{figure}
+
+Ha elkészül egy trapéz, és van már előző trapéz a listában, akkor
+megvizsgáljuk, hogy összevonhatók-e. Ha az aktuális trapéz bal szára egybeesik
+az utolsó trapéz jobb szárával, akkor az utolsó trapézt kibővítjük. Vagyis az
+utolsó trapéz jobb szára az aktuális trapéz jobb szára lesz, és az aktuális
+trapézt elvetjük.
+
+Így haladunk szakaszról szakaszra és listáról listára. Itt is igaz, hogy a
+feladat a jelenlegi megvalósításhoz képest optimalizálható. Mivel a mostani
+implementáció egyszálú. Viszont a bejárás szempontjából az egyes listák
+függetlenek egymástól, tehát akár egy \emph{termelő-fogyasztó} modellel is
+párhuzamosítható lehet a trapézok építése és horizontális összevonása.
+
+Az utolsó lépés a vertikális összevonás vizsgálata. A már horizontálisan
+összevont trapézok listáján újra végig haladunk. Vegyük az első trapézt, és
+vizsgáljuk meg, hogy a rákövetkező $y$ értékhez tartozó trapézok közül van-e
+olyan, hogy azzal összevonható lenne. Az összevonás értelemszerűen azt jelenti,
+hogy az új trapéz a két egyesítettet pontosan lefedi. Ehhez az kell, hogy a
+,,felső'' trapéz alsó alapvonala egybeessen az ,,alsó'' trapéz felső
+alapvonalával, és a bal, illetve a jobb szárak meredeksége megegyezzen. Ekkor a
+felső (sorban hamarabb szereplő) trapéz adatait úgy módosítjuk, hogy kiadja az
+egyesítettet, az alsó trapézt pedig elvetjük.
+
+Emlékezzünk vissza, hogy a metszéspontok kalkulációjánál megtörténhetett, hogy
+a szakaszok végpontjait enyhén eltoltuk, ami miatt az érintett szakaszok
+meredeksége megváltozott. Így geometriailag valaha összetartozó szakaszok
+látszólag végleg szétváltak. Viszont az adott eltolás csak az adatszerkezet és
+a listák túlburjánzásának elkerülése miatt volt szükséges. Ennél a pontnál akár
+ki is javíthatnánk ezeket a kis változtatásokat. A szakaszra bontást leíró
+részben ugyan nem említettük, de a szakaszokat leíró \func{Segment} osztály nem
+csak a legszükségesebb koordinátaadatokat tárolja. Megjegyzi az egyes szakaszok
+eredeti meredekségét, illetve egy egyedi azonosítóval is ellátja a szakaszokat.
+Ezeket a másodlagos adatokat aztán a szakasz feldarabolásakor minden darabka
+megőrzi. Világos, hogy a trapézok függőleges egyesítésének lépésében pontosan
+ezeket az értékeket tudjuk felhasználni, hogy egy-egy szakaszról (még
+pontosabban trapézszárról) eldönthessük, hogy valaha egy geometriai elem részei
+voltak. Tehát ha az egyesítés csak a meredekség enyhe változása miatt nem
+lehetséges, akkor ezt feloldhatjuk, és egyben még az előzőleg eszközölt kis
+,,csalást'' is kijavítjuk. Természetesen az könnyen előállhat, hogy a
+horizontális összevonás olyan ,,sikeres'' volt, hogy a vertikális összevonás
+már nem lehetséges, viszont ennek a szűrése túl mutat ezen a viszonylag egyszerű
+algoritmuson.
+
+A szakaszra bontás, trapézzá alakítás és összevonás után birtokunkban
+van egy trapézlista, ami lefedi az eredeti alakzatot. A következő lépés az
+grafikus meghajtó felkészítése, beállítása és a trapézokból képezett
+háromszögek adatinak feltöltése, hogy végül kirenderelhessük az alakzatot.
 
   \section{Rajzolás GLES2-vel}
 
