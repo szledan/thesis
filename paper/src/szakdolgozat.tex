@@ -1567,24 +1567,103 @@ megközelítő Bézier görbe adatait a $h_1 = \frac{4}{3} \tan{\frac{1}{4} \bet
 előzőekben ismertetett függvény hívásával tovább bontjuk, így megkapjuk a
 körcikk (vagy ellipsziscikk) szakaszokból álló képét.
 
-Az alakzat elemeinek a felbontása után a szakaszok egymást metsző pontjait kell
-megtaláljuk. Ehhez bejárjuk az $y$ koordináta mentén létrehozott listákat.
-Kezdve a két legkisebb $y_0$ (aho a lista legyen az $L_0$) és $y_1$ ($L_1$)
-értéknél. A legkisebb $y_0$-hoz tartozó $L_0$ (\func{SegmenList}) elemein
-végigmegyünk. Ezek az elemek szakaszok (\func{Segment}), és igaz rájuk, hogy
-vagy a következő legkisebb $y_1$ vagy egy további $y_i$ ($y_i > y_1$) értékig
-nyúlnak. Ha az $L_0$ listában egy $y_1$-en túllógó elemhez érünk, azt
-kettévágjuk az $y_1$ mentén. Az előző elemmel egybevágó két új elem úgy áll
-elő, hogy az eredeti elemet $y_1$-ig rövidítjük, majd a maradék résznek
-megfelelően egy új elemet szúrunk az $L_1$ listába. Az aktuális lista (a
-példában $L_0$) elemeinek bejárásakor vizsgáljuk, hogy metszik-e egymást. Ha
-találunk metszéspontot, akkor az $y_{metszéspont}$ értékhez beszúrunk egy újabb
-listát, majd az egész folyamatot újra kezdjük az aktuális listán ($L_0$).
+  \begin{figure}
+    \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
+    160pt,clip]{img/built/sunmoon_eps}
+    \caption{\label{sunmoon} Beszúrt
+    szakaszok ($S_i$) és azokat tartalmazó listák ($L_i$). A \emph{csillag}
+    formánál két szakasz ($S_1$ és $S_2$) metszéspontja által létrehozott új
+    listára ($L_m$) láthatunk példát. Az $S_1$ és $S_2$ szakaszok
+    lerövidülnek, maradék részüket már az $S_m^1$ és $S_m^2$ szakaszok
+    tartalmazzák. A \emph{hold} formánál pedig egy szakasz ($S_5$)
+    végpontja által definiált lista ($L_1$) miatt az $S_4$ szakaszt is fel
+    kell bontani.}
+  \end{figure}
 
-  \begin{description}
-    \item[Kulcsszavak] Szakasz - segment, metszéspontok.
-    \item[Becsült oldalszám] 6.
-  \end{description}
+Az alakzat elemeinek a felbontása után a szakaszokat kell felbontanunk. Egyrészt
+minden szakaszt felbontunk ha szükséges a különböző $L_i$ listákhoz tartozó
+$y_i$ értékek mentén (lásd a \emph{\ref{sunmoon}. ábrát}). Másrészt a szakaszok
+egymást metsző pontjait kell megtaláljuk (lásd szintén a \emph{\ref{sunmoon}.
+ábrát}).
+
+A szakaszok felbontásához bejárjuk az $y$ koordináta mentén létrehozott
+listákat. Kezdve a két legkisebb $y_0$ (ahol a lista legyen az $L_0$) és $y_1$
+($L_1$) értéknél. A legkisebb $y_0$-hoz tartozó $L_0$ (\func{SegmenList})
+elemein végigmegyünk. Ezek az elemek szakaszok (\func{Segment}), és igaz rájuk,
+hogy vagy a következő legkisebb $y_1$ vagy egy további $y_i$ ($y_i > y_1$)
+értékig nyúlnak. Ha az $L_0$ listában egy $y_1$-en túllógó elemhez érünk, azt
+kettévágjuk az $y_1$ mentén. Az előző elemmel egybevágó két új elemet úgy
+állítjuk elő, hogy az eredeti elemet $y_1$-ig rövidítjük, majd a maradék
+résznek megfelelően egy új elemet szúrunk az $L_1$ listába. Az aktuális lista
+(a példában $L_0$) elemeinek bejárásakor vizsgáljuk, hogy metszik-e egymást. Ha
+találunk metszéspontot, akkor annak $y_m$ értékéhez beszúrunk egy újabb listát,
+majd az egész folyamatot újra kezdjük az aktuális listán ($L_0$).
+
+Szabnunk kellett egy alsó határt a felbontás pontosságának. Erre azért volt
+szükség, hogy a listák bizonyos $y$ környékén ne sűrűsödjenek be. Vagyis
+egyfajta megálljt kell parancsolnunk egy bizonyos érték alatt. Ez az érték
+természetszerűleg adódik a már említett élsimítás és felbontási faktorok
+mértékéből. Az élsimítás szempontjából sem értékelhető közelségű $y$ értékeket
+egy előre kiválasztott kerekítési szabállyal azonosnak tekintjük.
+
+Legyen $y_t$ érték, amihez tartozhat lista. A következő érték amihez tartozhat
+lista az az $y_b = y_t + m$, ahol $m$ egyenlő a fentebb definiált
+\emph{alpixel} magasságával, és igaz, hogy $y_t~\equiv~0~\pmod{m}$. Hasonlóan
+értelmezzük a szomszédos $x_l$ és $x_r$ értékeket is úgy, hogy szintén igaz,
+hogy $x_r - x_l = m$ és $x_l~\equiv~0~\pmod{m}$. Magyarán, ez egy alpixelek
+által meghatározott rácsot jelent úgy, hogy a rács egyik pontja egybevág a $(0,
+0)$ ponttal. Világos, hogy a fenti megkötések észszerűek. Ugyanakkor sok
+metszéspontra lesz igaz, hogy nem esik majd rács vízszintes vonalaira. Az ilyen
+metszéspontokat el kell tolnunk a legközelebb eső kisebb $x_l$ és $y_t$ pontba.
+Vagyis, ha egy metszéspont egy alpixel belsejébe esik, akkor azt elmozgatjuk az
+alpixel bal felső sarkába. Az elmozgatás révén az ebbe a pontba futó szakaszok
+leírását is módosítani kell, valamint az innen kifutó szakaszokat is ezen új
+értékek mentén kell meghatározni. Bár ez geometriai torzulást jelent ugyan,
+viszont a torzulás mértéke a valódi raszterponton belüli, vagyis annyira kicsi,
+hogy tulajdonképpen észrevehetetlen.
+
+Eddig kevés szó esett a szakaszokat tároló adatszerkezetről. Nézzük meg ezt is
+részletesebben. Arról már volt szó, hogy a szakaszokat lista, a listákat pedig
+a \func{SegmentTree} struktúra tárolja. A jelen megvalósítás nem a
+legoptimálisabb adatszerkezet. A dolgozat szempontjából a pontos és helyes
+működés elsődleges cél volt. A könnyebb hibakereséshez első körben nem
+bonyolítottuk, illetve optimalizáltuk ki a tároló adatszerkezetet. A listákat
+tároló \func{SegmentTree} egy \func{std::map<const int, SegmentList*>}
+adatszerkezet. Ahol a \emph{kulcs} az előbb említett alpixel rács $y$ értékei
+egészre kerekítve (\func{trunc}). Az \func{std::map} mögött egy piros-fekete fa
+implementáció található\footnote{
+\footnotesize{\url{https://en.cppreference.com/w/cpp/container/map}}}. Az
+\emph{érték} mezőben pedig egy láncolt lista memóriacímét tároljuk. Ez a
+\func{SegmentList} egy \func{std::list<Segment>} típusú lista, ami a szakaszok
+leírását megvalósító \func{Segment} osztály példányait tárolja. A jelen
+megvalósításban akár többször is szükséges ezeknek a listáknak a rendezése, így
+egészen biztosan nem a legoptimálisabb a jelenlegi adatszerkezet. Ugyanakkor
+egyszerű, és pontos. A hibakeresést egyszerűsíti, és az általa tárolt
+szakaszokból renderelt kép jó referencia lehet a jövőbeli optimalizálások
+során. A későbbi javítások során fontos szempont lehet, hogy az adatszerkezetet
+,,csak'' bővítjük. Azaz beszúrást hajtunk csak végre. Ez igaz mind a listák,
+mind pedig a szakaszok tekintetében is. Vagyis egy olyan folyamatosan rendben
+tartott adatszerkezet lehet az optimális, ami egyrészt megtartja a geometriai
+rendezettséget és leírást a szakaszok között, ugyanakkor gyorsan tud
+szakaszokat beszúrni.
+
+Fontos még megnézni, hogy mit jelent a jól rendezettség ebben az esetben.
+Ahhoz, hogy később trapézokká alakíthassuk a szakaszok által határolt
+területet, pontosan tudnunk kell, hogy melyik szakasz van előbb a sorban. Tehát
+a szakaszok rendezettek a következőképpen:
+  \begin{enumerate}
+    \item a szakaszokat tároló listák az $y$ értékek szerint szigorúan
+    növekvő módon rendezettek,
+    \item a listában a szakaszok a kisebb $y$ értékhez tartozó $x$
+    értékek mentén növekvő sorrendben rendezettek,
+    \item az azonos $(x, y)$ pontból kiinduló szakaszok keresztszorzata
+    szerint növekvő sorrendben rendezettek; azaz rendezettek, ha a
+    keresztszorzat nem negatív,
+    \item ha a keresztszorzat zérus, akkor megtartjuk a beszúrás sorrendjét.
+  \end{enumerate}
+
+Az $y$ értékek mentén felosztott és a fentiekben előírt módon rendezett
+szakaszokat már könnyedén trapézokká alakíthatjuk.
 
   \section{Trapézzá alakítás}
 
