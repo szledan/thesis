@@ -1140,8 +1140,8 @@ legfontosabbakat soroltuk fel, de a Canvas API leírás \cite{Cabanier:14:HCC}
 második fejezetében megtalálható a teljes lista.
 
 A második rész a transzformációk. A Háttér részben (\ref{A Canvas előírás}) a
-Canvas API bemutatásakor már tárgyaltuk\footnote{TODO: ellenőrizni!} a
-transzformációkat, itt most csak röviden a megvalósításukat nézzük át.
+Canvas API bemutatásakor már tárgyaltuk a transzformációkat, itt most csak
+röviden a megvalósításukat nézzük át.
 
 Minden kontextus tartalmaz egy transzformációs mátrixot. Ezt a mátrixot a
 \func{Transform} osztály valósítja meg. A megvalósítani kívánt mátrix egy
@@ -1774,12 +1774,6 @@ grafikus meghajtó felkészítése, beállítása és a trapézokból képezett
 háromszögek adatinak feltöltése, hogy végül kirenderelhessük az alakzatot.
 
   \section{Rajzolás GLES2-vel}
-
-Az rajzolás utolsó fázisa. Itt mutatom be a trapézok
-háromszög-párként való kirajzolását. Hogyan gyűjtjük egybe a
-háromszög-párokat, és hogyan rajzoljuk ki azokat együtt. Hogyan lesz
-ebből egy alpha textúra, és azt hogyan használjuk fel színes
-kirajzolásra. Itt világosítom meg, hogy miért van szükség alpha textúrára?
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Batching, alpha textúra, textúrázás, színezés,
