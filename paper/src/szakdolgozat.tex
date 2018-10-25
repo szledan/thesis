@@ -1497,7 +1497,7 @@ rendezettek, és nem vizsgáltak a metszéspontok sem.
   \end{wrapfigure}
 
 Ha nem egy egyenes vonalat kell beszúrni, hanem egy bonyolultabb görbe vonalat,
-akkor kerülnek képbe \aref{Háttér} fejezetben tárgyalt matematikai
+akkor kerülnek képbe \aref{Háttér}. fejezetben tárgyalt matematikai
 visszavezetések.
 
 Egy Bézier görbe esetében ez a következőket jelenti. A görbét az
@@ -1551,7 +1551,7 @@ egymást metsző szakaszok esetében is figyelembe kell venni. Erről majd kés�
 még lesz szó.
 
 A másik nem egyenes vonal a körív. Mint arról már volt szó, a köríveket Bézier
-görbékkel közelítjük. \Aref{arctobezier} alfejezetben bemutatott matematikai
+görbékkel közelítjük. \Aref{arctobezier}. alfejezetben bemutatott matematikai
 módszert követve osztjuk a körcikket harmadrendű görbékre. A felosztás menete a
 következő. Miután alkalmaztuk a körcikkre az aktuális transzformációt, meg kell
 határozni a körcikk kezdő- és végpontját. Ha szükséges, akkor az utolsó végpont
@@ -1741,8 +1741,9 @@ trapézt elvetjük.
 Így haladunk szakaszról szakaszra és listáról listára. Itt is igaz, hogy a
 feladat a jelenlegi megvalósításhoz képest optimalizálható. Mivel a mostani
 implementáció egyszálú. Viszont a bejárás szempontjából az egyes listák
-függetlenek egymástól, tehát akár egy \emph{termelő-fogyasztó} modellel is
-párhuzamosítható lehet a trapézok építése és horizontális összevonása.
+függetlenek egymástól, tehát akár egy \emph{termelő-fogyasztó}
+(\inenglish{producer--consumer}) modellel is párhuzamosítható lehet a trapézok
+építése és horizontális összevonása.
 
 Az utolsó lépés a vertikális összevonás vizsgálata. A már horizontálisan
 összevont trapézok listáján újra végig haladunk. Vegyük az első trapézt, és
@@ -1771,17 +1772,86 @@ voltak. Tehát ha az egyesítés csak a meredekség enyhe változása miatt nem
 lehetséges, akkor ezt feloldhatjuk, és egyben még az előzőleg eszközölt kis
 ,,csalást'' is kijavítjuk. Természetesen az könnyen előállhat, hogy a
 horizontális összevonás olyan ,,sikeres'' volt, hogy a vertikális összevonás
-már nem lehetséges, viszont ennek a szűrése túl mutat ezen a viszonylag egyszerű
-algoritmuson.
+már nem lehetséges, viszont ennek a szűrése túl mutat ezen a viszonylag
+egyszerű algoritmuson.
 
-A szakaszra bontás, trapézzá alakítás és összevonás után birtokunkban
-van egy trapézlista, ami lefedi az eredeti alakzatot. A következő lépés a
-grafikus meghajtó felkészítése, beállítása és a trapézokból készített
-háromszögek adatinak feltöltése, hogy végül kirenderelhessük az alakzatot.
+A szakaszra bontás, trapézzá alakítás és összevonás után birtokunkban van egy
+trapézlista, ami lefedi az eredeti alakzatot. A következő lépés a grafikus
+meghajtó felkészítése, beállítása és a trapézokból készített háromszögek
+adatinak feltöltése, hogy végül kirenderelhessük az alakzatot.
 
   \section{Rajzolás GLES2-vel}
 
-Az OpenGL~ES~2.0-ás grafikus függvénykönyvtárt \aref{GLES2:API}. fejezetrészben
+Az OpenGL~ES~2.0 működését \aref{GLES2:API}. alfejezetben már bemutattuk. Volt
+arról szó, hogy milyen lépéseket kell megtennünk, és milyen lehetőségeink
+vannak. Itt most a trapézok rendereléséhez szükséges beállításokat, és a
+renderelést magát végző shader programokat mutatjuk be. Illetve szót ejtünk az
+alakzat kiszínezéséről is. Ez ugyanis egy külön lépés; ennek okáról is
+beszélünk majd.
+
+Mielőtt azonban a trapézlisták kirajzolását mutatnánk be, előtte nézzük meg a
+program betöltésekor szükséges iniciatív beállításokat és hívásokat.
+
+Eddig arról nem volt szó, hogy mi biztosítja a kapcsolatot a programunk és az
+ablakozást végző operációs rendszer, valamint magát a renderelést végző eszköz
+között. Ha minden egyes beágyazott rendszeren a speciális programnak magának
+kellene a kapcsolatot biztosítania, az igen bonyolult és nehezen támogatható
+programot eredményezne. Ezért is alakult ki néhány olyan interfész, ami réteget
+képez az eszköz, az eszközön futó operációs rendszer és az GLES2 API-t használó
+program között. Az egyik ilyen elterjedt interfész az \emph{EGL}\footnote{Az
+EGL szintén a Khronos Group által felügyelt platformfüggetlen API. \\ Forrás:
+\footnotesize{\url{https://www.khronos.org/egl}}.}. Az EGL segítségével
+adhatjuk meg, hogy pontosan milyen pufferbe akarunk rajzolni, annak a puffernek
+mik a tulajdonságai (színcsatornák méretei, stb.), sőt az EGL-lel állítjuk be
+magát a GLES2 API-t, vagyis a rajzolás kontextusát is. Az EGL tehát megteremti
+a kapcsolatot a programunk és a valódi renderelést végző eszköz között
+(természetesen az operációs rendszeren keresztül). Számunkra ami a
+legfontosabb, hogy kapunk egy GLES2 kontextust, egy eredménypuffert és
+szinkronizációt az ablakozó rendszerrel.
+
+A trapézokat háromszögpáronként értelmezzük. A háromszögek kirajzolásához egy
+adott állapotra kell beállítanunk a GLES2 grafikus meghajtót. Az eddigi
+előrehaladó bemutatáshoz képest ezt a részt visszafelé bontjuk ki. Vagyis a
+majdnem utolsó hívással, a renderelést kiváltó \func{glDrawElements}
+függvénnyel kezdjük.
+
+Ez a függvény a GLES2 beállításait és a bekötött adatokat feltölti a grafikus
+egységre, és elindítja a renderelést. A függvénynek megadjuk, hogy független
+háromszögek csúcspontjaiként kell a kapott elemeket értelmeznie. Ezt a
+\func{GL\_TRIANGLES} típusnévvel határozzuk meg. Ezen kívül még meg kell adnunk
+az érintett elemek számát. Ez háromszögenként három (vertex) elemet jelent,
+vagyis trapézonként hatot. Valamint azt is jeleznünk kell, hogy kisebb
+(\func{GL\_UNSIGNED\_BYTE}) vagy nagyobb (\func{GL\_UNSIGNED\_SHORT}) méretű
+tömböt adtunk-e át előzőleg. A trapézok lehetséges magas száma miatt mi rendre
+a nagyobb méretűt választjuk majd.
+
+Mivel mindig a nagyobb tömbméretet választjuk, és a trapézokat -- még ha
+elfajulók is -- mindig azonos módon bontjuk két háromszögre, ezért a program
+indulásakor, az előbb említett iniciatív részben már beállíthatjuk azt az
+indextömböt, amit a program futása alatt mindig használhatunk. Az indextömb
+első hat elem a következő: $0, 1, 2, 2, 1, 3$. A következő hatot pedig úgy
+generáljuk, hogy minden számhoz négyet hozzáadunk. Majd a következő hatot, és
+így tovább egy maximum $65536$ elemből álló tömböt generálunk. Ezt a tömböt
+feltöltjük, és megjelöljük mint az általános indextömb. Az említett indexszámok
+jelentése pedig értelemszerűen a trapézt lefedő két háromszög csúcspontjait
+rendeli a trapéz sarkaihoz. Egy trapéz sarka pedig mindig valódi koordinátapárt
+jelent.
+
+Tehát a renderelés pillanatában tudjuk a kirajzolandó háromszögek csúcsainak
+számát, és az indextömbnek köszönhetően a háromszögek csúcsaihoz tartozó
+koordináták indexét egy ún. \emph{attribútum tömbben}. Vagyis össze kell
+állítanunk egy ilyen attribútum tömböt. Egy csúcsponthoz azonban nem csak egy
+koordinátapár tartozik. Ennek az okára majd még visszatérünk. Minden
+csúcsponthoz (vertexhez) át kell adnunk a teljes trapézt leíró hat értéket, és a
+trapézon belüli sarokindexet. Nézzük meg röviden, hogy mit is értünk mindezen.
+
+Egy trapéz kirajzolása két háromszög renderelését jelenti. Egy háromszög
+renderelése három vertex (csúcspont) kiszámítását jelenti. Ezekre a vertexekre
+fog lefutni a már említett vertex shaderből készített program. Minden vertexre
+külön-külön (de párhuzamosan) lefut a vertex program úgy, hogy a vertxehez
+speciálisan kap a program bemeneti adatokat. A bal felső sarok például a teljes
+trapézt leíró hat értéket és a $0$-ás sarokindexet kapja meg. A bal alsó pedig
+szintén a teljes trapéz leírást és az $1$-es sarokindexet, és így tovább.
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Batching, alpha textúra, textúrázás, színezés,
