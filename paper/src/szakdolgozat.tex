@@ -273,8 +273,8 @@
 
     \vspace*{3.6cm}
 
-    {\Large Diplomamunka}
-    % vagy {\Large Szakdolgozat}
+    %{\Large Diplomamunka}
+    {\Large Szakdolgozat}
 
     \vspace*{4cm}
 
@@ -355,7 +355,8 @@ A témavezető által megfogalmazott feladatkiírás. Önálló oldalon szerepel
     \subsubsection*{A téma megnevezése}
 
 A \emph{World Wide Web Consortium} (W3C) által \emph{Canvas 2D Context} néven
-2015-ben elfogadott ajánlás \emph{path} részének megvalósítása \emph{OpenGL~ES~2.0} alapokon.
+2015-ben elfogadott ajánlás \emph{path} részének megvalósítása
+\emph{OpenGL~ES~2.0} alapokon.
 
     \subsubsection*{A megadott feladat megfogalmazása}
 
@@ -373,14 +374,15 @@ grafikus meghajtó miatt van szükség.
     \subsubsection*{Alkalmazott eszközök, módszerek}
 
 Az API \emph{C++11} programozási nyelven készült, használva a következő
-eszközöket, technológiákat: \emph{gcc}, \emph{git}, \textit{OpenGL~ES~2.0},
-\emph{\LaTeX},
+eszközöket, technológiákat: \emph{gcc}, \textit{OpenGL~ES~2.0} függvénykönyvtár.
 
     \subsubsection*{Elért eredmények}
 
     \subsubsection*{Kulcsszavak}
 
-grafika, path, Canvas 2D Context, OpenGL-ES 2.0
+ Canvas~2D~Context, OpenGL~ES~2.0, számítógépes grafika (\inenglish{computer
+ graphics}), szabad alakzat (\inenglish{path}), trapéz tesszelláció
+ (\inenglish{trapezoid tessellation})
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -453,17 +455,17 @@ Ezekről a lépésekről is érdemes lesz beszélni.
     \section[A Canvas 2D Context előírás]{A W3C Canvas 2D Context előírás}
     \label{A Canvas előírás}
 
-A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C első
-HTML5 szabvány vázlata:\\ \footnotesize{
-\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }. Az előírás leír
-egy felbontásfüggő rajzolóvásznat, amelyet jellemzően \emph{Canvas}-nek
-neveznek. A Canvas definíció szerint nem más mint egy adott \emph{szélességgel}
-és \emph{magassággal} meghatározott terület, ahova különböző alakzatokat,
-képeket, szövegeket és egyéb nem dinamikus grafikai elemeket rakhatunk fel. Az
-elemeket függvények segítségével rajzolhatjuk a vászonra, vagy pedig a
-Canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
-(pl.~\emph{fill}) esetén az addig összegyűjtött elemeket kirajzolja a megadott
-sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
+A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C HTML5
+szabvány, és az azon belüli Canvas \emph{első} vázlata 2008-as:\\
+\footnotesize{ \url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }.
+Az előírás leír egy felbontásfüggő rajzolóvásznat, amelyet jellemzően
+\emph{Canvas}-nek neveznek. A Canvas definíció szerint nem más mint egy adott
+\emph{szélességgel} és \emph{magassággal} meghatározott terület, ahova
+különböző alakzatokat, képeket, szövegeket és egyéb nem dinamikus grafikai
+elemeket rakhatunk fel. Az elemeket függvények segítségével rajzolhatjuk a
+vászonra, vagy pedig a Canvas-hez tartozó \emph{context} gyűjti, és bizonyos
+parancsok (pl.~\emph{fill}) esetén az addig összegyűjtött elemeket kirajzolja a
+megadott sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
 pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
 
 Az előíráson belül definiált Path API rész amúgy egy régebbi, elterjedt
@@ -567,7 +569,7 @@ említett színterekhez tartozó hívások: \func{rgba(red, green, blue, alpha)}
 webes környezetekben megszokott úgynevezett hexa-kódokat. Ekkor az RGB
 színtérből választhatunk, és kétféle mintát használhatunk: a hosszabb
 \func{\#rrggbb}-t és a rövidebb \func{\#rgb}-t. A két attribútum viselkedését a
-CSS ajánlás\footnote {A W3C CSS Color Module Level 3:\footnotesize{
+CSS ajánlás\footnote{A W3C CSS Color Module Level 3:\footnotesize{
 \url{https://www.w3.org/TR/css-color-3/}}.} írja le. A beállítást szöveges
 (\func{string}) formában kell megadni, amit aztán értelmezni kell, és aszerint
 megadni az értékeket. Később részletesen lesz szó arról, hogy milyen módon
@@ -642,11 +644,11 @@ m., 11. fejezet.}:
 Arról már volt szó, hogy az alakzat önmetsző is lehet. Az önmetszés kérdése a
 kitöltéskor válik fontossá. A kérdés az, hogy az alakzat által határolt
 részekből és az önmetszés alkalmával létrejövő lyukakból pontosan melyeket kell
-kitölteni. A Canvas API korábbi verziói támogatták\footnote{TODO: hivat} a két
-legelterjedtebb kitöltési stratégiát, szabályt. Ezek a \emph{paritás szabály}
+kitölteni. A Canvas API csak egy kitöltési szabályt ír elő. Viszont a legtöbb
+-- az előírást megvalósító -- renderelő API támogatja a két legelterjedtebb
+kitöltési stratégiát, szabályt. Ezek a \emph{paritás szabály}
 (\inenglish{even-odd fill rule}) és a \emph{nem-zérus szabály}
-(\inenglish{non-zero fill rule}). A végső API ugyanakkor már csak az utóbbi,
-nem-zérus szabályt írja elő. Mivel a 2D alakzatrajzolásban mindkettő igen
+(\inenglish{non-zero fill rule}). Mivel a 2D alakzatrajzolásban mindkettő igen
 elterjedt, ezért -- mint később látni fogjuk -- a Gepard API mindkettőt
 támogatja. A két szabályt a Pásztázó egyenesek (\ref{Pásztázó egyenesek}.)
 részben részletesen ismertetjük.
@@ -1063,12 +1065,12 @@ viselkedés kényelmes biztosításához saját osztályt kellett írni. Ez lett
 \func{Attribute} osztály. A bevezetésének szükségességét a \func{fillStyle}
 adattagon keresztül mutatjuk be.
 
-A \func{fillStyle} definíció szerint egy CSS attribútum\footnote{TODO: link
-CSS-Style} vagyis adattag. Ez azt jelenti, hogy igen sokféleképpen lehet
-értéket adni neki. A C++ szigorú típusossága miatt egyszerű, ún. primitív
-típussal nem is megoldható, annak ellenére, hogy ez az adattag alapvetően csak
-a kitöltés színét tárolja. Ugyanakkor a beállítás módja lehet hexa-kód
-(\func{\#0f0} vagy \func{\#00ff00}), egy előre definiált név (\func{green}),
+A \func{fillStyle} definíció szerint egy CSS attribútum vagyis adattag. Ez azt
+jelenti, hogy igen sokféleképpen lehet értéket adni neki. A C++ szigorú
+típusossága miatt egyszerű, ún. primitív típussal nem is megoldható, annak
+ellenére, hogy ez az adattag alapvetően csak a kitöltés színét tárolja.
+Ugyanakkor a beállítás módja lehet hexa-kód
+(\func{\#0f0}~vagy~\func{\#00ff00}), egy előre definiált név (\func{green}),
 esetleg egy függvényszerű leírás vagy egy másik adattag értéke. Azáltal, hogy
 az \func{Attribute} osztályt bevezettük, lehetőség nyílt az adattagok kényelmes
 értékadásának.
@@ -1077,10 +1079,13 @@ Nézzük meg röviden ezt az osztályt is. Tehát mint már az előbb említett�
 egyrészt, az értékadás sokféleségét biztosítani kellett. Ugyanakkor nem csak az
 értékadás lehet többféle, hanem az adattagok ,,típusa'' is. Vagyis az említett
 \func{fillStyle}-hoz képest más típusú adatot tároló módon is kellett tudjon
-működni az \func{Attribute} osztály. Az értékadás sokféleségét egyrészt az
-\emph{ad hoc polimorfizmus}\footnote{TODO:link!
-https://www.itu.dk/courses/BPRD/E2009/fundamental-1967.pdf} biztosítja. A
-bonyolultabb értékadásokat (pl. függvény leírás) pedig egy a példányosításkor
+működni az \func{Attribute} osztály. Az értékadás sokféleségét a
+\emph{paraméteres} és az \emph{ad hoc polimorfizmus}\footnote{ A kifejezést az
+azonos nevű de különböző típusú és számú argumentummal rendelkező függvényekre
+\textsc{Christopher Strachey} honosította meg. Forrás: Christopher Strachey:
+\emph{Fundamental Concepts in Programming Languages}, in Higher-Order and
+Symbolic Computation, Kluwer Academic Publishers, 2000, 13, 11–49.} biztosítja.
+A bonyolultabb értékadásokat (pl. függvény leírás) pedig egy a példányosításkor
 bekötött elemző-értelmező függvény végzi.
   \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
     \begin{center}
@@ -1125,7 +1130,7 @@ részletezünk itt. A negyedik részt, azaz a \emph{Path} alakzatleíró és tá
 és az ezt feldolgozó osztályokkal úgy is külön alfejezetekben foglalkozunk.
 
 Az egyik funkcionalitás a rajzolás környezetének (a továbbiakban kontextus,
-\inenglish(drawing context))\footnote{A \emph{\ref{structure_eps}. ábrán} ez az
+\inenglish{drawing context})\footnote{A \emph{\ref{structure_eps}. ábrán} ez az
 ,,Állapot kezelése'' rész.} biztosítása, bizonyos változások elmentése és
 helyreállítása. Az elmentésért a \func{save}, a visszaállításért pedig a
 \func{restore} API függvények a felelősek. A függvények hívásának hatásai ezen
