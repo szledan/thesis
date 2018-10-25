@@ -693,7 +693,7 @@ háromszögekkel kell lefednünk.
     \caption{\label{opengles_20_pipeline2} Az OpenGL ES 2.0 programozható
     grafikus végrehajtási modellje. A \emph{vertex shader} és a \emph{fragment
     shader} lépéseket programozhatjuk. \\%
-    (A \footnotesize{\url{https://www.khronos.org/api/opengles/2_X}} forrás
+    (A {\footnotesize\url{https://www.khronos.org/api/opengles/2_X}} forrás
     alapján.)
     }
   \end{figure}
@@ -1577,7 +1577,7 @@ körcikk (vagy ellipsziscikk) szakaszokból álló képét.
     \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
     160pt,clip]{img/built/sunmoon_eps}
     \caption{\label{sunmoon} Beszúrt
-    szakaszok $(S_i)$ és azokat tartalmazó listák $(L_i)$. A \emph{csillag}
+    szakaszok $(S_i)$ és azokat tartalmazó listák $(L_j)$. A \emph{csillag}
     formánál két szakasz $(S_1$ és $S_2)$ metszéspontja által létrehozott új
     listára $(L_m)$ láthatunk példát. Az $S_1$ és $S_2$ szakaszok
     lerövidülnek, maradék részüket már az $S_m^1$ és $S_m^2$ szakaszok
@@ -1726,7 +1726,7 @@ lenne az első, és így elölről kezdjük az említett eljárást.
     \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
     160pt,clip]{img/built/sunmoontrapezoids_eps}
     \caption{\label{sunmoontrapezoids} Az épített $(t_i)$ és az összevont végső
-    $(T_i)$ trapézok. A sima $+$ jel a horizontális, a $\oplus$ jel a
+    $(T_j)$ trapézok. A sima $+$ jel a horizontális, a $\oplus$ jel a
     vertikális összevonásokat jelenti. Pl. a $T_5$ esetében jól látszik, hogy
     az $L_2$ és az $L_m^1$ listákhoz tartozó szakaszokból épített és
     vízszintesen összevont trapézokat később még vertikálisan is egyesítjük.}
@@ -1775,11 +1775,13 @@ már nem lehetséges, viszont ennek a szűrése túl mutat ezen a viszonylag egy
 algoritmuson.
 
 A szakaszra bontás, trapézzá alakítás és összevonás után birtokunkban
-van egy trapézlista, ami lefedi az eredeti alakzatot. A következő lépés az
-grafikus meghajtó felkészítése, beállítása és a trapézokból képezett
+van egy trapézlista, ami lefedi az eredeti alakzatot. A következő lépés a
+grafikus meghajtó felkészítése, beállítása és a trapézokból készített
 háromszögek adatinak feltöltése, hogy végül kirenderelhessük az alakzatot.
 
   \section{Rajzolás GLES2-vel}
+
+Az OpenGL~ES~2.0-ás grafikus függvénykönyvtárt \aref{GLES2:API}. fejezetrészben
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Batching, alpha textúra, textúrázás, színezés,
