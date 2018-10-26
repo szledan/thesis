@@ -1809,49 +1809,67 @@ a kapcsolatot a programunk és a valódi renderelést végző eszköz között
 legfontosabb, hogy kapunk egy GLES2 kontextust, egy eredménypuffert és
 szinkronizációt az ablakozó rendszerrel.
 
-A trapézokat háromszögpáronként értelmezzük. A háromszögek kirajzolásához egy
-adott állapotra kell beállítanunk a GLES2 grafikus meghajtót. Az eddigi
-előrehaladó bemutatáshoz képest ezt a részt visszafelé bontjuk ki. Vagyis a
-majdnem utolsó hívással, a renderelést kiváltó \func{glDrawElements}
+Az eddigi előrehaladó bemutatáshoz képest ezt a részt visszafelé bontjuk ki.
+Vagyis majdnem az utolsó hívással, a renderelést kiváltó \func{glDrawElements}
 függvénnyel kezdjük.
 
-Ez a függvény a GLES2 beállításait és a bekötött adatokat feltölti a grafikus
-egységre, és elindítja a renderelést. A függvénynek megadjuk, hogy független
-háromszögek csúcspontjaiként kell a kapott elemeket értelmeznie. Ezt a
-\func{GL\_TRIANGLES} típusnévvel határozzuk meg. Ezen kívül még meg kell adnunk
-az érintett elemek számát. Ez háromszögenként három (vertex) elemet jelent,
-vagyis trapézonként hatot. Valamint azt is jeleznünk kell, hogy kisebb
-(\func{GL\_UNSIGNED\_BYTE}) vagy nagyobb (\func{GL\_UNSIGNED\_SHORT}) méretű
-tömböt adtunk-e át előzőleg. A trapézok lehetséges magas száma miatt mi rendre
-a nagyobb méretűt választjuk majd.
+Ez a függvény feltölti grafikus egységre a GLES2 beállításait és a bekötött
+adatokat, és elindítja\footnote{Az, hogy ténylegesen az adott függvénynél
+indul-e el a renderelés, azt a GLES2 szabvány nem garantálja. Azt a grafikus
+megható gyártójára bízza.} a renderelést. A függvény három paramétert vár. Az
+első, hogy a kirajzolandó elemeket hogyan kell értelmezni. A mi estünkben az
+elemek független háromszögek csúcspontjai. Ezt a \func{GL\_TRIANGLES}
+típusnévvel határozzuk meg. A második paraméter határozza meg az érintett
+elemek számát. Ez háromszögenként három (vertex) elemet jelent, vagyis
+trapézonként hatot. Az utolsó paraméter egy segítség a GLES2 API-nak. Ezzel a
+paraméterrel az jelezhetjük, hogy kisebb (\func{GL\_UNSIGNED\_BYTE}) vagy
+nagyobb (\func{GL\_UNSIGNED\_SHORT}) méretű indextömböt használunk-e. A
+trapézok lehetséges magas száma miatt mi rendre a nagyobb méretűt választjuk
+majd.
 
-Mivel mindig a nagyobb tömbméretet választjuk, és a trapézokat -- még ha
-elfajulók is -- mindig azonos módon bontjuk két háromszögre, ezért a program
-indulásakor, az előbb említett iniciatív részben már beállíthatjuk azt az
-indextömböt, amit a program futása alatt mindig használhatunk. Az indextömb
-első hat elem a következő: $0, 1, 2, 2, 1, 3$. A következő hatot pedig úgy
-generáljuk, hogy minden számhoz négyet hozzáadunk. Majd a következő hatot, és
-így tovább egy maximum $65536$ elemből álló tömböt generálunk. Ezt a tömböt
-feltöltjük, és megjelöljük mint az általános indextömb. Az említett indexszámok
-jelentése pedig értelemszerűen a trapézt lefedő két háromszög csúcspontjait
-rendeli a trapéz sarkaihoz. Egy trapéz sarka pedig mindig valódi koordinátapárt
-jelent.
+Sok esetben az indextömböt a renderelés előtt állítjuk be. Ugyanakkor lehetőség
+van egy általános indextömb korai feltöltésére is. Mivel mi mindig a nagyobb
+tömbméretet választjuk, és a trapézokat -- még ha elfajulók is -- mindig azonos
+módon bontjuk két háromszögre, ezért a program indulásakor -- az előbb említett
+iniciatív részben már beállíthatjuk. Az indextömb első hat elem a következő: $0, 1, 2,
+2, 1, 3$. Ezek rendre egy-egy trapéz sarokindexei is: bal felső ($0$), bal alsó
+($1$), jobb felső ($2$) és jobb alsó ($3$). Az indextömb következő hat indexét
+pedig úgy generáljuk, hogy minden számhoz négyet hozzáadunk. Majd a következő
+hatot, és így tovább egy maximum $65536$ elemből álló tömböt generálunk. Ezt a
+tömböt feltöltjük a GPU memóriájába, és megjelöljük mint az általános
+indextömb. Az említett indexszámok jelentése pedig értelemszerűen az egymást
+követő trapézokat lefedő két háromszög csúcspontjait rendeli az adott trapéz
+sarkaihoz. Egy trapéz sarkához pedig mindig tartozik valódi koordinátapár.
 
 Tehát a renderelés pillanatában tudjuk a kirajzolandó háromszögek csúcsainak
 számát, és az indextömbnek köszönhetően a háromszögek csúcsaihoz tartozó
 koordináták indexét egy ún. \emph{attribútum tömbben}. Vagyis össze kell
-állítanunk egy ilyen attribútum tömböt. Egy csúcsponthoz azonban nem csak egy
-koordinátapár tartozik. Ennek az okára majd még visszatérünk. Minden
-csúcsponthoz (vertexhez) át kell adnunk a teljes trapézt leíró hat értéket, és a
-trapézon belüli sarokindexet. Nézzük meg röviden, hogy mit is értünk mindezen.
+állítanunk egy olyan attribútum tömböt, ami a trapézok sarokpontjainak adatait
+tartalmazza. Egy csúcsponthoz azonban nem csak egy koordinátapár tartozik.
+Ennek az okára majd még visszatérünk. Minden csúcsponthoz (vertexhez) át kell
+adnunk a teljes trapézt leíró hat értéket, és a trapézon belüli sarokindexet.
+Nézzük meg röviden, hogy mit is értünk mindezen.
 
-Egy trapéz kirajzolása két háromszög renderelését jelenti. Egy háromszög
-renderelése három vertex (csúcspont) kiszámítását jelenti. Ezekre a vertexekre
-fog lefutni a már említett vertex shaderből készített program. Minden vertexre
-külön-külön (de párhuzamosan) lefut a vertex program úgy, hogy a vertxehez
-speciálisan kap a program bemeneti adatokat. A bal felső sarok például a teljes
-trapézt leíró hat értéket és a $0$-ás sarokindexet kapja meg. A bal alsó pedig
-szintén a teljes trapéz leírást és az $1$-es sarokindexet, és így tovább.
+Tehát egy trapézt meghatároz négy $x$ és két $y$ érték: $\{x_{l,t}, x_{r,t},
+x_{l,b}, x_{r,b}, y_{t}, y_{b}\}$\footnote{Ahol az indexben használt
+rövidítések jelentése: $l=left, t=top, r=right, b=bottom$.}. Illetve az
+előzőleg felsorolt sarokindexekhez ezekből négy koordinátapárt tudunk
+összeválogatni: $i_0$ $(x_{l,t}, y_{t})$, $i_1$ $(x_{l,b}, y_{b})$, $i_2$
+$(x_{r,t}, y_{t})$ és $i_3$ $(x_{r,b}, y_{b})$. Egy trapéz kirajzolása két
+háromszög renderelését jelenti. Egy háromszög renderelése három vertex
+(csúcspont) kiszámítását jelenti. Ezekre a vertexekre fog lefutni a már
+említett vertex shaderből készített program. Minden vertexre külön-külön (de
+párhuzamosan) lefut a vertex program úgy, hogy a vertxehez speciálisan kap a
+program bemeneti adatokat. A bal felső sarok például a teljes trapézt leíró hat
+értéket és a $0$-ás sarokindexet kapja meg. A bal alsó pedig szintén a teljes
+trapéz leírást és az $1$-es sarokindexet, és így tovább. Amennyiben csak
+simán a két háromszöget renderelnénk ki, nem volna szükség az összes
+adatra, elég volna a vertexhez tartozó koordinátát átadni. Viszont a mi
+esetünkben az élsimítást is a shader programokban számoljuk ki, ezért az
+minden vertexnek -- mint a későbbi leírásban látni fogjuk -- tudnia
+kell, hogy melyik sarokpontja a trapéznak.
+
+
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Batching, alpha textúra, textúrázás, színezés,
