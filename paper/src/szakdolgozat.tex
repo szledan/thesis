@@ -1813,62 +1813,85 @@ Az eddigi előrehaladó bemutatáshoz képest ezt a részt visszafelé bontjuk k
 Vagyis majdnem az utolsó hívással, a renderelést kiváltó \func{glDrawElements}
 függvénnyel kezdjük.
 
-Ez a függvény feltölti grafikus egységre a GLES2 beállításait és a bekötött
-adatokat, és elindítja\footnote{Az, hogy ténylegesen az adott függvénynél
-indul-e el a renderelés, azt a GLES2 szabvány nem garantálja. Azt a grafikus
-megható gyártójára bízza.} a renderelést. A függvény három paramétert vár. Az
+Ez a függvény feltölti a grafikus egységre a GLES2 beállításait és a bekötött
+adatokat, illetve elindítja\footnote{Azt, hogy ténylegesen az adott függvénynél
+indul-e el a renderelés, a GLES2 szabvány nem garantálja. Azt a grafikus
+meghajtó gyártójára bízza.} a renderelést. A függvény három paramétert vár. Az
 első, hogy a kirajzolandó elemeket hogyan kell értelmezni. A mi estünkben az
 elemek független háromszögek csúcspontjai. Ezt a \func{GL\_TRIANGLES}
 típusnévvel határozzuk meg. A második paraméter határozza meg az érintett
 elemek számát. Ez háromszögenként három (vertex) elemet jelent, vagyis
-trapézonként hatot. Az utolsó paraméter egy segítség a GLES2 API-nak. Ezzel a
-paraméterrel az jelezhetjük, hogy kisebb (\func{GL\_UNSIGNED\_BYTE}) vagy
-nagyobb (\func{GL\_UNSIGNED\_SHORT}) méretű indextömböt használunk-e. A
-trapézok lehetséges magas száma miatt mi rendre a nagyobb méretűt választjuk
-majd.
+trapézonként hatot. Az utolsó paraméter adja meg a GLES2 API-nak, hogy kisebb
+(\func{GL\_UNSIGNED\_BYTE}) vagy nagyobb (\func{GL\_UNSIGNED\_SHORT}) méretű
+indextömböt használunk-e. A trapézok lehetséges magas száma miatt mi rendre a
+nagyobb méretűt választjuk majd.
 
 Sok esetben az indextömböt a renderelés előtt állítjuk be. Ugyanakkor lehetőség
 van egy általános indextömb korai feltöltésére is. Mivel mi mindig a nagyobb
 tömbméretet választjuk, és a trapézokat -- még ha elfajulók is -- mindig azonos
 módon bontjuk két háromszögre, ezért a program indulásakor -- az előbb említett
-iniciatív részben már beállíthatjuk. Az indextömb első hat elem a következő: $0, 1, 2,
-2, 1, 3$. Ezek rendre egy-egy trapéz sarokindexei is: bal felső ($0$), bal alsó
-($1$), jobb felső ($2$) és jobb alsó ($3$). Az indextömb következő hat indexét
-pedig úgy generáljuk, hogy minden számhoz négyet hozzáadunk. Majd a következő
-hatot, és így tovább egy maximum $65536$ elemből álló tömböt generálunk. Ezt a
-tömböt feltöltjük a GPU memóriájába, és megjelöljük mint az általános
-indextömb. Az említett indexszámok jelentése pedig értelemszerűen az egymást
-követő trapézokat lefedő két háromszög csúcspontjait rendeli az adott trapéz
-sarkaihoz. Egy trapéz sarkához pedig mindig tartozik valódi koordinátapár.
+iniciatív részben már beállíthatjuk. Az indextömb első hat elem a következő:
+$0, 1, 2, 2, 1, 3$. Ezek rendre egy-egy trapéz sarokindexei is: bal felső
+($0$), bal alsó ($1$), jobb felső ($2$) és jobb alsó ($3$). Az indextömb
+következő hat indexét pedig úgy generáljuk, hogy minden számhoz négyet
+hozzáadunk. Majd a következő hatot is, és így tovább egy maximum $65536$
+elemből álló tömbméretig. Ezt a tömböt feltöltjük a GPU memóriába, és
+megjelöljük mint az általános indextömb. Az említett indexszámok jelentése
+pedig értelemszerűen az egymást követő trapézokat lefedő két háromszög
+csúcspontjait rendeli az adott trapéz sarkaihoz. Egy trapéz sarkához pedig
+mindig tartozik valódi koordinátapár.
 
-Tehát a renderelés pillanatában tudjuk a kirajzolandó háromszögek csúcsainak
-számát, és az indextömbnek köszönhetően a háromszögek csúcsaihoz tartozó
-koordináták indexét egy ún. \emph{attribútum tömbben}. Vagyis össze kell
-állítanunk egy olyan attribútum tömböt, ami a trapézok sarokpontjainak adatait
-tartalmazza. Egy csúcsponthoz azonban nem csak egy koordinátapár tartozik.
-Ennek az okára majd még visszatérünk. Minden csúcsponthoz (vertexhez) át kell
-adnunk a teljes trapézt leíró hat értéket, és a trapézon belüli sarokindexet.
-Nézzük meg röviden, hogy mit is értünk mindezen.
+  \begin{figure}
+    \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
+    160pt,clip]{img/built/sunmoonvertex_eps}
+    \caption{\label{sunmoonvertex}}
+  \end{figure}
 
-Tehát egy trapézt meghatároz négy $x$ és két $y$ érték: $\{x_{l,t}, x_{r,t},
+Egy trapézt négy $x$ és két $y$ érték határoz meg: $\{x_{l,t}, x_{r,t},
 x_{l,b}, x_{r,b}, y_{t}, y_{b}\}$\footnote{Ahol az indexben használt
 rövidítések jelentése: $l=left, t=top, r=right, b=bottom$.}. Illetve az
 előzőleg felsorolt sarokindexekhez ezekből négy koordinátapárt tudunk
 összeválogatni: $i_0$ $(x_{l,t}, y_{t})$, $i_1$ $(x_{l,b}, y_{b})$, $i_2$
 $(x_{r,t}, y_{t})$ és $i_3$ $(x_{r,b}, y_{b})$. Egy trapéz kirajzolása két
-háromszög renderelését jelenti. Egy háromszög renderelése három vertex
-(csúcspont) kiszámítását jelenti. Ezekre a vertexekre fog lefutni a már
-említett vertex shaderből készített program. Minden vertexre külön-külön (de
-párhuzamosan) lefut a vertex program úgy, hogy a vertxehez speciálisan kap a
-program bemeneti adatokat. A bal felső sarok például a teljes trapézt leíró hat
-értéket és a $0$-ás sarokindexet kapja meg. A bal alsó pedig szintén a teljes
-trapéz leírást és az $1$-es sarokindexet, és így tovább. Amennyiben csak
-simán a két háromszöget renderelnénk ki, nem volna szükség az összes
-adatra, elég volna a vertexhez tartozó koordinátát átadni. Viszont a mi
-esetünkben az élsimítást is a shader programokban számoljuk ki, ezért az
-minden vertexnek -- mint a későbbi leírásban látni fogjuk -- tudnia
-kell, hogy melyik sarokpontja a trapéznak.
+háromszög renderelését jelenti (lásd a \emph{\ref{sunmoonvertex}. ábrát}). Egy
+háromszög renderelése három vertex (csúcspont) kiszámítását jelenti. Ezekre a
+vertexekre fog lefutni a már említett vertex shaderből készített program.
+Minden vertexre külön-külön (de párhuzamosan) lefut a vertex program úgy, hogy
+a vertxehez speciálisan kap a program bemeneti adatokat. Egy vertexhez azonban
+nem csak egy koordinátapár tartozik. Ennek az okára majd még visszatérünk.
+Minden vertexhez át kell adnunk a teljes trapézt leíró hat értéket, és a
+trapézon belüli sarokindexet. A bal felső sarok például a teljes trapézt leíró
+hat értéket és a $0$-ás sarokindexet kapja meg. A bal alsó pedig szintén a
+teljes trapéz leírást és az $1$-es sarokindexet, és így tovább. Amennyiben csak
+simán a két háromszöget renderelnénk ki, nem volna szükség az összes adatra,
+elég volna a vertexhez tartozó koordinátát átadni. Viszont a mi esetünkben az
+élsimítást is a shader programokban számoljuk ki, ezért minden vertexnek tudnia
+kell, hogy milyen a trapézhoz, és annak melyik sarkához tartozik.
 
+Ezeket az adatokat egy ún. \emph{vertex attribútum tömbbe} tesszük. Az első
+helyre letesszük a hat trapéz adatot, a $0$-ás indexet, és egy kis részt
+kihagyunk. Majd letesszük ugyanannak a trapéznak az adatait, az $1$-es indexet,
+és szintén egy kis üres helyet kihagyunk. Majd úgyanígy járunk el a $2$-es és a
+$3$-as indexekkel is. Teljesen hasonló helyezhetjük el a tömbbe amásodik
+trapézt. A kis kihagyásokra azért van szükség, mert a GLES2 elvárja, hogy négy
+\func{float} méretére legyenek az adatok igazítva. Nekünk pedig effektív hét
+\func{float} típusú értékünk van.
+
+Most nézzük meg részletesebben, hogy mi is történik az adatokkal a vertex
+shader-ben. Minden vertex egyrészt meghatározza a végső pontját, ami így
+kijelöli, hogy mely raszterpontokra kell majd lefusson a fragment shader-ből
+előállított program. Másrészt néhány olyan adatot is kiszámol, aminek az
+interpolációja meghatározó lesz a fragment shader-ek számára.
+
+A vertexek gyakran nem esnek pontosan egy raszterpont közepére. Vagyis
+lehetséges, hogy a háromszög szélei és csúcsai belógnak egy raszterbe, de a
+raszter közepe már nem része a háromszögnek. Így viszont pont az élsimítás
+lehetősége veszik el, hiszen ebben az esetben ezekre a pontokra nem fut le a
+fragment program. Ezért a vertexek a kapott adatokból kiszámolják egy fél
+raszterpont méretével nagyobb háromszög szerinti pontjukat. Magyarán egy
+kicsivel meghízik az eredeti háromszög, így az összes érintett raszterpont
+bekerül. Lehetséges, hogy olyanok is bekerülnek, amiket az eredeti háromszög
+nem érint, ezek viszont úgyis nulla intenzitásúak lesznek.
 
 
   \begin{description}[noitemsep]
