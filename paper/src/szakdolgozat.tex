@@ -1414,7 +1414,7 @@ párhuzamos téglalapot kell hozzáadnunk úgy, hogy a téglalap vastagsága
 téglalapot megadó vonalra úgy illeszkedik, hogy a vonal hosszmentén felezi a
 téglalapot.
 
-Az toll áthelyezését jelölő \func{MoveToElement}-nél ugyan nem kell különálló
+A toll áthelyezését jelölő \func{MoveToElement}-nél ugyan nem kell különálló
 formát hozzáadnunk az új alakzathoz, de lehetséges, hogy kiegészítő formákat
 mégis be kell szúrjunk. Ilyen kiegészítő formák lehetnek a path végeinél a
 \emph{lezárások} (\inenglish{cap}) és/vagy a köztes elemek közötti
@@ -1423,21 +1423,53 @@ mégis be kell szúrjunk. Ilyen kiegészítő formák lehetnek a path végeinél
 Az eredeti path elemeinek végpontjában (az elemek sajátosságai miatt) mindig
 értelmezhetünk egy párhuzamos vektort. Egy kezdő- vagy végelem esetén
 lehetséges, hogy záróformát kell illesszünk az adott elemhez. Ha kell, akkor ez
-egy a vastagságot kipótoló \emph{téglalap} vagy egy abba illeszkedő
-\emph{félkör} kell legyen. Ezeknek a kiegészítő formáknak az irányultságát
-határozzák meg az adott pontban ismert vektorok.
+egy a vastagságot kipótoló \emph{téglalap} (\inenglish{square}) vagy egy abba
+illeszkedő \emph{félkör} (\inenglish{round}) lesz, különben \emph{csonk}
+(\inenglish{butt}) formán hagyjuk. Ezeknek a kiegészítő formáknak az
+irányultságát határozzák meg az adott pontban ismert vektorok.
 
 Két vonal csatlakozásakor úgy kell eljárni, hogy a hézagokat töltsük fel a
-meghatározott módon. Egy háromszög forma pont összekapcsolja a két elem végét.
-Ha pedig szükséges, akkor egy újabb háromszög, vagy körcikk kiegészíti az
-összekapcsolás pontját.
+meghatározott módon. Egy háromszög forma \emph{simán} (\inenglish{bevel})
+összekapcsolja a két elem végét. Ha pedig szükséges, akkor egy újabb háromszög
+\emph{süvegesre} (\inenglish{miter}), vagy egy körcikk \emph{lekerekítettre}
+(\inenglish{round}) egészíti ki az összekapcsolás pontját.
 
-  \begin{description}[noitemsep]
-    \item[Kulcsszavak] Region memory modell, line, quadratic-curve,
-    cubic-curve, arc, arc-to, rect, fill, stroke, transform, translate, rotate,
-    scale, skew, save, restore, color.
-    \item[Becsült oldalszám] 7.
-  \end{description}
+Tehát az egyenes vonalakat téglalappal helyettesítjük. A körcikk esetén úgy
+járunk el, hogy egy fél vonalvastagsággal kisebb és egy ugyanennyivel nagyobb
+körcikket a végeiknél összekötünk. Természetesen a szabványban leírt esetleges
+összekötő egyenes vonalat itt is hozzá kell adni, ha szükséges.
+
+A Bézier görbék esete egy parányit bonyolultabb. Hiszen itt nem járhatunk el az
+előzőekben említett fél vastagsággal történő kibővítéssel. Egészen más görbét
+jelent az adott vonalvastagságú Bézier görbe ,,belső'' és ,,külső'' ívét leíró
+görbe. Éppen ezért itt úgy járunk el, hogy a vastagság definícióját alkalmazzuk
+egy adott megközelítéssel. Itt is kihasználjuk a de Casteljau algoritmus
+nyújtotta gyors Bézier görbe feloszthatóságot. Az alap Bézier görbe mentén
+haladunk, és elfelezzük, majd ezt mindaddig, amíg az egyik oldalára nem lesz
+igaz, hogy egy határértéken belüli állapotba értünk. Az oldal itt a görbe
+,,sebességvektorának'' a normáltja szerinti ,,pozitív'' vagy ,,negatív''
+félsíkot jelenti. A határérték pedig azt jelenti, hogy a görbe egyik oldalára
+eső részt egy négyszöggel már elégséges pontossággal meg lehet közelíteni.
+Ekkor úgy vesszük, hogy ez a négyszög a görbedarabot lefedi. Ha szükséges a
+másik oldal miatt, akkor a görbét tovább osztjuk, de a már előzőleg lefedett
+oldallal már nem foglalkozunk. Gyakorlatilag a végső görbe képe ilyen
+összekapcsolt négyszögekből fog állni. Sajnos bizonyos elfajuló esetekben ez
+vagy nagyon sok darabkát jelent, vagy nem is egyértelmű, hogy hogyan kellene
+eljárjon az algoritmus. Ezek az esetek szerencsénkre azért felismerhetők, és
+mint speciális esetek egyike kezelhetőek. Ilyen elfajuló eset pl. ha a
+harmadrendű görbe a közepénél ,,megtörik''. Ilyenkor egy egészen kis
+tartományban olyan gyorsan változik a derivált, hogy nem is biztos, hogy
+folytonos módon követni tudjuk. Ha ilyen eset megközelítő képét tapasztaljuk,
+akkor a megközelített ,,törési'' pontban elhelyezünk egy kört, aminek az
+átmérője pont a vonalvastagság. Így ugyan lesznek többszörösen lefedett részek,
+ugyanakkor az alakzat képe a definíció szerintit követi, vagyis a ,,külső'' ív
+szépen körbefordul a ,,törési'' pont körül.
+
+A körvonal visszavezetésénél a kitöltendő alakzatot mindig a \emph{nem-zérus}
+szabállyal rendereljük. Erre többek között az előbb is bemutatott elfajuló
+esetekből fakadó esetlegesen egymásra kerülő darabkák miatt van szükség. Így
+nem keletkezhet lyuk az alakzat képében. Máskülönben a visszavezetett
+alakzattal pontosan úgy járunk el mint egy egyszerű kitöltendő párjával.
 
   \section{Szakaszra bontás}
 
