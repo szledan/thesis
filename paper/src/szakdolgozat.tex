@@ -1903,8 +1903,9 @@ csúcspontjait rendeli az adott trapéz sarkaihoz. Egy trapéz sarkához pedig
 mindig tartozik valódi koordinátapár.
 
   \begin{figure}
-    \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
-    160pt,clip]{img/built/sunmoonvertex_eps}
+    \centering
+    \includegraphics[width=.9\textwidth, viewport=0pt 60pt 260pt
+    150pt,clip]{img/built/sunmoonvertex_eps}
     \caption{\label{sunmoonvertex}}
   \end{figure}
 
@@ -1932,8 +1933,8 @@ kell, hogy milyen a trapézhoz, és annak melyik sarkához tartozik.
 Ezeket az adatokat egy ún. \emph{vertex attribútum tömbbe} tesszük. Az első
 helyre letesszük a hat trapéz adatot, a $0$-ás indexet, és egy kis részt
 kihagyunk. Majd letesszük ugyanannak a trapéznak az adatait, az $1$-es indexet,
-és szintén egy kis üres helyet kihagyunk. Majd úgyanígy járunk el a $2$-es és a
-$3$-as indexekkel is. Teljesen hasonló helyezhetjük el a tömbbe amásodik
+és szintén egy kis üres helyet kihagyunk. Majd ugyanígy járunk el a $2$-es és a
+$3$-as indexekkel is. Teljesen hasonló helyezhetjük el a tömbbe a második
 trapézt. A kis kihagyásokra azért van szükség, mert a GLES2 elvárja, hogy négy
 \func{float} méretére legyenek az adatok igazítva. Nekünk pedig effektív hét
 \func{float} típusú értékünk van.
@@ -1954,6 +1955,36 @@ kicsivel meghízik az eredeti háromszög, így az összes érintett raszterpont
 bekerül. Lehetséges, hogy olyanok is bekerülnek, amiket az eredeti háromszög
 nem érint, ezek viszont úgyis nulla intenzitásúak lesznek.
 
+Miután meghatározta a vertex program az aktuális vertex kibővitett pontját,
+utána még a fragment shader-nek szükséges értékeket is kiszámol, illetve
+beállít. Az értékeket a shader-ek között megosztást biztosító változókba
+(\inenglish{varyings}) tesz. Ilyen érték a vertex új koordinátája. Ez
+kulcsfontosságú beállítás, mert ez az értékpár lesz végül interpolálva, és
+innen tudja majd az egyes raszterpontokra lefutó fragment program, hogy a
+háromszögön belül hova tartozik. De meghatározza még a két trapézszár
+meredekségét és valódi alsó, felső alapvonalának értékét is.
+
+Egy fontos részről még nem volt szó a vertex shader kódjával kapcsolatban. A
+renderelést mindig a $(-1, -1, 0)$ és $(1, 1, 0)$ pontok által meghatározott
+négyzetben hajtjuk végre. Ezért a koordinátákat ebbe a síkba kell
+normalizálnunk. Vagyis ezt a négyzetet mint \emph{láthatósági ablakot}
+(\inenglish{view port}) kell kezelnünk. Ehhez \func{uniform} típusú egyedi
+változó formájában át kell adnunk a vertex shader-nek a vászon méretét. Ezzel a
+mérettel pedig már le tudjuk normalizálni a vertex koordinátákat. Ebből
+fakadóan az is következik, hogyha olyan háromszögek jönnének létre, amik nem
+esnek a láthatósági ablakba, akkor azokat nem is fogja kirenderelni a GPU. A mi
+esetünkben az ilyen trapézokat már CPU oldalon leválogattuk, és eldobtuk.
+
+A vertex programok után az érintett raszterpontokra fut le a fragment
+shader-ből előálló fragment program. Az alkzat képét azonban nem direkt az
+eredménytömbbe rendereljük, hanem még a rajzolást kiváltó hívás előtt bekötünk
+egy alakzatot befoglaló méretű (\inenglish{bounding box}) \func{GL\_ALPHA}
+típusú textúrát. Ebbe a textúrába várjuk az alakzat képét. Ez a textúra egy
+egycsatornás átláthatóságot leíró típus. Ahol a textúra pontjai a $0$, teljesen
+átlátszó értéktől a $255$, teljesen átfedő értékig vehetnek fel értékeket.
+Jellemzően az alakzat belsejében ez $255$, azaz teljesen elfedő, míg a szélein
+az élsimításnak megfelelően áteresztő lesz. Valamint a befoglaló téglalapnak az
+alakzathoz nem tartozó pontjai mind áteresztőek ($0$ értékűek).
 
   \begin{description}[noitemsep]
     \item[Kulcsszavak] Batching, alpha textúra, textúrázás, színezés,
