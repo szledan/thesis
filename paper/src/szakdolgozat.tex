@@ -1537,10 +1537,10 @@ a lépésben megtenni. Hiszen később a metszések révén sokkal több pontot 
 bejárni ugyanezért. A transzformációk érvényesítése után az egyes elemek
 szerint meghívjuk a \func{SegmentApproximator} megfelelő függvényét. Az egyenes
 vonal esetén ez egy megfelelő szakasz beszúrását jelenti. Ekkor a szakaszokat
-megfelelő módon tároló \func{SegmentTree}\footnote{Ez egy \func{std::map<int,
-SegmentList>} struktúra.} struktúrában két új bejegyzés jön létre. Először a
-szakasz kezdő- és végkoordináták $y$ értékének megfelelően két új üres
-\func{SegmentList} lista jön létre, ha még nincs ilyen az adott $y$
+megfelelő módon tároló \func{SegmentTree}\footnote{Ez egy \func{std::map<const
+int, SegmentList*>} struktúra.} struktúrában két új bejegyzés jön létre.
+Először a szakasz kezdő- és végkoordináták $y$ értékének megfelelően két új
+üres \func{SegmentList} lista jön létre, ha még nincs ilyen az adott $y$
 bármelyikére. Ezután a kisebbik $y$-hoz tartozó listába kerül egy új
 \func{Segment} struktúra, ami leírja az adott szakasz értékeit és irányát. A
 következő hasonló szakasz beszúrása esetén hasonlóan kell eljárni. Világos,
