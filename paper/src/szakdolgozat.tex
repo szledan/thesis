@@ -1975,22 +1975,70 @@ fakadóan az is következik, hogyha olyan háromszögek jönnének létre, amik 
 esnek a láthatósági ablakba, akkor azokat nem is fogja kirenderelni a GPU. A mi
 esetünkben az ilyen trapézokat már CPU oldalon leválogattuk, és eldobtuk.
 
-A vertex programok után az érintett raszterpontokra fut le a fragment
-shader-ből előálló fragment program. Az alkzat képét azonban nem direkt az
-eredménytömbbe rendereljük, hanem még a rajzolást kiváltó hívás előtt bekötünk
-egy alakzatot befoglaló méretű (\inenglish{bounding box}) \func{GL\_ALPHA}
-típusú textúrát. Ebbe a textúrába várjuk az alakzat képét. Ez a textúra egy
-egycsatornás átláthatóságot leíró típus. Ahol a textúra pontjai a $0$, teljesen
-átlátszó értéktől a $255$, teljesen átfedő értékig vehetnek fel értékeket.
-Jellemzően az alakzat belsejében ez $255$, azaz teljesen elfedő, míg a szélein
-az élsimításnak megfelelően áteresztő lesz. Valamint a befoglaló téglalapnak az
-alakzathoz nem tartozó pontjai mind áteresztőek ($0$ értékűek).
+A vertex programok után az érintett fragmentekre fut le a fragment shader-ből
+előálló program. Az alakzat képét azonban nem direkt az eredménytömbbe
+rendereljük, hanem még a rajzolást kiváltó hívás előtt bekötünk egy alakzatot
+befoglaló méretű (\inenglish{bounding box}) \func{GL\_ALPHA} típusú textúrát.
+Ebbe a textúrába várjuk az alakzat képét. Ez a textúra egy egycsatornás
+átláthatóságot leíró típus. Ahol a textúra pontjai a $0$, teljesen átlátszó
+értéktől a $255$, teljesen átfedő értékig vehetnek fel értékeket. Jellemzően az
+alakzat belsejében ez $255$, azaz teljesen elfedő, míg a szélein az
+élsimításnak megfelelően részben áteresztő lesz. Valamint a befoglaló
+téglalapnak az alakzathoz nem tartozó pontjai pedig teljesen áteresztőek ($0$
+értékűek).
 
-  \begin{description}[noitemsep]
-    \item[Kulcsszavak] Batching, alpha textúra, textúrázás, színezés,
-    gradiens, kivágás - clipping.
-    \item[Becsült oldalszám] 4.
-  \end{description}
+A fragment shader tíz, részben interpolált változó értéket kap. Ebből két érték
+interpolálódik. A \emph{kifelé kerekített}\footnote{A kifelé kerekítés itt azt
+jelenti, hogy a kerekített koordináták vagy pont a sarkokra, vagy az alakzaton
+kívülre esnek.} két sarokkoordináta távolsága a bal alsó sarokhoz képest. Így
+az egyes fragmentek úgy kapják meg ezt a két értéket, hogy azoknak az
+egész-része meghatározza a fragment helyét az alakzathoz képest. Ami első
+körben két esetet jelent. Az egyik, hogy a fragment az alakzatban van, tehát
+teljes intenzitással ki kell gyújtani. Vagy a másik, hogy az alakzat szélén
+helyezkedik el, tehát részben áteresztő lesz. A maradék nyolc érték közül kettő
+a bal és jobb meredekség értéke, három-három érték pedig trapézzal kapcsolatos
+értékek: az alsó alap hossza, a trapéz magassága, a fragmenten belüli alsó bal
+és jobb $x$ értékek törtrészei, valamint a hasonló alsó és felső $y$ értékek
+tört részei. Minden fragmentre kiszámoljuk a helyét az alakzaton belül, majd ez
+alapján meghatározzuk, hogy a lefedettség $y$ szerint mettől meddig tart.
+Ezután az élsimítás értékének (pl. a maximális $16$) megfelelő részre osztjuk
+horizontálisan a fragmentet. Ha a fragment aljától a tetejéig tart a
+lefedetség, akkor az összes ($16$ darab) osztott részt érintjük, és az azokhoz
+tartozó részeket összegezzük. Különben csak a lefedésben érintett sávokat
+összegezzük. A sávok esetében pedig az átadott meredekségeknek és a trapéz
+sarokpontjainak köszönhetően el tudjuk dönteni, hogy a sáv teljesen fedett az
+$x$ értékek szerint, vagy csak egy része. Természetesen a belső pontok
+gyakoribbak lesznek, így a fragment intenzitását a shader elején az $1.0$
+maximális értékre\footnote{Az \emph{alpha} csatorna mérete \emph{egy bájt},
+ugyanakkor a shader-ben ez egy $0.0$ és $1.0$ közti \func{float} típusú
+lebegőpontos érték.} állítjuk. Majd eldöntjük, hogy a fragmnet belső pont-e, és
+csak akkor számoljuk ki a fent említett iterációval az $1.0$-nál kisebb
+\emph{alpha} értéket, ha szélső fragmentről van szó.
+
+Így az alakzat képét egy alpha textúra tartalmazza. Ezek után egy újabb vertex
+és fragment shader-párból álló programmal az alpha textúra segítségével egy
+\emph{színezett textúrába} (\inenglish{color texture}) a megfelelő szín szerint
+az alakzat színezett képét másoljuk. Ez továbbra is az alakzatot befoglaló
+téglalap méretű textúra lesz. Ezt lefedő téglalappal (két háromszög)
+renderelünk egy nagyon egyszerű vertex és fragment shader segítségével. A
+vertex shader csak a téglalap sarkai szerint beállítja a négy vertex végső
+pontját, illetve az ezekhez tartozó alpha textúra megfelelő sarokpontjai. A
+fragment shader pedig megkapja egyedi változóban az alpha textúra azonosítóját
+és a kitöltés \func{RGBA} színét, valamint interpolált értékként a fragmentnek
+megfelelő alpha textúrabeli koordinátát. A koordináta segítségével az alpha
+textúrából a fragmenthez tartozó kitöltési intenzitást lekéri, és a szín érték
+végső alpha (áttetszőségi) értékét felszorozza. Ezzel az alakzat színhelyes
+képét minden fragmentre megkapjuk.
+
+Ezek után egy harmadik lépésben az előző vertex és fragment shader nagyon
+hasonlító módon a színes textúrát az eredmény tömb megfelelő helyére
+felmásoljuk. Ezzel gyakorlatilag a dolgozatunkban kitűzött célt elértük.
+
+Még röviden érdemes átgondolni, hogy a jelenleg nem támogatott, de jövőbeli
+\emph{gradiens színezés}, vagy \emph{kivágás} (\inenglish{clipping}) az alpha
+textúrának köszönhetően a folyamatba beépíthető. Hiszen az alpha textúrát akár
+kivágási ablaknak is használhatjuk. Tehát egy gradiens textúrát is kivághatunk
+az alakzat kpével, ezzel az alakzat gradiens színezett képét megkapva.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
