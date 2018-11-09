@@ -2463,23 +2463,27 @@ megírásához.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \chapter*{Mellékletek}
+    \newcommand{\thischaptertitle}{Mellékletek}
     \addcontentsline{toc}{section}{Mellékletek}
 
+\appendix
+\renewcommand\thefigure{M.\arabic{figure}}
+\fancyhead[L]{\MakeUppercase{\thischaptertitle}}
 
   \begin{figure}[!htb]
-  \begin{center}
-    \includegraphics[scale=0.5]{img/built/tiger}
-  \end{center}
-    \caption{\label{tiger} A tiger.svg}
+    \begin{center}
+      \includegraphics[scale=0.45]{img/built/tiger}
+    \end{center}
+    \caption{\label{appendix:tiger} A számítógépes grafikában gyakran használt
+    \func{Ghostscript Tiger.svg} képe Geparddal renderelve}
   \end{figure}
 
   \begin{figure}[!htb]
-  \begin{center}
-    \includegraphics[scale=0.8]{img/built/dataflow_eps}
-  \end{center}
-    \caption{\label{dataflow} A rajzolás folyamatai}
+    \begin{center}
+      \includegraphics[scale=0.8]{img/built/dataflow_eps}
+    \end{center}
+    \caption{\label{appendix:dataflow} A rajzolás folyamatai}
   \end{figure}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%   Nyilatkozat                                                    %%
