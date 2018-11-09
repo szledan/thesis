@@ -477,7 +477,7 @@ Ezekről a lépésekről is érdemes lesz beszélni.
 
 A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C HTML5
 szabvány, és az azon belüli Canvas \emph{első} vázlata 2008-as:\\
-\footnotesize{ \url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}} }.
+{\footnotesize\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}}}.
 Az előírás leír egy felbontásfüggő rajzolóvásznat, amelyet jellemzően
 \emph{Canvas}-nek neveznek. A Canvas definíció szerint nem más mint egy adott
 \emph{szélességgel} és \emph{magassággal} meghatározott terület, ahova
@@ -501,8 +501,8 @@ korlátok. Hiszen józan ésszel felfogható, hogy egy egyenes szakaszból defin
 alakzatra értelmetlen a \emph{kitöltés} (\func{fill}) parancsot meghívni.
 Hasonlóan nem mond semmit a nulla vastagságú vonal a \emph{körvonal rajzolása}
 (\func{stroke}) parancs esetén. Érdekes belegondolni abba is, hogy mi legyen
-egy definiált alakzat sorsa, ha már kirajzoltuk. Vessük el, vagy tartsuk meg. A
-szabvány megalkotói -- amúgy programozási szempontból jól indokolható módon --
+egy definiált alakzat sorsa, ha már kirajzoltuk. Vessük el, vagy tartsuk meg? A
+szabvány megalkotói -- amúgy programozás szempontból jól indokolható módon --
 a megtartás mellett döntöttek. Így viszont az a fontos megkötés is megjelent,
 hogy mindig egyértelműen jelezni kell, ha új alakzatot akarunk definiálni.
 
@@ -589,7 +589,7 @@ említett színterekhez tartozó hívások: \func{rgba(red, green, blue, alpha)}
 webes környezetekben megszokott úgynevezett hexa-kódokat. Ekkor az RGB
 színtérből választhatunk, és kétféle mintát használhatunk: a hosszabb
 \func{\#rrggbb}-t és a rövidebb \func{\#rgb}-t. A két attribútum viselkedését a
-CSS ajánlás\footnote{A W3C CSS Color Module Level 3:\footnotesize{
+CSS ajánlás\footnote{A W3C CSS Color Module Level 3:{\footnotesize
 \url{https://www.w3.org/TR/css-color-3/}}.} írja le. A beállítást szöveges
 (\func{string}) formában kell megadni, amit aztán értelmezni kell, és aszerint
 megadni az értékeket. Később részletesen lesz szó arról, hogy milyen módon
@@ -607,7 +607,7 @@ mátrix. Ezt a mátrixot módosíthatjuk a \func{scale(x, y)}, a
 e, f)} és a \func{setTransform(a, b, c, d, e, f)} függvényekkel. Az utolsó két
 függvény esetén a változók a homogén transzformációs mátrix módosítható
 értékeit reprezentálják\footnote{Cabanier et al.: \emph{{HTML} Canvas {2D}
-Context}, 2015, W3C\\ \footnotesize{ \url{https://www.w3.org/TR/2dcontext/}},
+Context}, 2015, W3C\\ {\footnotesize\url{https://www.w3.org/TR/2dcontext/}},
 6. fejezet.}: \[\begin{pmatrix}a & c & e \\ b & d & f \\ 0 & 0 & 1 \\
 \end{pmatrix}\]
 
@@ -711,24 +711,24 @@ háromszögekkel kell lefednünk.
 
   \begin{figure}
     \includegraphics[scale=0.5]{img/built/gles2pipeline_eps}
-    \caption{\label{opengles_20_pipeline2} Az OpenGL ES 2.0 programozható
+    \caption{\label{fig:opengles_20_pipeline2} Az OpenGL ES 2.0 programozható
     grafikus végrehajtási modellje. A \emph{vertex shader} és a \emph{fragment
-    shader} lépéseket programozhatjuk. \\%
-    (A {\footnotesize\url{https://www.khronos.org/api/opengles/2_X}} forrás
-    alapján.)
-    }
+    shader} lépéseket programozhatjuk \\%
+    (A {\footnotesize\url{https://www.khronos.org/api/opengles/2_X}}
+    forrás alapján.)}
   \end{figure}
 
 Bármilyen megjelenítéshez írni kell legalább két programot, ami a grafikus
 egységen fog lefutni. Az első program kódját adja meg az ún. \emph{vertex
 shader}, a másodikét pedig a \emph{fragment shader}. Ezeket a leírásokat a
 grafikus meghajtónak át kell adjuk, hogy az \emph{lefordíthassa}
-(\inenglish{compiling shader}) és \emph{összeköthesse} (\inenglish{linking
-programs}) azokat. Hibátlan fordítás és összekötés esetén visszakapunk egy
-\emph{program azonosítót}.  Később erre az azonosítóra hivatkozva állíthatjuk be
-a végrehajtási modell \emph{állapotát} (pipeline \inenglish{state}).
+(\inenglish{shader compiling}) a kódokat, és a programokat \emph{összeköthesse}
+(\inenglish{programs linking}). Hibátlan fordítás és összekötés esetén
+visszakapunk egy \emph{program azonosítót}.  Később erre az azonosítóra
+hivatkozva állíthatjuk be a végrehajtási modell \emph{állapotát} (pipeline
+\inenglish{state}).
 
-A vertex shader segítségével határozhatjuk meg a \emph{csúcspontokra}
+A \emph{vertex shader} segítségével határozhatjuk meg a \emph{csúcspontokra}
 (\inenglish{vertex}) lefutó programot. A vertex programmal adhatjuk meg a
 csúcspont végleges helyét.  Lehetőségünk van az adott csúcsponthoz tartozóan
 változókat (\inenglish{varyings}) beállítani, amiket a később lefutó fragment
@@ -785,7 +785,7 @@ adatokat, és átmásolja a GPU oldalra. Majd elkezdi feldolgozni.
 Az eredményt nem azonnal kapjuk meg, a folyamat a grafikus meghajtótól függ.
 Ugyanakkor vannak bizonyos CPU oldali függvények, amik blokkoló hatásúak, azaz
 bevárják az eredmény elkészültét. Ilyen például a \func{glReadPixels}. Ezzel
-függvénnyel olvashatunk ki az eredménytömbből. Világos, hogy valós adatot
+függvénnyel olvashatunk ki az eredménytömbből. Tehát ahhoz, hogy valós adatot
 olvashassunk ki ebből a tömbből, garantálnunk kell, hogy abban a végső kép el
 is készült.
 
@@ -879,11 +879,11 @@ Természetesen a számítógépes ábrázolásban nem egy pontból indítjuk a p
 vonalakat. A raszterkép valamelyik oldalára merőlegesen minden pontsorhoz
 rendelünk egy a végtelenből jövő pásztázó vonalat. Ezek a vonalak teljesen
 ekvivalensek a geometriaiakkal. Azzal a megkötéssel, hogy a raszterpontok
-megjelölésére olyan szabályt kell alkalmazni, hogy a nem raszterpont-határra eső
-és érintkező alakzatok ne jelöljék meg kétszer ugyanazt a raszterpontot.
-Természetesen nem is pásztázó egyenesekről, hanem adott magasságú \emph{pásztázó
-sávokról} beszélünk. A pásztázó sávok fogalma még fontos lesz a dolgozat
-szempontjából.
+megjelölésére olyan szabályt kell alkalmazni, hogy a nem raszterpont-határra
+eső és érintkező alakzatok ne jelöljék meg kétszer ugyanazt a raszterpontot.
+Természetesen nem is pásztázó egyenesekről, hanem egy raszterpont magasságú
+\emph{pásztázó sávokról} beszélünk. A pásztázó sávok fogalma még fontos lesz a
+dolgozat szempontjából.
 
     \subsection*{\emph{Bézier} görbe és a \emph{de Casteljau} felbontás}
     \label{sec:Bézier görbe és a de Casteljau felbontás}
@@ -1060,7 +1060,7 @@ tagolódik (lásd a \emph{\ref{fig:structure_eps}. ábrát}). A \emph{felső} r�
 alapja a Canvas API. Ezt neveztük el \emph{Gepard}-nak. A következő
 \emph{köztes} réteg fogja össze a közös részeket. Ez lett a \emph{Gepard
 Engine}. A \emph{Gepard Backend} pedig az \emph{alsó} szint, ahol az egyes
-grafikus meghajtók specifikus részei kaptak helyet. Három modul fejlesztése
+grafikus meghajtóspecifikus részek kaptak helyet. Három modul fejlesztése
 történik itt: \emph{GLES2} (OpenGL ES 2.0), \emph{Vulkan} (Vulkan 1.0) és
 \emph{Software} (saját raszterizáló).
   \begin{wrapfigure}{\melyikoldalra}{0.5\textwidth}
@@ -1221,17 +1221,17 @@ tulajdonképpen könnyedén folytathatjuk az alakzat építését.
 Részben ehhez a réteghez kapcsolódik a kitöltött téglalap (\func{fillRect})
 rajzolása is. Ez ugyan szigorúan nem tartozik a szakdolgozatunk tárgyához,
 ugyanakkor mint a Path általános alakzatleírás egyik -- külön is definiált --
-primitív alakzatként azért érdemes pár szót ejteni róla. Elsőre erre az
+primitív alakzataként azért érdemes pár szót ejteni róla. Elsőre erre az
 egyszerű alakzatra készült el a kirajzolás általános folyamata. Kezdve az API
 hívástól (\func{fillRect}) a felső rétegben. Majd haladva a köztes rétegen át a
-konkrét kirajzolásig OpenGL ES 2.0-t használva. A téglalapot mint két egymáshoz
-illesztett derékszögű háromszöget értelmeztük. A négy sarokra mint vertexekre
-hívódott meg egy nagyon egyszerű \emph{program} a grafikus eszközön. Az alakzat
+konkrét kirajzolásig GLES2-t használva. A téglalapot mint két egymáshoz
+illesztett derékszögű háromszöget értelmezzük. A négy sarokra mint vertex-ekre
+hívódik meg egy nagyon egyszerű \emph{program} a grafikus eszközön. Az alakzat
 egyszerűsége miatt mind a \emph{vertex}, mind pedig a \emph{fragment}
-programrészekhez tartozó ún. árnyaló\footnote{FIXME: magyarul a shader?}
-(\inenglish{shader}) kódok viszonylag egyszerűek lettek. Ezért könnyen
-felállítható volt a rajzolás folyamata, ahová aztán be lehetett illeszteni a
-komplexebb alakzatok megjelenítését.
+programrészekhez tartozó ún. \emph{árnyaló} (\inenglish{shader}, a továbbiakban
+mi is shader-ként hivatkozunk ezekre) kódok viszonylag egyszerűek. Ezért
+könnyen felállítható a rajzolás folyamata. Amit később felhasználva, egyszerűbb
+beilleszteni a komplexebb alakzatok megjelenítését adó hívásokat.
 
     \section[A Path osztály]{A Path osztály}
     \label{sec:A Path_osztály}
@@ -1290,9 +1290,9 @@ annyiban tér el az őstől, hogy markerként hordozza a típusát.
 
 A \func{QuadaraticCurveToElement} egy másodrendű Bézier görbét határoz meg az
 előző elem végpontjától a saját végpontjáig az újabb adattagként megjelenő
-kontrollpont szerint. A \func{BezierCurveToElement} egy harmadrendű
-Bézier görbét határoz meg az előző elem végpontjától a saját végpontjáig a két
-újabb adattagként megjelenő kontrollpontok szerint.
+kontrollpont szerint. A \func{BezierCurveToElement} egy harmadrendű Bézier
+görbét határoz meg az előző elem végpontjától a saját végpontjáig a két újabb
+adattagként megjelenő kontrollpontok szerint.
 
 Az \func{ArcElement} struktúra leír egy körcikket. Ez a struktúra több
 adattaggal is bővül az őshöz képest. Egyrészt tárolni kell a középpontot, a kör
@@ -1309,14 +1309,13 @@ kezelhessük.
 
 Az elemeket jelölő és azok adatait tároló segédstruktúrák után rátérhetünk a
 \func{Path} osztályra. Ez az osztály az előbb felsorolt struktúrákat egy
-listában tárolja. A lista első eleme a szabvány
-értelmében\footnote{szabványrész} mindig egy \func{MoveToElement} kell legyen.
-Utána pedig tetszőlegesen sok elem következhet. Jellemzően az alakzatokat
-egymás utáni hívások sorozataként építjük fel. Ebből az is következik, hogy jó
-pár viszonylag hasonló méretű struktúra memóriába való lefoglalására kerül sor
-egy alakzat építésekor. Ugyanakkor érdemes kerülni az ilyen jellegű
-foglalásokat. Ezért egy ún. \emph{Region} modellt alkalmaztunk a lista
-tárolására.
+listában tárolja. A lista első eleme a szabvány értelmében mindig egy
+\func{MoveToElement} kell legyen. Utána pedig tetszőlegesen sok elem
+következhet. Jellemzően az alakzatokat egymás utáni hívások sorozataként
+építjük fel. Ebből az is következik, hogy jó pár viszonylag hasonló méretű
+struktúra memóriába való lefoglalására kerül sor egy alakzat építésekor.
+Ugyanakkor érdemes kerülni az ilyen jellegű foglalásokat. Ezért egy ún.
+\emph{Region} modellt alkalmaztunk a lista tárolására.
 
 Ez az osztály (\func{Region}) a tárolni kívánt struktúrák méretéhez képest
 néhány nagyságrenddel nagyobb memóriaterületet (memóriarégiót) foglal le. A
@@ -1417,18 +1416,17 @@ Az \func{addArcToElement} függvény elméletileg egy speciális körcikk elemet
 a listához, valójában azonban ehhez a függvényhez nem tartozik külön struktúra.
 Itt azért nem volt szükség külön struktúrára, mert ez a függvény által leírt
 elem megadható egy egyenes vonal és egy körcikk segítségével. Ezért ez a
-függvény ezt a visszavezetést tartalmazza. Arról már volt szó~\footnote{TODO:
-ellenőrizni}, hogy ehhez a függvényhez egy olyan alakzatelem tartozik, ami
-főleg a lekerekített alakzatok könnyebb meghatározását biztosítja. Például egy
-rádiusz érték következetes használatával könnyedén definiálhatunk egy, a
-sarkainál lekerekített téglalapot. Ha most ezt a téglalapot vesszük, akkor négy
-ilyen alakzatelemből felépíthetjük. Ugyanakkor a valóságban négy egyenes
-vonalból és négy körcikkből épül fel. Ennél az elemnél tudjuk, hogy mindig
-benne van a használt pontok által meghatározott alakzatban, csupán a sarkoknál
-a megadott rádiusz(ok) hatására körcikkeket kell beszúrjunk. A visszavezetés
-azt kell eldöntse, hogy milyen szögtől milyen szögig terjed a körcikk, és az
-előző elem végpontjából hogyan kell vonalat húzni a lekerekítést adó
-körcikkhez.
+függvény ezt a visszavezetést tartalmazza. Ehhez a függvényhez egy olyan
+alakzatelem tartozik, ami főleg a lekerekített alakzatok könnyebb
+meghatározását biztosítja. Például egy rádiusz érték következetes használatával
+könnyedén definiálhatunk egy, a sarkainál lekerekített téglalapot. Ha most ezt
+a téglalapot vesszük, akkor négy ilyen alakzatelemből felépíthetjük. Ugyanakkor
+a valóságban négy egyenes vonalból és négy körcikkből épül fel. Ennél az
+elemnél tudjuk, hogy mindig benne van a használt pontok által meghatározott
+alakzatban, csupán a sarkoknál a megadott rádiusz(ok) hatására körcikkeket kell
+beszúrjunk. A visszavezetés azt kell eldöntse, hogy milyen szögtől milyen
+szögig terjed a körcikk, és az előző elem végpontjából hogyan kell vonalat
+húzni a lekerekítést adó körcikkhez.
 
     \subsection[A körvonal rajzolása]{A körvonal rajzolása}
 
@@ -1605,7 +1603,9 @@ végre. Nézzük meg az egyes lépéseket.
     \item Megvizsgáljuk, hogy betelt-e a verem.
     \begin{description}[topsep=0ex,noitemsep]
       \item[Ha igen] A görbedarabbal újrakezdjük az $1$-es pontban. (Rekurzív
-      rész. Ritkán hívódik.\footnote{TODO: Mérés})
+      rész. Ritkán hívódik.\footnote{A dolgozatban később ismertetésre
+      kerülő Ghostscript Tiger.svg renderelésekor mindössze egyszer
+      hívodik meg.})
       \item[Különben] Folytatjuk a $3$-as ponttal.
     \end{description}
   \end{enumerate}
@@ -1719,7 +1719,7 @@ tároló \func{SegmentTree} egy \func{std::map<const int, SegmentList*>}
 adatszerkezet. Ahol a \emph{kulcs} az előbb említett alpixel rács $y$ értékei
 egészre kerekítve (\func{trunc}). Az \func{std::map} mögött egy piros-fekete fa
 implementáció található\footnote{
-\footnotesize{\url{https://en.cppreference.com/w/cpp/container/map}}}. Az
+{\footnotesize\url{https://en.cppreference.com/w/cpp/container/map}}}. Az
 \emph{érték} mezőben pedig egy láncolt lista memóriacímét tároljuk. Ez a
 \func{SegmentList} egy \func{std::list<Segment>} típusú lista, ami a szakaszok
 leírását megvalósító \func{Segment} osztály példányait tárolja. A jelen
@@ -1881,7 +1881,7 @@ programot eredményezne. Ezért is alakult ki néhány olyan interfész, ami ré
 képez az eszköz, az eszközön futó operációs rendszer és az GLES2 API-t használó
 program között. Az egyik ilyen elterjedt interfész az \emph{EGL}\footnote{Az
 EGL szintén a Khronos Group által felügyelt platformfüggetlen API. \\ Forrás:
-\footnotesize{\url{https://www.khronos.org/egl}}.}. Az EGL segítségével
+{\footnotesize\url{https://www.khronos.org/egl}}.}. Az EGL segítségével
 adhatjuk meg, hogy pontosan milyen pufferbe akarunk rajzolni, annak a puffernek
 mik a tulajdonságai (színcsatornák méretei, stb.), sőt az EGL-lel állítjuk be
 magát a GLES2 API-t, vagyis a rajzolás kontextusát is. Az EGL tehát megteremti
@@ -2076,14 +2076,14 @@ szabványt támogató renderelő program eredményével.
 
     \section{Használat}
 
-Arról volt szó, hogy a forráskód C++ nyelven írt. Ennek megfelelően a
-projekt is C++ alapú. A teljes projekt több részt tartalmaz. Az első és
-legfontosabb a Gepard API-hoz tartozó \emph{függvénykönyvtár}. További
-részek: a belső osztályok és struktúrák \emph{egységtesztjei}
-(\inenglish{unit tests}), példakódok és valódi, a Gepard-ot használó programok.
-A projektet a \emph{lefordítás} (\inenglish{building}) szempontjából a
-\func{CMake} rendszer fogja össze. Ez a fent felsorolt részek
-célegységként (\inenglish{target}) való lefordítását írja le.
+A \emph{Gepard} projekt C++ alapú. A teljes projekt több részt tartalmaz. Az
+első és legfontosabb a Gepard API-hoz tartozó \emph{függvénykönyvtár}. További
+részek: a belső osztályok és struktúrák \emph{egységtesztjei} (\inenglish{unit
+tests}), a példakódok és a valódi -- Gepardot használó programok. A projektet
+az \emph{összerakás} (\inenglish{building}) és futtatható állománnyá
+\emph{fordítás} (\inenglish{compiling}) szempontjából a \func{CMake} rendszer
+fogja össze. Így tudjuk a fent leírt részeket mint célegységeket
+(\inenglish{target}) elkészíteni.
 
 A Gepard használatát az \emph{Ubuntu 18.04 (64 bit)} operációs rendszeren
 mutatjuk be. A célegységeket a \emph{gcc} (7.3.0) C++ fordító programmal
@@ -2114,9 +2114,10 @@ Canvas programrészleten mutatjuk be. Hozzunk létre egy
   \minipage{0.8\textwidth}
     \begin{lstlisting}[language=C++, autogobble=true]
       #include "gepard.h"
-      #include "gepard-xsurface.h"
+      #include "surfaces/gepard-xsurface.h"
 
-      void main() {
+      int main()
+      {
           gepard::XSurface surface(640 /*width*/, 480 /*height*/);
           gepard::Gepard ctx(&surface);
           ctx.fillStyle = "#b4e256";
