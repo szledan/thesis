@@ -34,6 +34,7 @@
 \usepackage{graphicx}
 \usepackage{psfrag}
 \usepackage{stackengine,trimclip}
+\usepackage{subcaption}
 
 \usepackage{setspace}
 
@@ -145,6 +146,12 @@
 \usepackage{epigraph}
 %\epigraphfontsize{\small\itshape}
 
+\usepackage[titletoc,title]{appendix}
+\usepackage{multirow}
+\usepackage{threeparttable}
+%\usepackage{numprint}
+\usepackage{siunitx}
+
 %Tételszerű környezetek definiálhatók, ezek most fejezetenként együtt számozódnak, pl.
 \newtheorem{tét}{Tétel}[chapter]
 \newtheorem{defi}[tét]{Definíció}
@@ -176,6 +183,15 @@
 % használatát mellőzzük.
 \newcommand{\melyikoldalra}{r}
 %\newcommand{\melyikoldalra}{o} % az oldal külső felére
+
+%%% Az INCLUDEGRAPHICS ,,resolution'' kulcsszavának definíciója.
+% resolution=<res in DPI>
+%\makeatletter
+%\define@key{Gin}{resolution}{\pdfimageresolution=#1\relax}
+%\makeatother
+
+%%% Az INCLUDEGRAPHICS kulcsszavainak globális beállításai.
+%\setkeys{Gin}{resolution=2400}
 
 %%% Az INCLUDEGRAPHICS kivágások globális eltolása.
 % A néhány sorral lentebbi \setpdfoffset{0pt}{0pt} átállításával a
