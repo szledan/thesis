@@ -410,7 +410,7 @@ eszközöket, technológiákat: \emph{gcc}, \textit{OpenGL~ES~2.0} függvénykö
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \chapter*{Bevezetés}
-    \label{Bevezetés}
+    \label{sec:Bevezetés}
     \addcontentsline{toc}{section}{Bevezetés}
 
 A környezetünkben található számítástechnikai eszközök legtöbbjének van
@@ -434,9 +434,9 @@ kiadása több elkülönített részből állítja össze az API-t. Ezen részek
 úgynevezett \emph{Path}. Az említett 2015-ös előírás az 5., 8. és 11.
 fejezetekben részletezi a Path-szal szembeni elvárásokat. A Path maga a
 definiált grafikus alakzatokhoz képest bonyolultabbak leírását biztosító
-eszköz. A Háttér (\ref{Háttér}.) fejezetben részletesebben kifejtjük a path-t
-építő eszköz lehetőségeit és szabályait. Itt most csak annyiban kell kitérjünk
-rá, hogy alapvetően két nagyobb részből áll. A \emph{körvonalból}
+eszköz. A Háttér (\ref{sec:Háttér}.) fejezetben részletesebben kifejtjük a
+path-t építő eszköz lehetőségeit és szabályait. Itt most csak annyiban kell
+kitérjünk rá, hogy alapvetően két nagyobb részből áll. A \emph{körvonalból}
 (\inenglish{stroke}) és a \emph{kitöltésből} (\inenglish{fill}).
 
 Jelen dolgozat az említett \emph{Path} rész megvalósítását kívánja bemutatni.
@@ -456,7 +456,7 @@ előírás (Canvas) elvárásait teljesíteni.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \chapter{Háttér}
-    \label{Háttér}
+    \label{sec:Háttér}
 
 Ez a fejezet mutatja be azokat a technológiákat és kihívásokat, amelyek keretet
 szabtak a téma megvalósításának. Szót kell ejteni magáról a Canvas 2D Context
@@ -473,7 +473,7 @@ Path~API elvárásaival~\footnote { Elvárás a tetszőleges számú körcikk, s
 Ezekről a lépésekről is érdemes lesz beszélni.
 
     \section[A Canvas 2D Context előírás]{A W3C Canvas 2D Context előírás}
-    \label{A Canvas előírás}
+    \label{sec:A_Canvas_előírás}
 
 A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C HTML5
 szabvány, és az azon belüli Canvas \emph{első} vázlata 2008-as:\\
@@ -542,11 +542,11 @@ szabványban külön nem definiált forma, ellentétben a téglalappal (\emph{re
     \minipage{0.5\textwidth}
       \includegraphics[width=.5\textwidth]{img/built/triangle}
     \endminipage
-    \caption{\label{triangles-code-and-image} Bezárt és nyitva hagyott
-    alakzatok körvonalai és kitöltései }
+    \caption{\label{fig:triangles} Bezárt és nyitva hagyott
+    alakzatok körvonalai és kitöltései}
   \end{figure}
 
-A fenti ábrán (\emph{\ref{triangles-code-and-image}}) látható egy kis példakód,
+A fenti ábrán (\emph{\ref{fig:triangles}}) látható egy kis példakód,
 illetve ennek hat különböző eredménye. Az első sorban olyan alakzatokat látunk,
 ahol a \func{closePath} parancsot meghívtuk (hármoszög), a másodikban pedig nem
 (V alak). Az első oszlopban a \func{fill}-t, a harmadikban pedig a
@@ -670,7 +670,7 @@ kitöltési stratégiát, szabályt. Ezek a \emph{paritás szabály}
 (\inenglish{even-odd fill rule}) és a \emph{nem-zérus szabály}
 (\inenglish{non-zero fill rule}). Mivel a 2D alakzatrajzolásban mindkettő igen
 elterjedt, ezért -- mint később látni fogjuk -- a Gepard API mindkettőt
-támogatja. A két szabályt a Pásztázó egyenesek (\ref{Pásztázó egyenesek}.)
+támogatja. A két szabályt a Pásztázó egyenesek (\ref{sec:Pásztázó_egyenesek}.)
 részben részletesen ismertetjük.
 
 A itt ismertetett API elvárásokból (is) látszik, hogy a Canvas által
@@ -679,7 +679,7 @@ Ezért is fontos, hogy milyen módszerrel közelítjük majd meg az alakzatok
 renderelését.
 
     \section{Az OpenGL~ES~2.0 API}
-    \label{GLES2:API}
+    \label{sec:GLES2:API}
 
 Az OpenGL~ES~2.0 (GLES2) azaz az \emph{Open Graphics Library for Embeded System
 2.0}-ás verziója a \emph{Khronos Group} által felügyelt grafikus
@@ -690,13 +690,13 @@ Kisebb, hordozható eszközök esetén nincs szükség ekkora komplexitásra. R�
 ezért is vezették be az ,,asztali'' OpenGL megrostálása és egyszerűsítése révén
 az ES API verziókat. Az ES verziók közül a 2.0-ás lett a
 legelterjedtebb\footnote{The Khronos Group: \emph{OpenGL ES Overview}, 2018,
-\footnotesize{\url{https://www.khronos.org/opengles/}}\label{fn:GLES2}}.
+{\footnotesize\url{https://www.khronos.org/opengles/}}\label{fn:GLES2}}.
 Viszonylag szigorú megkötések és a kevés számú függvény ellenére jól
 használható. Ettől a verziótól már lehetővé vált a \emph{programozható grafikus
 végrehajtási modell} (\inenglish{programmable graphics
 pipeline}).\textsuperscript{\ref{fn:GLES2}} Ami azt jelenti, hogy a végrehajtási
 sorrendbe ugyan nem lehet belenyúlni, de az egyes lépésekben futó részek
-programozhatók (lásd az \emph{\ref{opengles_20_pipeline2}. ábrát}).
+programozhatók (lásd az \emph{\ref{fig:opengles_20_pipeline2}. ábrát}).
 
 Nézzük meg röviden a GLES2 működését és a dolgozat szempontjából fontosabb
 megkötéseit.
@@ -823,7 +823,7 @@ ablakozót értesíteni (pl. \emph{eglSwapBuffers} hívással) a képernyőn val
 megjelenítéshez.
 
     \section[Matematikai háttér]{Matematikai háttér}
-    \label{Matematikai háttér}
+    \label{sec:Matematikai_háttér}
 
 Az előző két fejezetrészben láthattuk, hogy tetszőlegesen bonyolult (akár
 önmetsző) alakzatokat is ki kell tudjunk rajzolni, renderelni. Ehhez viszont
@@ -832,7 +832,7 @@ matematikai hátterű fogalmat, tulajdonságot vagy módszert mutatjuk be, amit 
 implementáció során felhasználtunk.
 
     \subsection*{Pásztázó egyenesek}
-    \label{Pásztázó egyenesek}
+    \label{sec:Pásztázó_egyenesek}
 
 A \emph{pásztázó egyenesek módszere} (\inenglish{scan-line algorithm}) egy
 grafikai algoritmus alakzatok kitöltésére, vagy pont tartalmazásának
@@ -886,7 +886,7 @@ sávokról} beszélünk. A pásztázó sávok fogalma még fontos lesz a dolgoza
 szempontjából.
 
     \subsection*{\emph{Bézier} görbe és a \emph{de Casteljau} felbontás}
-    \label{Bézier görbe és a de Casteljau felbontás}
+    \label{sec:Bézier görbe és a de Casteljau felbontás}
 
 A \emph{Bézier} (vagy \emph{de Casteljau}) görbecsalád jó tulajdonságai miatt
 népszerű~\footnote{Foley et al.: i. m., 598. o.} a számítógépes grafikában. Nem
@@ -899,15 +899,15 @@ Az alábbiakban definiáljuk a Bézier-görbéket. A definícióban a ,,pont'' f
 nem szűkítjük a síkra, ugyanakkor világos, hogy a dolgozat esetében elégséges
 erre a speciális esetre gondolnunk.
 
-\begin{defi}\label{Bézier}\cite[Kurusa]{Kurusa:1999:szamitogepes} Legyen adott
-az ($n+1$)-darab $p_0,...,p_n$ pont. Ezeket Bézier, vagy kontroll pontoknak, az
-általuk meghatározott poligont pedig kontrollpoligonnak nevezzük.  Indukcióval
-definiáljuk a következő pontokat, minden $t \in [0,1], k \in \{{0,1,2,...,n\}}$
-és $i \in \{{0,1,2,...,n-k\}}$ esetére: \[p^0_i(t)=p_i,\]
+\begin{defi}\label{def:Bézier}\cite[Kurusa]{Kurusa:1999:szamitogepes} Legyen
+adott az ($n+1$)-darab $p_0,...,p_n$ pont. Ezeket Bézier, vagy kontroll
+pontoknak, az általuk meghatározott poligont pedig kontrollpoligonnak nevezzük.
+Indukcióval definiáljuk a következő pontokat, minden $t \in [0,1], k \in
+\{{0,1,2,...,n\}}$ és $i \in \{{0,1,2,...,n-k\}}$ esetére: \[p^0_i(t)=p_i,\]
 \[p^k_i(t):=(1-t)p^{k-1}_i(t) + tp^{k-1}_{i+1}(t).\] Ekkor azt a görbét, amit a
 $p^n_0(t)$ pont leír, ahogy a $t$ végig fut a $[0,1]$ intervallumon, Bézier
 görbének nevezzük, és $B(t)$-vel jelöljük. A $p^k_i(t)$ pontokat de Casteljau
-pontoknak, az $n$ számot pedig a görbe rendjének hívjuk.  \end{defi}
+pontoknak, az $n$ számot pedig a görbe rendjének hívjuk. \end{defi}
 
   \begin{figure}
   \psfrag{a}[b][B][0.9]{\emph{a.}}
@@ -930,9 +930,9 @@ pontoknak, az $n$ számot pedig a görbe rendjének hívjuk.  \end{defi}
   \psfrag{Q11}[b][B][0.8]{\bf{$p_{1}^{1}$}}
     \centering
     \includegraphics[width=.95\textwidth]{img/built/beziers_eps}
-    \caption{\label{beziers} Bézier görbék. Az \emph{a. ábra} harmadrendű, a
+    \caption{\label{fig:beziers} Bézier görbék. Az \emph{a. ábra} harmadrendű, a
     \emph{b. ábra} másodrendű görbe képét, kontrollpoligonját és de
-    Casteljau pontjait mutatja.}
+    Casteljau pontjait mutatja}
   \end{figure}
 
 A definícióból következik néhány tulajdonság. Nézzük ezek közül a számunkra
@@ -945,14 +945,14 @@ legfontosabbakat:
   ($k-1$)-edik kontrollpoligont, amit tovább osztva a $t/(1-t)$ aránnyal, s
   ezzel eggyel csökkentve a kontrollpoligon oldalainak számát, végül már csak
   egy pontot kapunk, ami a Bézier görbe $t$ paraméteréhez tartozó pontja, és az
-  eljárást pedig \emph{de Casteljau felbontásnak} neveztük (\emph{\ref{beziers}.
-  ábra})\footnote{Kurusa -- Szemők: i. m. 41--42. o.},
+  eljárást pedig \emph{de Casteljau felbontásnak} neveztük
+  (\emph{\ref{fig:beziers}. ábra})\footnote{Kurusa -- Szemők: i. m. 41--42. o.},
   \item az elsőrendű Bézier görbe alakja egy \emph{egyenes}\footnote{Kurusa --
   Szemők: i. m. 43. o.\label{fn:Kurusa:43p}},
   \item az egy egyenesre eső kontrollpontok által meghatározott Bézier görbe
   alakja szintén egy egyenes\textsuperscript{\ref{fn:Kurusa:43p}},
   \item a másodrendű Bézier görbe alakja egy \emph{parabola}
-  (\emph{\ref{beziers}. ábra b.} pontja)\textsuperscript{\ref{fn:Kurusa:43p}},
+  (\emph{\ref{fig:beziers}. ábra b.} pontja)\textsuperscript{\ref{fn:Kurusa:43p}},
   \item a Bézier görbe mindig a kontrollpoligon konvex burkában
   van\textsuperscript{\ref{fn:Kurusa:43p}},
   \item a Bézier görbe az affin transzformációkra invariáns, azaz a görbe affin
@@ -977,7 +977,7 @@ tovább alkalmazva a görbe darabokon, végül a görbe darabok végpontjait sor
 összekötő egyenesek megközelítik az eredeti görbét.
 
     \subsection*{Körívek közelítése Bézier görbékkel}
-    \label{arctobezier}
+    \label{sec:arctobezier}
 
 A dolgozatban tárgyalt módszerrel az alakzatokat trapézokkal fedjük le. Ezért
 szükséges a köríveket szakaszokkal közelíteni. A Bézier görbéket a de Casteljau
@@ -996,7 +996,7 @@ esetén meghatározhatunk egy harmadrendű Bézier görbét, és megadhatjuk a k
 görbe közti eltérését leíró $\epsilon_{\alpha,h}(t)$ függvényt\footnote{M.
 Goldapp: \emph{Approximation of circular arcs by cubic polynomials}, North
 Holland, 1991, Elsevier, 231. o.}. Az eltérést leíró függvény képe függ a Bézier
-görbe alakjától. Ha azonban az \emph{\ref{circle}. ábrán} látható módon
+görbe alakjától. Ha azonban az \emph{\ref{fig:circle}. ábrán} látható módon
 szimmetrikusan határozzuk meg a Bézier görbét, akkor a maximális eltérés a
 $t=\frac{1}{2}$ értéknél adódik.\footnote{M. Goldapp: i. m., 230. o.}
 
@@ -1016,9 +1016,9 @@ $t=\frac{1}{2}$ értéknél adódik.\footnote{M. Goldapp: i. m., 230. o.}
                               \end{bmatrix}$}}
     \centering
     \includegraphics[width=.5\textwidth]{img/built/circle_eps}
-    \caption{\label{circle} Körcikk (szaggatott vonal) és a hozzá
+    \caption{\label{fig:circle} Körcikk (szaggatott vonal) és a hozzá
     $\epsilon(t=\frac{1}{2})$, maximális eltérésben illeszkedő harmadrendű
-    Bézier görbe (sima vonal).}
+    Bézier görbe (sima vonal)}
   \end{figure}
 
 Vegyünk egy $\alpha$ szögű egységsugarú körcikket, ekkor a fenti módon leírt
@@ -1056,7 +1056,7 @@ A \emph{Gepard} tervezésekor fontos szempont volt, hogy ne csak az OpenGL
 rajzoló modullal működjön. Vagyis lehetőséget kell kínálni, hogy a jövőben több
 grafikus meghajtóval is tudjuk használni. Mint például a Vulkan, DirectX,
 esetleg egy referencia szoftveres raszterizáló. Ezért a Gepard három részre
-tagolódik (lásd a \emph{\ref{structure_eps}. ábrát}). A \emph{felső} réteg
+tagolódik (lásd a \emph{\ref{fig:structure_eps}. ábrát}). A \emph{felső} réteg
 alapja a Canvas API. Ezt neveztük el \emph{Gepard}-nak. A következő
 \emph{köztes} réteg fogja össze a közös részeket. Ez lett a \emph{Gepard
 Engine}. A \emph{Gepard Backend} pedig az \emph{alsó} szint, ahol az egyes
@@ -1065,7 +1065,7 @@ történik itt: \emph{GLES2} (OpenGL ES 2.0), \emph{Vulkan} (Vulkan 1.0) és
 \emph{Software} (saját raszterizáló).
   \begin{wrapfigure}{\melyikoldalra}{0.5\textwidth}
     \includegraphics[scale=0.45]{img/built/structure_eps}
-    \caption{\label{structure_eps} A három fő réteg}
+    \caption{\label{fig:structure_eps} A három fő réteg}
   \end{wrapfigure}
 Ezeket a modulokat vagyis az ún. Backend-eket jelen pillanatban
 \func{GepardEngineBackend} néven fordítási időben adjuk hozzá Gepardhoz, és
@@ -1082,7 +1082,7 @@ bemutatásához szükséges módon említjük meg ezeket.
 
     \subsection*{A felső réteg, azaz a Gepard interfész}
 
-A felső réteget a \func{Gepard} osztályt \aref{Háttér}. fejezetben tárgyalt
+A felső réteget a \func{Gepard} osztályt \aref{sec:Háttér}. fejezetben tárgyalt
 Canvas határozza meg. Természetesen  a Canvas alapvetően egy webes interfész.
 Ez azt is jelenti, hogy a \func{Gepard} nem teljesen úgy működik mint a Canvas
 API a webes környezetben. A cél nem is az volt, hogy pontosan lemásoljuk. A cél
@@ -1140,16 +1140,16 @@ bekötött elemző-értelmező függvény végzi.
     \begin{center}
       \includedataflowkivagas{0pt}{210pt}{160pt}{590pt}{}
     \end{center}
-    \caption{\label{dataflow-API-diagram} A \emph{felső} réteg (Gepard
-    interfész) függvényei és adattagjai. \\ (Részlet a
-    \emph{\ref{dataflow}. folyamatábrából}.)}
+    \caption{\label{fig:dataflow-API-diagram} A \emph{felső} réteg (Gepard
+    interfész) függvényei és adattagjai \\ (Részlet az
+    \emph{\ref{appendix:dataflow}. folyamatábrából}.)}
   \end{wrapfigure}
 Az így bekötött függvény az értékadáskor meghívódik (visszahívódik,
 \inenglish{callback}), és a kapott szöveget értelmezi, majd a megfelelő
 adattagot immáron a középső rétegben vagyis a \func{Gepard Engine}-ben
 beállítja.
 
-A \emph{\ref{dataflow-API-diagram}. ábrán} a Canvas API-nak a Geprad
+A \emph{\ref{fig:dataflow-API-diagram}. ábrán} a Canvas API-nak a Geprad
 interfészben az alakzatrajzoláshoz szükséges és szorosan kapcsolódó függvényei
 és adattagjai láthatók. A függvényeket a nevük utáni zárójelpár jelzi. Az egyes
 függvények paramétereit itt nem tüntettük fel, ezek úgy is megtalálhatók
@@ -1158,7 +1158,7 @@ az egyes adattagok. Ezekről is tartalmaz bővebb leírást a dokumentáció. A
 megvalósított API részek -- a gradiens színezést és a szaggatott vonallal
 rajzolást leszámítva -- teljes körű alakzatrajzolást biztosítanak számunkra.
 Erre láthatunk majd példát az eredményeket bemutató fejezetben
-(\ref{Eredmények}). Az ábrán nem tüntettük fel a többi -- a dolgozatot nem
+(\ref{sec:Eredmények}). Az ábrán nem tüntettük fel a többi -- a dolgozatot nem
 érintő API függvényt és adattagot.
 
 Tehát az itt bemutatott \emph{felső} réteg vagyis a \func{Gepard} egy C++
@@ -1173,13 +1173,13 @@ tartalmazza és megvalósítja a közös osztályokat. Az egész réteget össze
 osztály pedig a \func{GepardEngine}. Nézzük át részletesebben az itt
 megvalósított részeket.
 
-A \emph{\ref{structure_eps}. ábrán} már láthattuk, hogy ez a szint a jelen
+A \emph{\ref{fig:structure_eps}. ábrán} már láthattuk, hogy ez a szint a jelen
 dolgozatot érintő négy főbb részből tevődik össze. Most csak hármat
 részletezünk itt. A negyedik részt, azaz a \emph{Path} alakzatleíró és tároló
 és az ezt feldolgozó osztályokkal úgy is külön alfejezetekben foglalkozunk.
 
 Az egyik funkcionalitás a rajzolás környezetének (a továbbiakban kontextus,
-\inenglish{drawing context})\footnote{A \emph{\ref{structure_eps}. ábrán} ez az
+\inenglish{drawing context})\footnote{A \emph{\ref{fig:structure_eps}. ábrán} ez az
 ,,Állapot kezelése'' rész.} biztosítása, bizonyos változások elmentése és
 helyreállítása. Az elmentésért a \func{save}, a visszaállításért pedig a
 \func{restore} API függvények a felelősek. A függvények hívásának hatásai ezen
@@ -1194,7 +1194,7 @@ region}) és a legtöbb színezéssel kapcsolatos értékeket igen, de a \emph{P
 legfontosabbakat soroltuk fel, de a Canvas API leírás \cite{Cabanier:14:HCC}
 második fejezetében megtalálható a teljes lista.
 
-A második rész a transzformációk. A Háttér részben (\ref{A Canvas előírás}) a
+A második rész a transzformációk. A Háttér részben (\ref{sec:A_Canvas_előírás}) a
 Canvas API bemutatásakor már tárgyaltuk a transzformációkat, itt most csak
 röviden a megvalósításukat nézzük át.
 
@@ -1234,7 +1234,7 @@ felállítható volt a rajzolás folyamata, ahová aztán be lehetett illeszteni
 komplexebb alakzatok megjelenítését.
 
     \section[A Path osztály]{A Path osztály}
-    \label{A Path osztály}
+    \label{sec:A Path_osztály}
 
 A \func{Path} egy konténer osztály. A fő feladata, hogy az alakzatot és az
 ahhoz szorosan kapcsolódó tulajdonságokat tárolja. Ebben a fejezetben ezt az
@@ -1333,7 +1333,7 @@ memóriarégiók is használhatók; persze ha ennek hasznosságát mérések is
 alátámasztják.
 
 Most pedig nézzük át a \func{Path} osztályhoz tartozó függvényeket
-(\emph{\ref{dataflow-path}. ábra}). Vannak egyrészt az elemeket
+(\emph{\ref{fig:dataflow-path}. ábra}). Vannak egyrészt az elemeket
 hozzáadó, illetve a már hozzáadott elemek bejárását és átalakítását biztosító
 függvények.
 
@@ -1341,8 +1341,8 @@ függvények.
     \begin{center}
       \includedataflowkivagas{153pt}{355pt}{345pt}{595pt}{}
     \end{center}
-    \caption{\label{dataflow-path} A belső Path API részei. \\ (Részlet a
-    \emph{\ref{dataflow}. folyamatábrából}.)}
+    \caption{\label{fig:dataflow-path} A belső Path API részei \\ (Részlet az
+    \emph{\ref{appendix:dataflow}. folyamatábrából}.)}
   \end{wrapfigure}
 
 Az átalakításra azért van szükség, mert az alakzat építése közben lehetőség van
@@ -1572,13 +1572,13 @@ rendezettek, és nem vizsgáltak a metszéspontok sem.
     \begin{center}
       \includedataflowkivagas{345pt}{400pt}{525pt}{590pt}{}
     \end{center}
-    \caption{\label{dataflow-segment} A szakasszá alakítás és a megközelítő
-    visszavezetések. \\ (Részlet a \emph{\ref{dataflow}.
+    \caption{\label{fig:dataflow-segment} A szakasszá alakítás és a megközelítő
+    visszavezetések \\ (Részlet az \emph{\ref{appendix:dataflow}.
     folyamatábrából}.)}
   \end{wrapfigure}
 
 Ha nem egy egyenes vonalat kell beszúrni, hanem egy bonyolultabb görbe vonalat,
-akkor kerülnek képbe \aref{Háttér}. fejezetben tárgyalt matematikai
+akkor kerülnek képbe \aref{sec:Háttér}. fejezetben tárgyalt matematikai
 visszavezetések.
 
 Egy Bézier görbe esetében ez a következőket jelenti. A görbét az
@@ -1632,7 +1632,7 @@ egymást metsző szakaszok esetében is figyelembe kell venni. Erről majd kés�
 még lesz szó.
 
 A másik nem egyenes vonal a körív. Mint arról már volt szó, a köríveket Bézier
-görbékkel közelítjük. \Aref{arctobezier}. alfejezetben bemutatott matematikai
+görbékkel közelítjük. \Aref{sec:arctobezier}. alfejezetben bemutatott matematikai
 módszert követve osztjuk a körcikket harmadrendű görbékre. A felosztás menete a
 következő. Miután alkalmaztuk a körcikkre az aktuális transzformációt, meg kell
 határozni a körcikk kezdő- és végpontját. Ha szükséges, akkor az utolsó végpont
@@ -1657,20 +1657,20 @@ körcikk (vagy ellipsziscikk) szakaszokból álló képét.
   \begin{figure}
     \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
     160pt,clip]{img/built/sunmoon_eps}
-    \caption{\label{sunmoon} Beszúrt
+    \caption{\label{fig:sunmoon} Beszúrt
     szakaszok $(S_i)$ és azokat tartalmazó listák $(L_j)$. A \emph{csillag}
     formánál két szakasz $(S_1$ és $S_2)$ metszéspontja által létrehozott új
     listára $(L_m)$ láthatunk példát. Az $S_1$ és $S_2$ szakaszok
     lerövidülnek, maradék részüket már az $S_m^1$ és $S_m^2$ szakaszok
     tartalmazzák. A \emph{hold} formánál pedig egy szakasz $(S_5)$
     végpontja által definiált lista $(L_1)$ miatt az $S_4$ szakaszt is fel
-    kell bontani.}
+    kell bontani}
   \end{figure}
 
 Az alakzat elemeinek a felbontása után a szakaszokat kell felbontanunk. Egyrészt
 minden szakaszt felbontunk ha szükséges a különböző $L_i$ listákhoz tartozó
-$y_i$ értékek mentén (lásd a \emph{\ref{sunmoon}. ábrát}). Másrészt a szakaszok
-egymást metsző pontjait kell megtaláljuk (lásd szintén a \emph{\ref{sunmoon}.
+$y_i$ értékek mentén (lásd a \emph{\ref{fig:sunmoon}. ábrát}). Másrészt a szakaszok
+egymást metsző pontjait kell megtaláljuk (lásd szintén a \emph{\ref{fig:sunmoon}.
 ábrát}).
 
 A szakaszok felbontásához bejárjuk az $y$ koordináta mentén létrehozott
@@ -1767,12 +1767,12 @@ kirajzolni.
     \begin{center}
       \includedataflowkivagas{345pt}{200pt}{525pt}{393pt}{}
     \end{center}
-    \caption{\label{dataflow-trapezoid} A trapézzá alakítás és
-    összevonás lépései. \\ (Részlet a \emph{\ref{dataflow}. folyamatábrából}.)}
+    \caption{\label{fig:dataflow-trapezoid} A trapézzá alakítás és
+    összevonás lépései \\ (Részlet az \emph{\ref{appendix:dataflow}. folyamatábrából}.)}
   \end{wrapfigure}
 
 Nézzük meg részletesebben a trapézzá alakítás folyamatait. Három fontos lépést
-különíthetünk el (lásd a \emph{\ref{dataflow-trapezoid}. ábrát}).
+különíthetünk el (lásd a \emph{\ref{fig:dataflow-trapezoid}. ábrát}).
   \begin{enumerate}
     \item A szakaszokból a kitöltési stratégia (\emph{nem-zérus} vagy
     \emph{paritás} szabály) szerint trapézokat alakítunk ki (építünk).
@@ -1806,11 +1806,11 @@ lenne az első, és így elölről kezdjük az említett eljárást.
   \begin{figure}
     \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
     160pt,clip]{img/built/sunmoontrapezoids_eps}
-    \caption{\label{sunmoontrapezoids} Az épített $(t_i)$ és az összevont végső
+    \caption{\label{fig:sunmoontrapezoids} Az épített $(t_i)$ és az összevont végső
     $(T_j)$ trapézok. A sima $+$ jel a horizontális, a $\oplus$ jel a
     vertikális összevonásokat jelenti. Pl. a $T_5$ esetében jól látszik, hogy
     az $L_2$ és az $L_m^1$ listákhoz tartozó szakaszokból épített és
-    vízszintesen összevont trapézokat később még vertikálisan is egyesítjük.}
+    vízszintesen összevont trapézokat később még vertikálisan is egyesítjük}
   \end{figure}
 
 Ha elkészül egy trapéz, és van már előző trapéz a listában, akkor
@@ -1863,7 +1863,7 @@ adatinak feltöltése, hogy végül kirenderelhessük az alakzatot.
 
   \section{Rajzolás GLES2-vel}
 
-Az OpenGL~ES~2.0 működését \aref{GLES2:API}. alfejezetben már bemutattuk. Volt
+Az OpenGL~ES~2.0 működését \aref{sec:GLES2:API}. alfejezetben már bemutattuk. Volt
 arról szó, hogy milyen lépéseket kell megtennünk, és milyen lehetőségeink
 vannak. Itt most a trapézok rendereléséhez szükséges beállításokat, és a
 renderelést magát végző shader programokat mutatjuk be. Illetve szót ejtünk az
@@ -1926,7 +1926,9 @@ mindig tartozik valódi koordinátapár.
     \centering
     \includegraphics[width=.9\textwidth, viewport=0pt 60pt 260pt
     150pt,clip]{img/built/sunmoonvertex_eps}
-    \caption{\label{sunmoonvertex}}
+    \caption{\label{fig:sunmoonvertex}. A renderelésre jelölt trapézokat lefedő
+    háromszögek $(\tau_0, \tau_1, ...)$. Egy trapézt leíró mindkét háromszög
+    csúcspontjaihoz tartozik tömbindex: $(i_0, i_1, i_2)$ és $(i_2, i_1, i_3)$}
   \end{figure}
 
 Egy trapézt négy $x$ és két $y$ érték határoz meg: $\{x_{l,t}, x_{r,t},
@@ -1935,7 +1937,7 @@ rövidítések jelentése: $l=left, t=top, r=right, b=bottom$.}. Illetve az
 előzőleg felsorolt sarokindexekhez ezekből négy koordinátapárt tudunk
 összeválogatni: $i_0$ $(x_{l,t}, y_{t})$, $i_1$ $(x_{l,b}, y_{b})$, $i_2$
 $(x_{r,t}, y_{t})$ és $i_3$ $(x_{r,b}, y_{b})$. Egy trapéz kirajzolása két
-háromszög renderelését jelenti (lásd a \emph{\ref{sunmoonvertex}. ábrát}). Egy
+háromszög renderelését jelenti (lásd a \emph{\ref{fig:sunmoonvertex}. ábrát}). Egy
 háromszög renderelése három vertex (csúcspont) kiszámítását jelenti. Ezekre a
 vertexekre fog lefutni a már említett vertex shaderből készített program.
 Minden vertexre külön-külön (de párhuzamosan) lefut a vertex program úgy, hogy
@@ -2084,29 +2086,30 @@ A projektet a \emph{lefordítás} (\inenglish{building}) szempontjából a
 célegységként (\inenglish{target}) való lefordítását írja le.
 
 A Gepard használatát az \emph{Ubuntu 18.04 (64 bit)} operációs rendszeren
-mutatjuk be. A célegységeket a \emph{gcc} (7.3.0) C++ fordító programmal készítjük el.
-A Háttér (\ref{Háttér}) részben bemutatott aprócska HTML -- Canvas
-programrészletet használjuk fel.
+mutatjuk be. A célegységeket a \emph{gcc} (7.3.0) C++ fordító programmal
+készítjük el.Természetesen a Gepardnak is vannak függőségei. A fordításhoz
+mindenképpen érdemes előre telepíteni a következő csomagokat:
+  {\small
+    \begin{itemize} \renewcommand\labelitemi{\texttt{\$}}
+      \item \texttt{apt install build-essential cmake}
+      \item\texttt{apt install libegl1-mesa-dev libgles2-mesa-dev freeglut3-dev}
+    \end{itemize}
+  }
 
-Tehát a Gepard függvénykönyvtár előállítása az említett operációs
-rendszeren a következő parancsokkal történik:
-{\small
-  \begin{itemize} \renewcommand\labelitemi{\texttt{\$}}
-    \item \begin{verbatim}cmake -H. -Bbuild -DBACKEND=GLES2 \end{verbatim}
-    \item \begin{verbatim}make -C build gepard\end{verbatim}
-  \end{itemize}
-}
+Tehát a Gepard függvénykönyvtár előállítása az említett operációs rendszeren a
+következő parancsokkal történik, miután beléptünk a Gepard projekt
+gyökérkönyvtárába:
+  {\small
+    \begin{itemize} \renewcommand\labelitemi{\texttt{\$}}
+      \item \texttt{cmake -H. -Bbuild -DBACKEND=GLES2}
+      \item \texttt{make -C build gepard}
+      \item \texttt{make -C build install}
+    \end{itemize}
+  }
 
-Természetesen a Gepardnak is vannak függőségei. A fordításhoz mindenképpen
-érdemes előre telepíteni a következő csomagokat:
-{\small
-  \begin{itemize} \renewcommand\labelitemi{\texttt{\$}}
-    \item \begin{verbatim}apt install build-essential cmake\end{verbatim}
-    \item \begin{verbatim}apt install libegl1-mesa-dev libgles2-mesa-dev freeglut3-dev\end{verbatim}
-  \end{itemize}
-}
-
-Ezután a Háttér részben bemutatott programrészletünk a következőképpen módosul:
+A Gepard használatát a Háttér (\ref{sec:Háttér}.) fejezetben leírt aprócska
+Canvas programrészleten mutatjuk be. Hozzunk létre egy
+{\small\texttt{pelda.cpp}} nevű fájlt a következő tartalommal:
 
   \minipage{0.8\textwidth}
     \begin{lstlisting}[language=C++, autogobble=true]
@@ -2125,31 +2128,261 @@ Ezután a Háttér részben bemutatott programrészletünk a következőképpen 
           ctx.closePath();
           ctx.fill();
           ctx.stroke();
+          return 0;
       }
     \end{lstlisting}
   \endminipage
+\\
 
-  \begin{figure}[!htb]
-    \centering
-    \includegraphics[width=.95\textwidth]{img/built/erdely}
-    \caption{\label{erdely} Hogy használjuk a Gepardot.}
-  \end{figure}
+Jól látszik, hogy a Canvas-hez hasonlóan egy \emph{vászonra} (\func{surface})
+és egy \emph{kontextusra} (\func{ctx}) van szükségünk. Ezt biztosítja az
+\func{XSurface} osztály. Ez köti össze az operációs rendszer ablakozóját a
+Gepardban használt EGL-lel. Magyarán kapunk egy ablakot, amibe rajzolhatunk. A
+Gepard pedig maga a rajzoló kontextus. Innentől már minden hívás a Canvas-nek
+megfelelően működik.
 
-  \begin{description}[noitemsep]
-    \item[Kulcsszavak] Gepard kontext, libgepard.
-    \item[Becsült oldalszám] 4.
-  \end{description}
+A példaprogramot a következőképpen fordíthatjuk le, és hívhatjuk meg:
+  {\small
+    \begin{itemize} \renewcommand\labelitemi{\texttt{\$}}
+      \item \texttt{g++ pelda.cpp -o pelda -lgepard -lGLESv2 -lEGL -lX11}
+      \item \texttt{./pelda}
+    \end{itemize}
+  }
+
+A dolgozat szempontjából kulcsfontosságú példa lehet a számítógépes grafikában
+igen elterjedt \func{Ghostscript Tiger.svg}\footnote{ {\footnotesize
+\url{https://commons.wikimedia.org/wiki/File:Ghostscript_Tiger.svg}}}
+megjelenítése. Ennek eredményét láthatjuk egyrészt a Melléklet
+\emph{\ref{appendix:tiger}. ábráján}. Ez a példa SVG (\inenglish{Scalable
+Vector Graphics}) formátumú. Ami azt jelenti, hogy a megjelenítéshez az SVG
+grafikai elemeket (amik nagyrészt szintén alakzatokat leíró Path-ok) Canvas
+hívásokra kell fordítanunk. Ehhez a NanoSVG\footnote{Mikko Mononen
+(memon@inside.org): \emph{NanoSVG}, 2013-14, \\
+{\footnotesize\url{https://github.com/memononen/nanosvg}}.} API-t, egy már
+megírt, minimális SVG értelmezőt használtuk. Ez az API visszaadja az elemeket
+C/C++-os struktúrákként. Bejárjuk ezeket a struktúrákat, és Canvas-es hívásokká
+alakítjuk. A Gepard projekt \func{svggepard} célegysége egy olyan kis program,
+ami egy SVG fájlt a Gepard segítségével kirenderel. A már említett
+\emph{\ref{appendix:tiger}. ábra} is ennek az eredménye.
 
     \section{Eredmények}
-    \label{Eredmények}
+    \label{sec:Eredmények}
 
-  Itt a lefedettséget, illetve néhány ismert rajzolóval való minőségi
-összehasonlítást fogom bemutatni.
+Nézzük meg a kitűzött célokhoz képest az elért eredményeket. Az eredményeket a
+Ghostscript Tiger.svg példán keresztül vizsgáljuk és muatjuk be. Ennek a
+renderelése teljes. Ami azt jelenti, hogy \emph{minden} elemet
+\emph{mérethelyesen} megjelenítünk. A kitöltés esetén a \emph{színhelyesség} is
+igaz, ugyanakkor a széleknél vannak eltérő pontok. Ennek okaira még kitérünk.
 
-  \begin{description}[noitemsep]
-    \item[Kulcsszavak] Blink, Gecko.
-    \item[Becsült oldalszám] 4.
-  \end{description}
+A \emph{\ref{fig:tiger-eyes}. ábrán} három-három nagyított képet láthatunk
+oszlopokként rendre a \emph{Gepard}, a \emph{Skia} (Chrome -- verzió:
+70.0.3538.77) és a \emph{WebKit} (Safari -- verzió: 12.0, 14606.1.36.1.9) által
+készített eredményekből. A felső három képen a tigris szemének környékét, míg
+az alsó három képen ennek tovább nagyított részletét láthatjuk. A tigris
+szempilláin láthatjuk a szembeötlőbb eltérést a képek között. Míg a tovább
+nagyított alsó képeken részben az élsimításból adódó különbségeket láthatjuk.
+
+  \begin{figure}
+    \centering
+    \newcommand{\tigerviewsize}{%
+      \setkeys{Gin}{viewport=345pt 575pt 480pt 660pt,clip,width=\textwidth}
+      \presetkeys{Gin}{clip}{}
+    }
+    \newcommand{\tigersubfigure}[2]{%
+      \begin{subfigure}[b]{0.3\textwidth}
+        \tigerviewsize \includegraphics{#1} #2
+      \end{subfigure}
+    }
+    \tigersubfigure{img/built/tiger}{}
+    ~
+    \tigersubfigure{img/tiger-chrome-70_0_3538_77}{}
+    ~
+    \tigersubfigure{img/tiger-safari-12_0-14606_1_36_1_9}{}
+
+    \renewcommand{\tigerviewsize}{%
+      \setkeys{Gin}{viewport=385pt 580pt 420pt 590pt,clip,width=\textwidth}
+      \presetkeys{Gin}{clip}{}
+    }
+    \tigersubfigure{img/built/tiger}{\caption{Gepard}\label{fig:tiger-gepard}}
+    ~
+    \tigersubfigure{img/tiger-chrome-70_0_3538_77}{\caption{Skia (Chrome)}
+      \label{fig:tiger-chrome}}
+    ~
+    \tigersubfigure{img/tiger-safari-12_0-14606_1_36_1_9}{\caption{WebKit
+    (Safari)}
+      \label{fig:tiger-firefox}}
+    \caption{Kinagyított részek a \emph{Gepard}, a \emph{Skia} és a
+    \emph{WebKit} eredményeiből (részletek a szövegben)}\label{fig:tiger-eyes}
+  \end{figure}
+
+Az élsimításból adódó különbségek okát abban látjuk, hogy a használt
+\emph{élsimító stratégiák} és \emph{finomsági faktorok} nem egyeznek. Azaz, a
+Gepard és az összehasonlításként használt renderelő API-k, más és más élsimító
+megközelítést használ(hat)nak. A Gepardban egy alap módszert használtunk
+(pásztázó egyenesek és subpixel-ek), a lehető legfinomabb faktorral (16).
+
+A \emph{strukturális hasonlóság} (SSIM\footnote{Zhou Wang et al.: \emph{{Image
+quality assessment: from error visibility to structural similarity}, in IEEE
+Transactions on Image Pro- cessing, 13. évf. (2004. April) 4. sz., 600–612. p.
+ISSN 1057-7149}}) kapcsán azt mondhatjuk, hogy a kitöltések helyesek, s így nem
+hiányzik alakzat a képről (lásd a \emph{\ref{fig:diff}. ábrát}). Ugyanakkor az
+élsimítás okán tapasztalt eltérést is jól mutatja az említett ábrán a teljes
+eltérés képe. Az ábrán egy részletet kiemeltünk, itt a ,,szakáll'' három pont
+vastagságú körvonalának különbségmintázatát látjuk. A szélek különböznek, de a
+belső rész azonos.
+
+A \emph{\ref{tab:ssim}. táblázatokon} számszerűsítve is láthatjuk a
+strukturális hasonlóságot, illetve a \emph{jel-zaj viszonyt} (Peak
+Signal-to-Noise Ratio -- PSNR\footnote{Zhou Wang et al.: i. m.}). A baloldali
+táblázat a Gepard és a Skia  közti SSIM értékeket mutatja színcsatornákra
+lebontva\footnote{Az \emph{alpha} csatorna a képfájlokban azonosan zérus (0),
+ezért ezeket az értékeket nem tüntettük fel.}. A második oszlopban láthatjuk,
+hogy mindegyik színcsatorna esetén 0.02-nál kisebb az eltérés az azonosságot
+kifejező 1-nél.
+
+  \begin{figure}
+    \captionof{table}{}
+    \label{tab:ssim}
+    \centering
+ %   \begin{threeparttable}
+    \minipage{0.3\textwidth}
+      \small
+      \renewcommand*{\arraystretch}{1.2}
+      \centering
+      \begin{tabular}{|c|S[round-mode=places, round-precision=3]|}
+        \hline
+        Színcsatorna & \multicolumn{1}{|c|}{SSIM %\tnote{1}\,
+        érték}\\
+        \hline
+        \hline
+          \input{../../../paper/src/res/ssim.txt}
+        \hline
+      \end{tabular}
+    \endminipage
+    \hspace{0.05\textwidth}
+    \minipage{0.6\textwidth}
+      \small
+      \renewcommand*{\arraystretch}{1.2}
+      \centering
+      \begin{tabular}{|c|c|S[round-mode=places, round-precision=3]
+                          |S[round-mode=places,round-precision=3]
+                          |S[round-mode=places,round-precision=3]|}
+        \hline
+          & Metrika & \multicolumn{1}{|c|}{Skia}
+                    & \multicolumn{1}{|c|}{WebKit}
+                    & \multicolumn{1}{|c|}{Edge} \\
+        \hline
+        \hline
+          \input{../../../paper/src/res/ssim-psnr.txt}
+        \hline
+      \end{tabular}
+    \endminipage
+  \end{figure}
+
+A jobboldali táblázat hat-hat összehasonlítás\footnote{Az összehasonlításokat
+az \emph{ImageMagick Studio LLC} ({\footnotesize\url{https://imagemagick.org}})
+7.0.8-14-es verziójú \func{compare} programjával készítettük. Az
+összehasonlítások hívásmintája:\\ \texttt{\$ compare -metric SSIM|PSNR -compose
+src image1 image2 diff-image} } számszerűsített eredményét mutatja. Az első
+sorban láthatjuk a Gepard és három ismert renderelő\footnote{Skia (említett
+verzió), Webkit (említett verzió), Edge (verzió: 42.17134.1.0)} eredményei
+közti SSIM és PSNR értékeket. Itt is igaz, hogy a legnagyobb eltérés nem éri el
+a 0.02-ot. Illetve a jel-zaj viszony is hasonló értékeket mutat. A táblázat
+második sora a Skia és az előbbi három renderelő közötti méréseket tartalmazza.
+Így jobban érthetőek a SSIM és a PSNR értékek is. Látható, hogy a Skia
+eredménye önmagával hasonlítva az elméletileg várt $1$ és $\infty$ értékeket
+adja. A nem azonos képek közti SSIM és PSNR értékek egy kategóriába esnek.
+Vagyis a Gepardhoz mértek nem térnek el szignifikánsan a többiek közti
+értékektől. Ezzel számszerűleg is tisztáztuk a Gepard teljesítményét a
+pontosság terén. Érdemes még a \emph{\ref{fig:diff}. ábrára} rápillantani, ahol
+a baloldali képen a Skia és WebKit, a jobboldalin pedig a Gepard és Skia
+eredményképeinek eltérő képpontjait láthatjuk. Itt vizuálisan kaphatunk képet
+arról, hogy mit is értünk azon, hogy az eredményképeken az alakzatok széleit
+tartalmazó képpontok az érintettek az eltérésben.
+
+Nézzük meg röviden a Ghostscript Tiger.svg kirajzolásához szükséges hívások és
+létrejött elemek számát. Ezeket az értékeket tartalmazza a
+\emph{\ref{tab:numbers}. táblázat}. Az első sorban a képet alkotó alakzatok
+számát látjuk. Ebben a fájlban csak Path elemek találhatók, így minden elemet
+érintünk. A második sorban összesítve látjuk azon hívások számát, amik valódi
+elemet adnak a képhez. Vagyis a \func{moveTo} hívások hiányoznak. Ezzel ugyan
+elveszíthetjük a meghatározáskor be nem zárt, de kitöltött alakzatokat. Azok
+ugyanis definíció szerint mindig zártak. Ezek száma ugyanakkor
+csekély\footnote{A Ghostscript Tiger.svg fájlban a a 240-ből 227 alakzatot
+explicit lezártak.}, illetve az ,,elvesztett'' elemek a további számokban úgyis
+megjelennek. A harmadik sorban a körvonalban érintett elemek száma található.
+Ezeket az elemeket mint körvonalakat kell egy bonyolultabb Path formájában
+kitölteni. A negyedik sorb az explicit kitöltést indukáló hívások számát
+tartalmazza. Míg az ötödik sor mutatja a körvonal hívásokat. Az világos, hogy
+ezek is majd mind kitöltés hívásokra módosulnak. Így jutunk el a hatodik
+sorhoz, ahol jól látszik, hogy a 16-os élsimítási faktornak és a visszavezetett
+körvonalaknak köszönhetően milyen drasztikusan megugrik a Path elemek száma.
+Ezután a két utolsó sor a trapézok számát mutatja. Az utolsó előtti a csak
+horizontálisan összevont és beválogatott trapézokat mutatja. Az utolsóban pedig
+a vertikális összevonás utáni trapézok számát láthatjuk. Végül ezen trapézok
+lesznek kirajzolva az alpha-textúrába.
+
+  \begin{table}[!t]
+    \captionof{table}{}
+    \label{tab:numbers}
+    \renewcommand*{\arraystretch}{1.2}
+    \small
+    \centering
+    \begin{tabular}{|l|r|}
+      \hline
+      Függvényhívások vagy elemek & Összesen (db.) \\
+      \hline \hline
+      Alakzatok száma & 240\\
+      Alakzatépítő függvényhívás & 2734\\
+      Ebből körvonal (\func{stroke}) hívás (is) & 524\\
+      \hline
+      Kitöltő (\func{fill}) hívás & 226 \\
+      Körvonal (\func{stroke}) hívás & 78 \\
+      \hline
+      Path elemek & 125864 \\
+      Trapézok (horizontálisan összevonva) & 224722 \\
+      Vertikálisan összevont trapézok & 197999 \\
+      \hline
+    \end{tabular}
+  \end{table}
+
+\vspace{3cm} % TODO FIXME : REMOVE THISREMOVE THISREMOVE THISREMOVE THIS REMOVE  THISREMOVE THIS
+  \begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]
+    {img/built/diff-tiger-chrome-70_0_3538_77-tiger-safari-12_0-14606_1_36_1_9}
+      \caption{Skia -- WebKit}
+    \end{subfigure}
+    \hspace{0.1\textwidth}
+    \begin{subfigure}[b]{0.4\textwidth}
+      \centering
+      \def\stackalignment{l}
+      \bottominset{
+        \setlength{\fboxsep}{0pt}
+        \setlength{\fboxrule}{1pt}
+        \fbox{
+          \includegraphics[width=0.2\textwidth,viewport=305pt 10pt 315pt
+          20pt,clip]{img/built/diffover}
+        }
+      }
+      {
+        \includegraphics[width=0.8\textwidth]{img/built/diff}
+        \linethickness{1pt}
+        \begin{picture}(2,2)
+          \put(-99,2){\framebox(5,5){}}
+%           \put(-113,7){\line(-15,10){50}}
+        \end{picture}
+      }{0pt}{-30pt}
+      \caption{Gepard -- Skia}
+    \end{subfigure}
+    \caption{A \emph{Gepard} és a \emph{Skia (Chrome)} által renderelt
+    Ghostscript Tiger.svg eredmények különbsége. Az ábrán jól látható,
+    hogy a különbségben a körvonal pontok az érintettek, a kitöltés
+    azonos.}
+    \label{fig:diff}
+  \end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
