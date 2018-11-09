@@ -2391,7 +2391,51 @@ lesznek kirajzolva az alpha-textúrába.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \chapter{Összefoglalás}
-    \addcontentsline{toc}{section}{Összefoglalás}
+    %\addcontentsline{toc}{section}{Összefoglalás}
+
+Végeredményben azt mondhatjuk, hogy a dolgozatban kitűzött célunkat -- miszerint
+alkossunk meg egy Canvas 2D API-t használó OpenGL ES 2.0-án alapuló 2D
+alakzatrajzoló C++ nyelvű programot -- elértük. A \emph{\ref{tab:functions}
+táblázatban} még feltüntettük a megvalósított, a rajzolás szempontjából
+elengedhetetlen funkcionalitások biztosító függvényeket. Illetve a táblázat
+második oszlopában a rajzolást effektív nem gátoló, de a Canvas 2D előírásban
+szereplő függvényeket is. Ezeknek a megvalósítása egy jövőbeli munka
+része. Mint ahogy az is, hogy a jelenleg helyes eredményt nyújtó renderelő
+egységeket \emph{futásidő} és \emph{memóriahasználat} szempontjából javítsuk.
+
+Ezekről a javítási, gyorsítási lehetőségekről már a dolgozat főszövegében
+részletesebben is szóltunk. Itt csak az összefoglalást segítendő röviden
+megemlítjük a javítási lehetőségeket, mint például a vászon \emph{csempézése}
+(\inenglish{tiling}), egyedi \emph{adatszerkezet} a felbontott elemek
+tárolására, és párhuzamosított bejárására.
+
+Tehát összefoglalásként elmondhatjuk, hogy a Gepard egy olyan 2D
+alakzatrajzoló API, ami megvalósítja a Canvas előírásit, és ugyanakkor
+GPU alapokon lehetőséget biztosít egy kicsi és gyors C++ alapú program
+megírásához.
+
+  \begin{table}[b]
+    \captionof{table}{}
+    \label{tab:functions}
+    \renewcommand*{\arraystretch}{1.2}
+    \centering
+    \begin{tabular}{|l|l|}
+      \hline
+      \multirow{2}{*}{Megvalósított funkcionalitások} & Hiányzó vagy nem
+      támogatott \\
+      & funkcionalitások \\
+      \hline \hline
+      \func{fill}, \func{stroke} & \func{clip} \\ \cline{1-1}
+      \func{closePath}, \func{moveTo}, \func{lineTo}  & \func{isPointInPath} \\
+      \cline{2-2}
+      \func{quadraticCurveTo}, \func{bezierCurveTo} & \func{drawFocusIfNeeded}
+      \\
+      \func{arcTo}, \func{rect}, \func{arc} &  \\ \cline{1-1}
+      \func{lineWidth}, \func{lineCap}, \func{lineJoin}, \func{miterLimit} & \\
+      \func{fillStyle}, \func{strokeStyle} &  \\
+      \hline
+    \end{tabular}
+  \end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
