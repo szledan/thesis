@@ -3,6 +3,7 @@ add_subdirectory(examples)
 list(APPEND THESIS_DEPENDENCIES "")
 
 set(BUILT_IMG_DIR ${PROJECT_SOURCE_DIR}/paper/src/img/built)
+set(SRC_ROOT_DIR ${PROJECT_SOURCE_DIR}/paper/src/)
 file(MAKE_DIRECTORY ${BUILT_IMG_DIR})
 
 # Run example/triangle to generate output
@@ -45,6 +46,33 @@ foreach(file ${EPS_FILES})
     add_custom_target(${SVG_FILENAME}_eps ALL DEPENDS ${EPS_FILE})
     list(APPEND THESIS_DEPENDENCIES ${SVG_FILENAME}_eps)
 endforeach()
+
+# Compare 'tiger' images and create diffover.png
+add_custom_command(
+    OUTPUT ${BUILT_IMG_DIR}/diffover.png
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/compare-images.sh ARGS 1
+    DEPENDS tiger.png ${BUILT_IMG_DIR}/tiger.png
+)
+add_custom_target(diffover.png ALL DEPENDS ${BUILT_IMG_DIR}/diffover.png)
+list(APPEND THESIS_DEPENDENCIES diffover.png)
+
+# Compare 'tiger' images and calculate SSIM color values
+add_custom_command(
+    OUTPUT ${SRC_ROOT_DIR}/res/ssim.txt
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/compare-images.sh ARGS 2
+    DEPENDS tiger.png ${BUILT_IMG_DIR}/tiger.png
+)
+add_custom_target(ssim ALL DEPENDS ${SRC_ROOT_DIR}/res/ssim.txt)
+list(APPEND THESIS_DEPENDENCIES ssim)
+
+# Compare 'tiger' images and calculate SSIM values
+add_custom_command(
+    OUTPUT ${SRC_ROOT_DIR}/res/ssim-psnr.txt
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/compare-images.sh ARGS 3
+    DEPENDS tiger.png ${BUILT_IMG_DIR}/tiger.png
+)
+add_custom_target(ssim-psnr ALL DEPENDS ${SRC_ROOT_DIR}/res/ssim-psnr.txt)
+list(APPEND THESIS_DEPENDENCIES ssim-psnr)
 
 add_subdirectory(src)
 

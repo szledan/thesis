@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="900" height="900" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+var can = document.getElementById('myCanvas');
+var ctx = can.getContext('2d');
+
+ctx.fillStyle="#fff";
+ctx.fillRect(0, 0, 900, 900);
+
+var img = new Image();
+
+img.onload = function() {
+    ctx.drawImage(img, 0, 0);
+}
+img.src = "https://upload.wikimedia.org/wikipedia/commons/f/fd/Ghostscript_Tiger.svg";
+
+</script>
+
+</body>
+</html>
