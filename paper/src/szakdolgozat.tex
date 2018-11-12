@@ -378,21 +378,21 @@ A témavezető által megfogalmazott feladatkiírás. Önálló oldalon szerepel
     \subsubsection*{A téma megnevezése}
 
 A \emph{World Wide Web Consortium} (W3C) által \emph{Canvas 2D Context} néven
-2015-ben elfogadott ajánlás \emph{path} részének megvalósítása
+2015-ben elfogadott ajánlás \emph{Path API} részének megvalósítása
 \emph{OpenGL~ES~2.0} alapokon.
 
     \subsubsection*{A megadott feladat megfogalmazása}
 
-Az előbb említett \emph{Canvas 2D Context} egy grafikus interfész. Ez az
-interfész több grafikus függvényt definiál. Jelen dolgozat témája ezek közül az
-úgynevezett \emph{path} részének leprogramozása úgy, hogy a lehető legtöbb
-feladatot a grafikus processzor (\textit{GPU}) lássa el.
+A \emph{Canvas 2D Context} egy webes (rajzoló) interfész. Az interfész előírja
+több grafikai elem, függvény és tulajdonság működését. Ezek egy részét foglalja
+egybe a \emph{Path API}. Jelen dolgozat témája ennek a leprogramozása úgy, hogy
+a lehető legtöbb feladatot a grafikai processzor (\textit{GPU}) lássa el.
 
     \subsubsection*{A megoldásmód}
 
-Több megoldás közül mi az alakzatok trapézokra bontását választottuk. Minden
-trapéz felbontható további két háromszögre, amely megkötésre a OpenGL~ES~2.0
-grafikus meghajtó miatt van szükség.
+A GPU eléréséhez az OpenGL~ES~2.0 API-t használjuk. Ez sok előnnyel és néhány
+megkötéssel jár. Így az alakzatokat majd háromszögpárokból álló trapézokká
+alakítjuk.
 
     \subsubsection*{Alkalmazott eszközök, módszerek}
 
@@ -403,7 +403,7 @@ használva a következő eszközöket, technológiákat: \emph{gcc},
     \subsubsection*{Elért eredmények}
 A megvalósított \emph{Gepard} egy \emph{méret-} és \emph{színhelyesen}
 renderelő 2D alakzatrajzoló \emph{függvénykönyvtár}, ami támogatja a Canvas API
-hívásokat, használva az OpenGL ES 2.0 grafikus meghajtót.
+hívásokat, támaszkodva az OpenGL ES 2.0 grafikai API-ra.
 
     \subsubsection*{Kulcsszavak}
 
