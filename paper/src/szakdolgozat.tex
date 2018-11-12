@@ -422,16 +422,16 @@ hívásokat, támaszkodva az OpenGL ES 2.0 grafikai API-ra.
 
 A környezetünkben található számítástechnikai eszközök legtöbbjének van
 grafikus kijelzője, és ezen eszközök mindegyike használ valamilyen
-megjelenítő~\footnote{A számítógépes grafikában egy modell megjelenítését végző
+megjelenítő\footnote{A számítógépes grafikában egy modell megjelenítését végző
 folyamatot \emph{renderelésnek} (\inenglishfn{rendering}), a renderelést végző
 programrészt pedig \emph{motornak} (\inenglishfn{engine}) hívunk.} (a
 továbbiakban renderelő) függvénykönyvtárat. Ilyen például a Skia, a Cairo, az
 OpenGL, és ilyen kíván lenni a \emph{Gepard} is. A cél, hogy létrehozzunk egy
-\emph{C++11}-es nyelven írt és több (\mbox{OpenGL~ES~2.0}, Vulkan) grafikus
-renderelő motort támogató függvénykönyvtárt.
+\emph{C++11}-es nyelven írt és több grafikai renderelő API-t (OpenGL~ES~2.0,
+Vulkan) támogató függvénykönyvtárat.
 
 A tervek szerint idővel a Gepard több interfésszel is rendelkezik. Így alkot
-majd egy komplex grafikus alkalmazásprogramozási felületet
+majd egy komplex grafikai alkalmazásprogramozási felületet
 (\inenglish{Application Programming Interface}, a továbbiakban API). Az elsőnek
 választott ilyen ismertebb interfész amit támogatni kíván az a \emph{W3C} által
 készített \emph{Canvas 2D Context}~\cite{Cabanier:14:HCC} előírás.
@@ -439,23 +439,25 @@ készített \emph{Canvas 2D Context}~\cite{Cabanier:14:HCC} előírás.
 A \emph{Canvas 2D Context} (a továbbiakban \emph{Canvas}) előírás 2015-ös
 kiadása több elkülönített részből állítja össze az API-t. Ezen részek egyike az
 úgynevezett \emph{Path}. Az említett 2015-ös előírás az 5., 8. és 11.
-fejezetekben részletezi a Path-szal szembeni elvárásokat. A Path maga a
-definiált grafikus alakzatokhoz képest bonyolultabbak leírását biztosító
-eszköz. A Háttér (\ref{sec:Háttér}.) fejezetben részletesebben kifejtjük a
-path-t építő eszköz lehetőségeit és szabályait. Itt most csak annyiban kell
-kitérjünk rá, hogy alapvetően két nagyobb részből áll. A \emph{körvonalból}
-(\inenglish{stroke}) és a \emph{kitöltésből} (\inenglish{fill}).
+fejezetekben részletezi a Path-szal szembeni elvárásokat. A Path egy olyan
+eszköz, aminek segítségével szabadon rakhatunk össze, építhetünk bonyolult
+\emph{alakzatokat} (\inenglish{path}) is. \Aref{sec:Háttér}. fejezetben
+részletesen kifejtjük a Path eszköz lehetőségeit és építési szabályait. Itt
+most csak annyira térünk ki, hogy alapvetően két nagyobb részből áll: az
+alakzat \emph{építéséből} és annak \emph{kirajzolásából}.
 
-Jelen dolgozat az említett \emph{Path} rész megvalósítását kívánja bemutatni.
-Azt, hogy milyen szabályoknak kellett megfelelni, illetve milyen lehetőségeket
-biztosított a választott OpenGL~ES~2.0 (a továbbiakban GLES2) szabvány, és azt,
-hogy hogyan alkot köztes réteget ezek között a Gepard Path-t rajzoló, renderelő
-része.
+Jelen dolgozatban az említett Path rész megvalósítását kívánjuk bemutatni. A
+dolgozat keretein belül azt szeretnénk megmutatni, hogy a Canvas API
+megvalósításához milyen megkötéseknek és szabályoknak kell megfelelnünk.
+Illetve milyen lehetőségeket biztosít számunkra a OpenGL~ES~2.0 (a továbbiakban
+GLES2) API. Valamint azt is szeretnénk az olvasó elé tárni, hogy hogyan alkot
+ezek között egy köztes réteget a Gepard, és annak is a Path-t rajzoló,
+renderelő része.
 
 Első körben nem volt cél a ,,leggyorsabban futó'' és ,,legkisebb méretű''
-Path-t rajzoló API elkészítése. Célunk egy lehetséges megvalósítás megtalálása,
-és ez alapján egy olyan eszköz megalkotása volt, amely képes a választott
-előírás (Canvas) elvárásait teljesíteni.
+Path-t rajzoló API elkészítése. Célunk, egy lehetséges megvalósítás
+megtalálása, és ez alapján egy olyan eszköz megalkotása, amely képes a Canvas
+előírás elvárásait teljesíteni.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
