@@ -467,43 +467,44 @@ előírás elvárásait teljesíteni.
     \chapter{Háttér}
     \label{sec:Háttér}
 
-Ez a fejezet mutatja be azokat a technológiákat és kihívásokat, amelyek keretet
-szabtak a téma megvalósításának. Szót kell ejteni magáról a Canvas 2D Context
-API\footnote{Az \emph{alkalmazásprogramozási felület/interfész}
-(\inenglish{Application Programming Interface}) kifejezésre a továbbiakban mint
-\emph{API} hivatkozunk.} előírásról, a GLES2 szabvány nyújtotta lehetőségekről,
-azokról a matematikai módszerekről, amelyek biztosítják számunkra, hogy
-tetszőlegesen bonyolult -- szerencsénkre zárt -- alakzatok kitöltését helyesen
-elvégezhessük. Össze kellett kapcsolni a választott GLES2 szabta
-megkötést~\footnote { Az OpenGL 2.0 legfeljebb háromszögeket rajzol. } a Canvas
-Path~API elvárásaival~\footnote { Elvárás a tetszőleges számú körcikk, szakasz
-és Bézier-görbe alkotta -- akár önmetsző -- alakzat mérethelyes megjelenítése.
-}. Ehhez több lépésbeli megközelítést (\inenglish{approximation}) alkalmaztunk.
-Ezekről a lépésekről is érdemes lesz beszélni.
+Ebben a fejezetben bemutatjuk azokat a technológiákat és kihívásokat, amelyek
+keretet szabnak a téma megvalósításának. Szót ejtünk magáról a Canvas 2D
+Context API\footnote{Az \emph{alkalmazásprogramozási felület/interfész}
+(\inenglish{Application Programming Interface}) kifejezésre mint \emph{API}
+hivatkozunk.} előírásról, a GLES2 szabvány nyújtotta lehetőségekről és azokról
+a matematikai módszerekről, amelyek biztosítják számunkra, hogy ,,tetszőlegesen
+bonyolult'' alakzatokat helyesen megjeleníthessünk. Össze kell kapcsolni a
+GLES2 szabta korlátokat\footnote {Pl. a GLES2 legfeljebb háromszögeket rajzol.}
+a Canvas elvárásaival. Ami azt jelenti, hogy fedjünk le háromszögekkel olyan --
+akár önmetsző -- alakzatokat, amelyeket tetszőleges számú szakasz, Bézier-görbe
+és körcikk alkot, s mindezeket mérethelyesen jelenítésük is meg. Ehhez -- mint
+látni fogjuk -- több lépésbeli megközelítést (\inenglish{approximation})
+alkalmazunk.
 
     \section[A Canvas 2D Context API]{A W3C Canvas 2D Context API}
     \label{sec:A_Canvas_előírás}
 
 A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C HTML5
 szabvány, és az azon belüli Canvas \emph{első} vázlata 2008-as:\\
-{\footnotesize\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}}}.
-Az előírás leír egy felbontásfüggő rajzolóvásznat, amelyet jellemzően
+{\footnotesize\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}}}. Az
+előírás leír egy felbontásfüggő rajzolóvásznat, amelyet jellemzően
 \emph{Canvas}-nek nevezünk. A Canvas definíció szerint nem más, mint egy adott
-\emph{szélességgel} és \emph{magassággal} meghatározott terület, ahova
-különböző alakzatokat, képeket, szövegeket és egyéb nem dinamikus grafikai
-elemeket rakhatunk fel. Az elemeket függvények segítségével rajzolhatjuk a
-vászonra, vagy pedig a Canvas-hez tartozó \emph{context} gyűjti, és bizonyos
-parancsok (pl.~\emph{fill}) esetén az addig összegyűjtött elemeket kirajzolja a
-megadott sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
+\emph{szélességgel} és \emph{magassággal} meghatározott rajzterület, amire
+különböző grafikai elemeket rakhatunk fel. Ilyenek lehetnek képek, szövegek és
+a dolgozatunkat érintő alakzatok. Az egyszerűbb elemeket speciális függvények
+segítségével rajzolhatjuk a vászonra. Míg a bonyolultabb alakzatok leírását a
+Canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
+(pl.~\emph{fill}) esetén az addig felépített alakzatokat kirajzolja a megadott
+sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
 pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
 
-Az előíráson belül definiált Path API rész amúgy egy régebbi, elterjedt
-alakzatszerkesztő eljáráson alapul. Az eljárás lényege, hogy bizonyos alap
-eszközökkel definiálunk egy bonyolultabb formát. Ezt a folyamatot hívjuk
-alakzat építésnek (\inenglish{shape/path building}). Az építés után különböző
-parancsokkal rajzolhatjuk ki a definiált alakzatot, akár kitöltve
-(\emph{fill}), akár körvonalként (\emph{stroke}), de lehetőségünk van az adott
-alakzattal kivágni (\emph{clip}) is a rajzvásznon már meglévő képből.
+Az előíráson belül definiált Path API egy jól elkülönülő alakzatszerkesztő
+módszer (vagy eljárás). A lényege, hogy bizonyos alap eszközökkel definiálunk egy
+bonyolultabb formát. Ezt a folyamatot hívjuk \emph{alakzatépítésnek}
+(\inenglish{shape/path building}). Az építés után különböző parancsokkal
+rajzolhatjuk ki a definiált alakzatot, akár kitöltve (\emph{fill}), akár
+körvonalként (\emph{stroke}), de lehetőségünk van az adott alakzattal kivágni
+(\emph{clip}) is a rajzvásznon már meglévő képből.
 
 A Canvas előír néhány megkötést. Ezekről látni fogjuk, hogy természetes
 korlátok. Hiszen józan ésszel felfogható, hogy egy egyenes szakaszból definiált
@@ -567,10 +568,10 @@ második sor utolsó két V-nek definiált alakzata mégis kitöltött háromsz�
 Most pedig nézzük meg, hogy milyen konkrét eszközöket biztosít az előírás.
 Ebben a fejezetben nem térünk ki részletesen a teljes előírásra. A legfontosabb
 rész a dolgozatunk témája a Path. Ugyanakkor a munkához szorosan kapcsolódott a
-környezet megvalósítása is. Ezért érintőlegesen beszélnünk kell a rajzolás
-kontextusáról (\inenglish{drawing context}), a színek és vonaltulajdonságok
-beállításáról, valamint a transzformációkról. Ezek után térünk rá az előírás
-Path-t definiáló részére.
+környezet megvalósítása is. Ezért érintőlegesen beszélnünk kell a
+\emph{rajzolás környezetéről, kontextusáról} (\inenglish{drawing context}), a
+színek és vonaltulajdonságok beállításáról, valamint a transzformációkról. Ezek
+után térünk rá az előírás Path-t definiáló részére.
 
 A rajzolás környezete, vagyis a \emph{context} tartalmazza, hogy milyen
 színekkel fogunk rajzolni, milyen betűtípussal és mérettel, de ez tartalmazza
@@ -580,12 +581,12 @@ felépített alakzat (\inenglish{path}) is. A context-nek mindig van egy aktuál
 állapotot egy verembe elmenthessük és visszaállíthassuk. Ez a tulajdonsága a
 vászonnak megkönnyíti a transzformációk alkalmazását egy-egy alakzatra, vagy
 képre, esetleg szövegre. Ugyanakkor az állapot elmentése nem érinti az épített
-alakzatot. Vagyis nincs hatással a path-ra. A context mindig egy path-t
-tartalmaz, határoz meg. Ha például egy ilyen alakzatot több különböző színnel
-és helyen szeretnénk a vászonra rajzolni, de nem akarjuk elveszíteni az
-aktuális állapot szín- és koordináta-beállításait, akkor egy mentés után
-könnyedén módosíthatjuk az attribútumokat, és tolhatjuk el az alakzatot. Majd a
-kirajzolások után visszaállíthatjuk az elmentett állapotot.
+alakzatot. Vagyis nincs hatással a path-ra. A context aktuálisan mindig csak
+egy path-t tartalmaz, határoz meg. Ha például egy ilyen alakzatot több
+különböző színnel és helyen szeretnénk a vászonra rajzolni, de nem akarjuk
+elveszíteni az aktuális állapot szín- és koordináta-beállításait, akkor egy
+mentés után könnyedén módosíthatjuk az attribútumokat, és tolhatjuk el az
+alakzatot. Majd a kirajzolások után visszaállíthatjuk az elmentett állapotot.
 
 A dolgozatunkat két színbeállítás érinti. Az egyik az alakzat kitöltésekor
 használt \func{fillStyle} attribútum. A másik az alakzat körvonalának színét
