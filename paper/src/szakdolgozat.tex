@@ -588,23 +588,25 @@ elveszíteni az aktuális állapot szín- és koordináta-beállításait, akkor
 mentés után könnyedén módosíthatjuk az attribútumokat, és tolhatjuk el az
 alakzatot. Majd a kirajzolások után visszaállíthatjuk az elmentett állapotot.
 
-A dolgozatunkat két színbeállítás érinti. Az egyik az alakzat kitöltésekor
-használt \func{fillStyle} attribútum. A másik az alakzat körvonalának színét
-meghatározó \func{strokeStyle} attribútum. Ezek az attribútumok nem csak színek
-lehetnek, hanem például leírhatnak egy gradiens színezést is. Illetve nem csak
-néhány névvel előre definiált színt (\func{red}, \func{green}, \func{blue}
-stb.) adhatunk meg, hanem különböző színterekből csatornánként saját színt is
-beállíthatunk. Ilyen például az \emph{RGBA} vagy az \emph{HSV}\footnote{Az
-említett színterekhez tartozó hívások: \func{rgba(red, green, blue, alpha)},
-\func{hsv(hue, saturation, value)}.} színtér. Sőt, lehetőségünk van használni a
-webes környezetekben megszokott úgynevezett hexa-kódokat. Ekkor az RGB
-színtérből választhatunk, és kétféle mintát használhatunk: a hosszabb
-\func{\#rrggbb}-t és a rövidebb \func{\#rgb}-t. A két attribútum viselkedését a
-CSS ajánlás\footnote{A W3C CSS Color Module Level 3:{\footnotesize
-\url{https://www.w3.org/TR/css-color-3/}}.} írja le. A beállítást szöveges
-(\func{string}) formában kell megadni, amit aztán értelmezni kell, és aszerint
-megadni az értékeket. Később részletesen lesz szó arról, hogy milyen módon
-oldottuk meg a hasonló viselkedést C++11-es környezetben.
+A dolgozatunk szempontjából két színbeállítás érdekes. Az egyik az alakzat
+kitöltésekor használt \func{fillStyle} attribútum. A másik az alakzat
+körvonalának színét meghatározó \func{strokeStyle} attribútum. Ezek az
+attribútumok nem csak színek lehetnek, hanem például leírhatnak egy gradiens
+színezést is. Illetve nem csak néhány névvel előre definiált színt (\func{red},
+\func{green}, \func{blue} stb.) adhatunk meg, hanem különböző színterekből
+csatornánként saját színt is beállíthatunk. Ilyen színtér lehet például az
+\emph{RGBA} (\emph{vörös, zöld, kék, opacitás}) vagy az \emph{HSV}
+(\emph{árnyalat, telítettség, érték}).\footnote{Az említett színterekhez
+tartozó hívások: \func{rgba(red, green, blue, alpha)}, \func{hsv(hue,
+saturation, value)}.} Sőt, lehetőségünk van használni a webes környezetekben
+megszokott úgynevezett hexa-kódokat. Ekkor az RGB színtérből választhatunk, és
+kétféle mintát használhatunk: a hosszabb \func{\#rrggbb}-t és a rövidebb
+\func{\#rgb}-t. A két attribútum viselkedését a CSS ajánlás\footnote{A W3C CSS
+Color Module Level 3:{\footnotesize \url{https://www.w3.org/TR/css-color-3/}}.}
+írja le. A beállítást szöveges (\func{string}) formában kell megadni, amit
+aztán értelmezni kell, és aszerint megadni az értékeket. Később részletesen
+lesz szó arról, hogy milyen módon oldottuk meg a hasonló viselkedést C++11-es
+környezetben.
 
 A színekhez hasonlóan az alakzat körvonalának tulajdonságát leíró
 attribútumokat (pl. \func{lineWidth}) is szöveg formájában kell megadni. Itt
@@ -613,13 +615,14 @@ itt számértékekről van szó, ezért elfogadhatunk majd ténylegesen szám t�
 is. Erről is lesz szó az alakzatépítés működését leíró fejezetben.
 
 A Canvas állapotaihoz mindig tartozik egy affin-transzformációt leíró hatelemű
-mátrix. Ezt a mátrixot módosíthatjuk a \func{scale(x, y)}, a
-\func{rotate(angle)}, a \func{translate(x, y)},  a \func{transform(a, b, c, d,
-e, f)} és a \func{setTransform(a, b, c, d, e, f)} függvényekkel. Az utolsó két
-függvény esetén a változók a homogén transzformációs mátrix módosítható
+mátrix. Ezt a mátrixot módosíthatjuk a \emph{méretező} \func{scale(x, y)}, a
+\emph{forgató} \func{rotate(angle)}, az \emph{áthelyező} \func{translate(x,
+y)}, az \emph{összetett transzformáló} \func{transform(a, b, c, d, e, f)} és a
+\emph{beállító} \func{setTransform(a, b, c, d, e, f)} függvényekkel. Az utolsó
+két függvény esetén a változók a homogén transzformációs mátrix módosítható
 értékeit reprezentálják\footnote{Cabanier et al.: \emph{{HTML} Canvas {2D}
-Context}, 2015, W3C\\ {\footnotesize\url{https://www.w3.org/TR/2dcontext/}},
-6. fejezet.}: \[\begin{pmatrix}a & c & e \\ b & d & f \\ 0 & 0 & 1 \\
+Context}, 2015, W3C\\ {\footnotesize\url{https://www.w3.org/TR/2dcontext/}}, 6.
+fejezet.}: \[\begin{pmatrix}a & c & e \\ b & d & f \\ 0 & 0 & 1 \\
 \end{pmatrix}\]
 
 Végül nézzük a \emph{Path API} részt. A Canvas-ben a Path API két részből áll.

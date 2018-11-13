@@ -5,8 +5,8 @@ _all_cmd=0
 _no_cmd=""
 _cmd_ndx=0
 
-#_rootDir=$PWD
-_srcDir="/home/szledan/work/thesis.git/paper/src"
+_rootDir=$PWD
+_srcDir="$2"
 _imgDir=$_srcDir/img
 _builtDir=$_imgDir/built
 _refDir=$_imgDir
