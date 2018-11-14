@@ -1045,12 +1045,12 @@ a $t=\frac{1}{2}$ értéknél adódik.\footnote{M. Goldapp: i. m., 230. o.}
   \psfrag{y}[b][B][0.8]{\bf{$y$}}
   \psfrag{a}[b][B][0.8]{\bf{$\alpha$}}
   \psfrag{C}[b][B][0.8]{\bf{$\epsilon_{\alpha,h}(\frac{1}{2})$}\qquad}
-  \psfrag{P0}[b][B][0.8]{\bf{$\begin{bmatrix} 1 \\ 0 \end{bmatrix}$}}
-  \psfrag{P1}[b][B][0.8]{\bf{$\begin{bmatrix} 1 \\ h \end{bmatrix}$}}
-  \psfrag{P2}[b][B][0.8]{\bf{$\hspace{3cm}\begin{bmatrix}\cos\alpha\\ \sin\alpha
+  \psfrag{P0}[b][B][0.8]{\bf{$\qquad\boldsymbol{p}_0=\begin{bmatrix} 1 \\ 0 \end{bmatrix}$}}
+  \psfrag{P1}[b][B][0.8]{\bf{$\qquad\boldsymbol{p}_1=\begin{bmatrix} 1 \\ h \end{bmatrix}$}}
+  \psfrag{P2}[b][B][0.8]{\bf{$\hspace{3cm}\qquad\boldsymbol{p}_2=\begin{bmatrix}\cos\alpha\\ \sin\alpha
                               \end{bmatrix} + h \begin{bmatrix} \sin\alpha \\
                               -\cos\alpha \end{bmatrix}$}}
-  \psfrag{P3}[b][B][0.8]{\bf{$\begin{bmatrix}\cos\alpha\\ \sin\alpha
+  \psfrag{P3}[b][B][0.8]{\bf{$\qquad\boldsymbol{p}_3=\begin{bmatrix}\cos\alpha\\ \sin\alpha
                               \end{bmatrix}$}}
     \centering
     \includegraphics[width=.5\textwidth]{img/built/circle_eps}
@@ -1061,26 +1061,27 @@ a $t=\frac{1}{2}$ értéknél adódik.\footnote{M. Goldapp: i. m., 230. o.}
 
 Vegyünk egy $\alpha$ szögű egységsugarú körcikket, ekkor a fenti módon leírt
 Bézier-görbe kontrollpontjai a következők:
-\[p_0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix},\quad
-  p_1 = \begin{bmatrix} 1 \\ h \end{bmatrix},\quad
-  p_2 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix} + h
+\[\boldsymbol{p}_0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix},\quad
+  \boldsymbol{p}_1 = \begin{bmatrix} 1 \\ h \end{bmatrix},\quad
+  \boldsymbol{p}_2 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix} + h
         \begin{bmatrix} \sin\alpha \\ -\cos\alpha \end{bmatrix},\quad
-  p_3 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix}, \]
+  \boldsymbol{p}_3 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix}, \]
 ahol a $h$ egy szabad paraméter. Pontosabban $h$ függ a körcikk $r$ sugarától.
 Az is világos, hogy adott $\alpha$ szögnél nagyobb körcikk kellő pontosságú
 megközelítéséhez nem elégséges egy darab harmadfokú Bézier-görbe.
 
 Legyen $h_1$ a $h$ egy speciális értéke az egységsugarú körcikk
-esetén\footnote{M. Goldapp: i. m., 230. o.}: $h_1 = \frac{4}{3} \tan{\frac{1}{4}
-\alpha}$. Ekkor a \cite[Goldapp]{Goldapp:1991:approximation} tanulmányban
+esetén\footnote{M. Goldapp: i. m., 230. o.}: $h_1 = \frac{4}{3}
+\tan{\frac{1}{4} \alpha}$. Ekkor
+\az{\cite[Goldapp]{Goldapp:1991:approximation}} tanulmányban
 említett\footnote{M.  Goldapp: i. m., 231. o., (16)-os képlet.} képlet
 segítségével megkaphatjuk a maximális eltérés mértékét: \begin{equation}
 \label{eq:2} |\epsilon_{max} = \max_{{t\in[0, 1]}} \epsilon(t)| = \frac{4}{27}
-\frac{\sin^6{\frac{1}{4} \alpha}}{\cos^2{\frac{1}{4} \alpha}}. \end{equation} Ha
-a kapott $\epsilon_{max}$ nem kellően kicsi, akkor a körcikk felbontásával (pl.
-felezésével) csökkenthetjük az eltérések mértékét. A folyamatot egészen addig
-újra elvégezhetjük, amíg minden körcikk-darabnál nem lesz kellően kicsi az
-eltérés. Ezután $h_1$ és a szögek ismeretében megkaphatjuk a Bézier-görbék
+\frac{\sin^6{\frac{1}{4} \alpha}}{\cos^2{\frac{1}{4} \alpha}}. \end{equation}
+Ha a kapott $\epsilon_{max}$ nem kellően kicsi, akkor a körcikk felbontásával
+(pl. felezésével) csökkenthetjük az eltérések mértékét. A folyamatot egészen
+addig újra elvégezhetjük, amíg minden körcikk-darabnál nem lesz kellően kicsi
+az eltérés. Ezután $h_1$ és a szögek ismeretében megkaphatjuk a Bézier-görbék
 kontrollpontjait.
 
 
