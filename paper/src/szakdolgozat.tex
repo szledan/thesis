@@ -909,28 +909,21 @@ sávok fogalma még fontos lesz a dolgozat szempontjából.
     \subsection*{\emph{Bézier-görbe} és a \emph{de Casteljau-eljárás}}
     \label{sec:Bézier:de:Casteljau}
 
-A \emph{Bézier}- (vagy \emph{de Casteljau-}) görbecsalád jó tulajdonságai miatt
-népszerű~\footnote{Foley et al.: i. m., 598. o.} a számítógépes grafikában. Nem
-véletlen, hogy a Canvas API is biztosít lehetőséget a másod- és harmadfokú Bézier-görbék
-használatára. A következőkben általánosan bemutatjuk a Bézier-görbéket és azok
-tulajdonságait. Megvizsgáljuk a de Casteljau-eljárást, és bemutatjuk néhány
-olyan előnyét, amely indokolja a használatát.
+A számítógépes grafikában a \emph{Bézier}- (vagy \emph{de Casteljau-})
+görbecsalád a jó tulajdonságai miatt igen népszerű~\footnote{Foley et al.: i.
+m., 598. o.}. Nem véletlen, hogy a Canvas API is biztosít lehetőséget a másod-
+és harmadfokú Bézier-görbék használatára. A következőkben általánosan
+bemutatjuk a Bézier-görbéket és azok tulajdonságait. Megvizsgáljuk a de
+Casteljau-eljárást, és bemutatjuk néhány olyan előnyét, amely indokolja a
+használatát.
 
-Az alábbiakban definiáljuk a Bézier-görbéket. A definícióban a ,,pont'' fogalmát
-nem szűkítjük a síkra, ugyanakkor világos, hogy a dolgozat esetében elégséges
-erre a speciális esetre gondolnunk.
-
-%\begin{defi}\label{def:Bézier}\cite[Kurusa]{Kurusa:1999:szamitogepes} Legyen
-%adott az ($n+1$)-darab $p_0,...,p_n$ pont. Ezeket Bézier, vagy kontrollpontoknak, az általuk meghatározott poligont pedig kontrollpoligonnak nevezzük.
-%Indukcióval definiáljuk a következő pontokat, minden $t \in [0,1], k \in
-%\{{0,1,2,...,n\}}$ és $i \in \{{0,1,2,...,n-k\}}$ esetére: \[p^0_i(t)=p_i,\]
-%\[p^k_i(t):=(1-t)p^{k-1}_i(t) + tp^{k-1}_{i+1}(t).\] Ekkor azt a görbét, amit a
-%$p^n_0(t)$ pont leír, ahogy a $t$ végigfut a $[0,1]$ intervallumon,
-%Bézier-görbének nevezzük, és $B(t)$-vel jelöljük. A $p^k_i(t)$ pontokat de Casteljau-pontoknak, az $n$ számot pedig a görbe rangjának hívjuk. \end{defi}
+Az alábbiakban definiáljuk a Bézier-görbéket. A definícióban a ,,pont''
+fogalmát nem szűkítjük a síkra, ugyanakkor világos, hogy a dolgozat esetében
+elégséges erre a speciális esetre gondolnunk.
 
 \begin{defi}\label{def:Bézier}\cite[Kurusa]{Kurusa:1999:szamitogepes} Adottak a
 $\boldsymbol{p}_0,\boldsymbol{p}_1,\dots,\boldsymbol{p}_n$ pontok a térben.
-Minden $t \in [0,1]$ számra és $k \in \{0,1,\dots,n\}$ legyen
+Minden $t \in [0,1]$ és $k \in \{0,1,\dots,n\}$ számra legyen
 $\boldsymbol{p}^0_k(t) = \boldsymbol{p}_k$, továbbá minden $j \in
 \{1,2,\dots,n\}$, $i \in \{0,1,2,\dots,n-j\}$ és $t \in [0,1]$ esetén legyen
 \[\boldsymbol{p}^j_i(t) = (1-t)\boldsymbol{p}^{j-1}_i(t) +
@@ -1000,8 +993,11 @@ legfontosabbakat:
   Bézier-görbével\textsuperscript{\ref{fn:Kurusa:43p}}.
 \end{itemize}
 
-A fenti tulajdonságokból is jól látszik, hogy miért lett népszerű a számítógépes
-grafikában ez a görbecsalád.
+A fenti tulajdonságokból is jól látszik, hogy miért lett népszerű a
+számítógépes grafikában ez a görbecsalád. Hiszen pl. a görbe kontrollpoligon
+konvex burkában való maradása miatt nem kell tartanunk attól, hogy a
+kontrollpontok változtatásakor a görbe hullámokat vetne, így biztosítva, hogy
+mindig tudhatjuk, hogy a görbe képe milyen korlátok közt helyezkedik el.
 
 A $t$ paraméterhez tartozó pont az $n$-edfokú Bézier-görbét két, ugyancsak
 $n$-edfokú görbére osztja\footnote{Kurusa -- Szemők: i. m. 47. o.}. A két görbe
@@ -1014,9 +1010,9 @@ véve a két $n$-edfokú görbe kontrollpontjai a következők:
 \boldsymbol{p}_0^n, \boldsymbol{p}_1^{n-1}, ..., \boldsymbol{p}_{n-1}^1,
 \boldsymbol{p}_n. \end{equation}
 
-\Aref({eq:1}) felbontást később majd használni fogjuk. Világos, hogy a felbontást
-tovább alkalmazva a görbe darabokon, végül a görbe darabok végpontjait sorban
-összekötő egyenesek megközelítik az eredeti görbét.
+\Aref({eq:1}) felbontást később majd használni fogjuk. Világos, hogy a
+felbontást elégszer alkalmazva a görbe darabokon, végül a görbe darabok
+végpontjait sorban összekötő egyenesek megközelítik az eredeti görbét.
 
     \subsection*{Körívek közelítése Bézier-görbékkel}
     \label{sec:arctobezier}
