@@ -467,19 +467,19 @@ előírás elvárásait teljesíteni.
     \chapter{Háttér}
     \label{sec:Háttér}
 
-Ebben a fejezetben bemutatjuk azokat a technológiákat és kihívásokat, amelyek
-keretet szabnak a téma megvalósításának. Szót ejtünk magáról a Canvas 2D
-Context API\footnote{Az \emph{alkalmazásprogramozási felület/interfész}
-(\inenglish{Application Programming Interface}) kifejezésre mint \emph{API}
-hivatkozunk.} előírásról, a GLES2 szabvány nyújtotta lehetőségekről és azokról
-a matematikai módszerekről, amelyek biztosítják számunkra, hogy ,,tetszőlegesen
-bonyolult'' alakzatokat helyesen megjeleníthessünk. Össze kell kapcsolni a
-GLES2 szabta korlátokat\footnote {Pl. a GLES2 legfeljebb háromszögeket rajzol.}
-a Canvas elvárásaival. Ami azt jelenti, hogy fedjünk le háromszögekkel olyan --
-akár önmetsző -- alakzatokat, amelyeket tetszőleges számú szakasz, Bézier-görbe
-és körcikk alkot, s mindezeket mérethelyesen jelenítésük is meg. Ehhez -- mint
-látni fogjuk -- több lépésbeli megközelítést (\inenglish{approximation})
-alkalmazunk.
+A dolgozathoz elengedhetetlen a követelmények, illetve a használt technológiák
+bemutatása, amelyek keretet szabnak a téma megvalósításának. Szót ejtünk
+magáról a Canvas 2D Context API\footnote{Az \emph{alkalmazásprogramozási
+felület/interfész} (\inenglish{Application Programming Interface}) kifejezésre
+mint \emph{API} hivatkozunk.} előírásról, a GLES2 szabvány nyújtotta
+lehetőségekről és azokról a matematikai módszerekről, amelyek biztosítják
+számunkra, hogy ,,tetszőlegesen bonyolult'' alakzatokat helyesen
+megjeleníthessünk. Össze kell kapcsolni a GLES2 szabta korlátokat\footnote {Pl.
+a GLES2 legfeljebb háromszögeket rajzol.} a Canvas elvárásaival. Ami azt
+jelenti, hogy fedjünk le háromszögekkel olyan -- akár önmetsző -- alakzatokat,
+amelyeket tetszőleges számú szakasz, Bézier-görbe és körcikk alkot, s
+mindezeket mérethelyesen jelenítésük is meg. Ehhez -- mint látni fogjuk -- több
+lépésbeli megközelítést (\inenglish{approximation}) alkalmazunk.
 
     \section[A Canvas 2D Context API]{A W3C Canvas 2D Context API}
     \label{sec:A_Canvas_előírás}
@@ -669,7 +669,8 @@ m., 11. fejezet.}:
   \item a \func{stroke()} az épített alakzat körvonalának képét a megadott
   beállításokkal kirajzolja,
   \item a \func{drawFocusIfNeeded(element)} az aktuális alakzatot egy speciális
-  beállítással kirajzolja, ha a paraméterként kapott elem fókuszban van,
+  beállítással kirajzolja, ha a paraméterként kapott elem (\func{element})
+  fókuszban van,
   \item a \func{clip()} az aktuális alakzat képével kivág a rajzolóvásznon,
   \item az \func{isPointInPath(x, y)} megállapítja az adott pontról, hogy az
   alakzat rész-e.
@@ -710,9 +711,9 @@ viszonylag szigorú megkötések és a kevés számú függvény ellenére jól
 használható. Ettől a verziótól már lehetővé vált a \emph{programozható grafikai
 végrehajtási modell} (\inenglish{programmable graphics
 pipeline}).\textsuperscript{\ref{fn:GLES2}} Ami azt jelenti, hogy a
-végrehajtási sorrendet nem lehet megváltoztatni, de az egyes lépésekben futó
-részek programozhatóak (lásd \az+\emph{\ref{fig:opengles_20_pipeline2}.
-ábrát}).
+végrehajtási sorrendet továbbra sem lehet megváltoztatni, de az egyes
+lépésekben futó részek programozhatóak (lásd
+\az+\emph{\ref{fig:opengles_20_pipeline2}. ábrát}).
 
 Nézzük meg röviden a GLES2 működését, valamint a dolgozat szempontjából
 fontosabb megkötéseit.
@@ -793,12 +794,12 @@ kapja meg. Ha a háromszögbe esik, akkor az interpoláció típusának megfelel
 három ponttól vett távolságainak függvényében kap értékeket az adott
 változókba.
 
-Ha megadtuk a shader kódokat, lefordítottuk, és bekötöttük azokat, akkor a már
-említett puffereket (attribútum, index stb.) kell feltöltenünk. Meg kell adnunk
-egy eredmény puffert is, ahová a kirenderelt képet várjuk. Ez egy úgynevezett
-\func{Frame Buffer} típusú tömb lesz. Ezek után valamelyik renderelést kiváltó
-függvény hatására a grafikus meghajtó összegyűjti a rajzoláshoz szükséges
-adatokat, és átmásolja a GPU oldalra. Majd elkezdi feldolgozni.
+Ha a shader kódokat lefordítottuk, bekötöttük a megfelelő attribútumokat és
+egyéb értékeket, akkor még meg kell adnunk egy eredmény puffert is, ahová a
+renderelt képet várjuk. Ez egy úgynevezett \func{Frame Buffer} típusú tömb
+lesz. Ezek után valamelyik renderelést kiváltó függvény hatására a grafikus
+meghajtó összegyűjti a rajzoláshoz szükséges adatokat, és átmásolja a GPU
+oldalra. Majd elkezdi feldolgozni.
 
 Az eredményt nem azonnal kapjuk meg, a folyamat a grafikus meghajtótól függ.
 Ugyanakkor vannak bizonyos CPU oldali függvények, amik blokkoló hatásúak, azaz
@@ -816,15 +817,15 @@ csatornánkénti értékek méretével (pl. \func{GL\_UNSIGNED\_BYTE}). Nagy
 vonalakban ezekkel értelmezhető egy a GPU-n lefoglalt memória leírása. Ilyen
 textúrákba renderelhetünk, vagy ezekből olvashatunk ki adatokat. Természetesen,
 hogy hívatkozni tudjunk a textúrákra a shader kódokban, ahhoz azokat is be kell
-kössük még a renderelés előtt. Illetve ha forrás textúráról van szó, akkor
+,,kössük'' még a renderelés előtt. Illetve ha forrás textúráról van szó, akkor
 szükséges CPU oldali tömböt is rendelnünk hozzá. Ezek az adatokat is majd a
 renderelést kiváltó függvény hívásakor töltődnek fel a GPU memóriájába.
 
 Ahhoz, hogy minél hatékonyabban kihasználjuk a CPU oldaltól függetlenül
 renderelő GPU nyújtotta lehetőséget, annál több adatot kell egyszerre, vagyis
 csokorban (\inenglish{batching}) átadnunk. Ezért pl. trapézok egy sorozatát nem
-egyenként érdemes kirenderelni, hanem az adatokat összerakni a már említett
-attribútum tömbökbe, és egyszerre kirendereltetni a lehető legtöbbet.
+egyenként érdemes kirenderelni, hanem az adatokat összerakni -- a már említett
+attribútum tömbökbe --, és egyszerre kirendereltetni a lehető legtöbbet.
 Elképzelhető, hogy olyan sok elemet kell kirenderelni, hogy a tömbök méretére
 vonatkozóan felső korlátba ütközünk. Ez a felső korlát jellemzően vagy az
 index- vagy az attribútumtömb maximális $65536$-os mérete. Ilyenkor ismételt
@@ -833,12 +834,12 @@ nem várt módon elromolhat. Ezt befolyásolhatjuk az ún. \emph{összhatásmód
 (\inenglish{blending mode}). A jól megválasztott összhatásmód\footnote{A
 megszakított, lépésenkénti renderelés esetén ez a forrás- és céltextúrára is a
 \func{GL\_ONE}.} segítségével elérhető, hogy egyben történő renderelésnek
-látszik az is, amit külön lépésekben rajzoltunk.
+tűnjön az is, amit külön lépésekben rajzoltunk.
 
-Az eredményképünk a GLES2-es definíció szerint mindig a $0$ azonosítójú Frame
-Buffer típusú tömbbe kerül. Vagyis innen lehet kiolvasni, vagy az aktuális
-ablakozót értesíteni (pl. \emph{eglSwapBuffers} hívással) a képernyőn való
-megjelenítéshez.
+A végső eredményképünk a GLES2-es definíció szerint mindig a $0$ azonosítójú
+Frame Buffer típusú tömbbe kerül. Vagyis innen lehet kiolvasni, vagy az
+aktuális ablakozót értesíteni (pl. \emph{eglSwapBuffers} hívással) a képernyőn
+való megjelenítéshez.
 
     \section[Matematikai háttér]{Matematikai háttér}
     \label{sec:Matematikai_háttér}
