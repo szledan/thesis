@@ -859,17 +859,18 @@ eldöntésére.
 
 Az algoritmus jól ismert a számítógépes ábrázolás területén.\footnote{Foley et
 al.: \emph{Computer Graphics: Principles and Practice (2Nd Ed.)}, Boston, 1990,
-Addison-Wesley Longman, 209. és 431. o.} Bár a módszer igen egyszerű és
+Addison-Wesley Longman, 209. és 431. o.} S bár a módszer igen egyszerű és
 közismert, azért nagy vonalakban ismertetjük. Kiemelve azokat a tényezőket,
 amelyek a dolgozat szempontjából fontosabbak.
 
-Vegyük az alakzatokat leíró elemek listáját. Fontos, hogy mindig zárt
-alakzatokról van szó, ha a módszert vizsgáljuk. Az egyszerűség kedvéért a
-leírást végezzük síkban. Ugyanakkor belátható, hogy a módszer térben is
-működne. Vegyük az alakzatokat leíró elemek koordinátáit. Válasszuk ki
+A módszert síkon (2D) mutatjuk be, és az alakzat alatt egy Path-nak megfelelő
+leírást értünk. Vegyük az alakzatokat leíró elemek listáját. Bár geometriailag
+nem kritikus elvárás, gyakorlatban fontos, hogy mindig zárt alakzatokról legyen
+szó. Így biztosítva, hogy képesek legyünk véges koordinátájú külső pontot
+választani. Vegyük az alakzatokat leíró elemek koordinátáit. Válasszuk ki
 valamelyik dimenziót (például az $y$-t). Keressük meg a választott dimenzió
-mentén a koordináták közül a legkisebbet. Ezután válasszunk egy olyan pontot a
-síkon aminek a választott dimenziójú értéke még ennél is kisebb. Indítsunk
+mentén a koordináták közül a legkisebbet. Ezután válasszunk a síkon egy olyan
+pontot, aminek a választott dimenziójú értéke még ennél is kisebb. Indítsunk
 pásztázó félegyeneseket minden irányba ebből a pontból. Ekkor lesznek olyan
 félegyenesek, amelyek nem érintik egyik alakzatot sem. Viszont lesznek olyanok,
 amelyek metszik valamelyik alakzatelemet. A metszések és azok sorrendje a
@@ -879,11 +880,11 @@ stratégiát választunk, nyernek értelmet a metszéspontok.
 Vegyük elsőnek a \emph{paritás szabályt} (\inenglish{even-odd fill rule}). A
 kiindulási ponttól (a pásztázó félegyenesek vége) egészen az első metszéspontig
 a pásztázó egyenes által érintett pontokat nem jelöljük. Az első metszésponttól
-a következőig minden pontot jelölünk, majd megint nem jelöljük a rákövetkezőig,
-és így tovább. Egy pont az alakzat része, ha meg van jelölve. A megjelölt
-pontok összességének képe a kitöltött alakzatok képe.
+a következő metszéspontig minden pontot jelölünk, majd megint nem jelöljük a
+rákövetkező metszéspontig, és így tovább. Egy pont az alakzat része, ha meg van
+jelölve. A megjelölt pontok összességének képe a kitöltött alakzatok képe.
 
-A másik elterjedt a \emph{nem-zérus szabály} (\inenglish{non-zero fill rule}).
+A másik elterjedt, a \emph{nem-zérus szabály} (\inenglish{non-zero fill rule}).
 Ahhoz azonban, hogy ezt a szabályt alkalmazni tudjuk, ismernünk kell az
 alakzatokat leíró elemeknek az irányítását. Ez lehet például a definiálás
 sorrendje szerinti haladásirány. Itt a kiindulási pontól (szintén a pásztázó
@@ -898,7 +899,7 @@ zérus pont együttes képe a kitöltött alakzatok képe.
 Természetesen a gyakorlatban nem egy pontból indítjuk a pásztázó egyeneseket. A
 raszterkép valamelyik oldalára merőlegesen minden pontsorhoz rendelünk egy a
 végtelenből jövő pásztázó egyenest. Ezek az egyenesek az alakzathoz érve úgy
-tekinthetők, mint az előbbi geometriai félegyenesek.\footnote{Azzal a
+tekinthetőek, mint az előbbi geometriai félegyenesek.\footnote{Azzal a
 megkötéssel, hogy a raszterpontok megjelölésére olyan szabályt kell alkalmazni,
 hogy a nem raszterpont-határra eső és érintkező alakzatok ne jelöljék meg
 kétszer ugyanazt a raszterpontot.} Természetesen nem is pásztázó egyenesekről,
