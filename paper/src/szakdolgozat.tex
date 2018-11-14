@@ -595,7 +595,7 @@ attribútumok nem csak színek lehetnek, hanem például leírhatnak egy gradien
 színezést is. Illetve nem csak néhány névvel előre definiált színt (\func{red},
 \func{green}, \func{blue} stb.) adhatunk meg, hanem különböző színterekből
 csatornánként saját színt is beállíthatunk. Ilyen színtér lehet például az
-\emph{RGBA} (\emph{vörös, zöld, kék, opacitás}) vagy az \emph{HSV}
+\emph{RGBA} (\emph{vörös, zöld, kék, opacitás}) vagy a \emph{HSV}
 (\emph{árnyalat, telítettség, érték}).\footnote{Az említett színterekhez
 tartozó hívások: \func{rgba(red, green, blue, alpha)}, \func{hsv(hue,
 saturation, value)}.} Sőt, lehetőségünk van használni a webes környezetekben
@@ -622,57 +622,57 @@ y)}, az \emph{összetett transzformáló} \func{transform(a, b, c, d, e, f)} és
 két függvény esetén a változók a homogén transzformációs mátrix módosítható
 értékeit reprezentálják\footnote{Cabanier et al.: \emph{{HTML} Canvas {2D}
 Context}, 2015, W3C\\ {\footnotesize\url{https://www.w3.org/TR/2dcontext/}}, 6.
-fejezet.}: \[\begin{pmatrix}a & c & e \\ b & d & f \\ 0 & 0 & 1 \\
-\end{pmatrix}\]
+fejezet.}: ${\Bigl(\begin{smallmatrix}a & c & e \\ b & d & f \\ 0 & 0 & 1 \\
+\end{smallmatrix}\Bigr)}$.
 
-Végül nézzük a \emph{Path API} részt. A Canvas-ben a Path API két részből áll.
-Egyrészt a Path-t építő és az azt kirajzoló részből. Az építő
-rész\footnote{Cabanier et al.: i. m., 5. fejezet.} függvényei a következők:
+Végül nézzük a \emph{Path API} részt. A Canvas-ben a Path API két részből áll:
+a Path-t építőből és az azt kirajzolóból.
+
+Az építő rész\footnote{Cabanier et al.: i. m., 5. fejezet.} függvényei a
+következők:
 \begin{itemize}
   \item a \func{moveTo(x, y)} egy új alakzatrészt kezd el a megadott ponttal,
   \item a \func{closePath()} bezárja az addig épített alakzatrészt (ha volt
   ilyen),
-  \item a \func{lineTo(x, y)} egy szakaszt ad hozzá az utolsó pont és
-  a megadott koordináta között,
+  \item a \func{lineTo(x, y)} egy szakaszt ad hozzá az utolsó pont és a
+  megadott koordináta között,
   \item a \func{quadraticCurveTo(cpx, cpy, x, y)} egy másodfokú Bézier-görbét
   határoz meg az utolsó pont, a megadott kontroll- és végpont között,
   \item a \func{bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)} egy harmadfokú
-  Bézier-görbét jelent az utolsó pont és a megadott kontrollpontok és végpont
+  Bézier-görbét jelent az utolsó pont és a megadott kontrollpontok és a végpont
   között,
   \item az \func{arcTo(x1, y1, x2, y2, radius)} megad egy \func{radius} sugarú
-  körcikket az utolsó
-  pont és a megadott két koordináta által meghatározott szögben úgy,
-  hogy ha kell, akkor egy szakaszt is húz az utolsó pont és körcikk kezdő
-  pontja között,
-  \item az \func{arc(x, y, radius, startAngle, endAngle, counterclockwise)} a
-  változók szerint meghatároz egy körcikket, szükség esetén egy összekötő
-  szakasszal,
-  \item \func{a rect(x, y, w, h)} pedig egy külön téglalap alakzatrészt ad a
-  Path-hoz.
+  körcikket az utolsó pont és a megadott két koordináta által meghatározott
+  szögben úgy, hogy ha kell, akkor egy szakaszt is húz az utolsó elem végpontja
+  és a körcikk kezdőpontja között,
+  \item az \func{arc(x, y, radius, startAngle, endAngle, counterclockwise)} az
+  argumentumoknak megfelelően meghatároz egy körcikket, szükség esetén itt is
+  összeköti az utolsó elem végpontját a körcikk kezdőpontjával,
+  \item \func{a rect(x, y, w, h)} pedig egy külön téglalapot, mint alakzatrészt
+  ad a Path-hoz.
 \end{itemize}
 
 A fenti függvényekkel tetszőlegesen bonyolult alakzatok adhatók meg. Ez elemek
 egy listáját jelenti, ahol az elemek pontjait egyenes vagy speciális görbe
 vonal köti össze, esetleg az elem azt jelöli, hogy egy-egy alakzat zárt. A
-függvények paraméterei -- egy kivételével -- mind lebegőpontos típusok
-(\func{float}). A kivétel a körcikk körbejárásának irányát leíró logikai
-paraméter, a \func{counterclockwise}.
+függvények paraméterei -- egy kivételével -- mind \emph{nem korlátozott
+lebegőpontos} (\func{unrestricted double}) típusok. A kivétel a körcikk
+körbejárásának irányát leíró logikai paraméter, a \func{counterclockwise}.
 
 A rajzoló rész függvényei pedig a következők\footnote{Cabanier et al.: i.
 m., 11. fejezet.}:
 \begin{itemize}
   \item a \func{beginPath()} új Path-t definiál, azaz, ha már volt épített
   alakzat, akkor azt eldobja,
-  \item a \func{fill()} hívására az épített alakzat kitöltött képét a
-  megadott beállításokkal kirajzolja,
-  \item a \func{stroke()} az épített alakzat körvonalának képét a
-  megadott beállításokkal kirajzolja,
-  \item a \func{drawFocusIfNeeded(element)} az aktuális alakzat kirajzolásával
-   informál, ha az adott elem fókuszban van (nem támogatott függvény),
-  \item a \func{clip()} az aktuális alakzat képével kivág a
-  rajzolóvásznon (jelenleg nem támogatott függvény),
+  \item a \func{fill()} hívására az épített alakzat kitöltött képét a megadott
+  beállításokkal kirajzolja,
+  \item a \func{stroke()} az épített alakzat körvonalának képét a megadott
+  beállításokkal kirajzolja,
+  \item a \func{drawFocusIfNeeded(element)} az aktuális alakzatot egy speciális
+  beállítással kirajzolja, ha a paraméterként kapott elem fókuszban van,
+  \item a \func{clip()} az aktuális alakzat képével kivág a rajzolóvásznon,
   \item az \func{isPointInPath(x, y)} megállapítja az adott pontról, hogy az
-  alakzat rész-e (jelenleg nem támogatott függvény).
+  alakzat rész-e.
 \end{itemize}
 
 Arról már volt szó, hogy az alakzat önmetsző is lehet. Az önmetszés kérdése a
@@ -696,31 +696,33 @@ renderelését.
     \label{sec:GLES2:API}
 
 Az OpenGL~ES~2.0 (GLES2) azaz az \emph{Open Graphics Library for Embeded System
-2.0}-ás verziója a \emph{Khronos Group} által felügyelt grafikus
+2.0}-ás verziója a \emph{Khronos Group} által felügyelt grafikai
 függvénykönyvtár.  Segítségével majdnem közvetlenül adhatunk parancsokat a
-grafikus egységnek. Az API-t alapvetően 3D modellek megjelenítésére
-használhatjuk. Viszont maga az OpenGL egy hatalmas, komplex függvénykönyvtár.
-Kisebb, hordozható eszközök esetén nincs szükség ekkora komplexitásra. Részben
-ezért is vezették be az ,,asztali'' OpenGL megrostálása és egyszerűsítése révén
-az ES API verziókat. Az ES verziók közül a 2.0-ás lett a
-legelterjedtebb\footnote{The Khronos Group: \emph{OpenGL ES Overview}, 2018,
-{\footnotesize\url{https://www.khronos.org/opengles/}}\label{fn:GLES2}}.
-Viszonylag szigorú megkötések és a kevés számú függvény ellenére jól
-használható. Ettől a verziótól már lehetővé vált a \emph{programozható grafikus
+grafikai egységnek (GPU). Az eredeti OpenGL API-t alapvetően 3D modellek
+megjelenítésére tervezték. Viszont maga az OpenGL egy hatalmas, komplex
+függvénykönyvtár. Kisebb, hordozható eszközök esetén sokszor nincs szükség
+ekkora komplexitásra. Részben ezért is vezették be az ,,asztali'' OpenGL
+megrostálása és egyszerűsítése révén az ES API verziókat. Az ES verziók közül a
+2.0-ás lett a legelterjedtebb\footnote{The Khronos Group: \emph{OpenGL ES
+Overview}, 2018,
+{\footnotesize\url{https://www.khronos.org/opengles/}}\label{fn:GLES2}}. A
+viszonylag szigorú megkötések és a kevés számú függvény ellenére jól
+használható. Ettől a verziótól már lehetővé vált a \emph{programozható grafikai
 végrehajtási modell} (\inenglish{programmable graphics
-pipeline}).\textsuperscript{\ref{fn:GLES2}} Ami azt jelenti, hogy a végrehajtási
-sorrendbe ugyan nem lehet belenyúlni, de az egyes lépésekben futó részek
-programozhatók (lásd \az+\emph{\ref{fig:opengles_20_pipeline2}. ábrát}).
+pipeline}).\textsuperscript{\ref{fn:GLES2}} Ami azt jelenti, hogy a
+végrehajtási sorrendet nem lehet megváltoztatni, de az egyes lépésekben futó
+részek programozhatóak (lásd \az+\emph{\ref{fig:opengles_20_pipeline2}.
+ábrát}).
 
-Nézzük meg röviden a GLES2 működését és a dolgozat szempontjából fontosabb
-megkötéseit.
+Nézzük meg röviden a GLES2 működését, valamint a dolgozat szempontjából
+fontosabb megkötéseit.
 
 A használható primitív alakzatelemek geometriai típusuk szerint a következők:
 \emph{pont}, \emph{szakasz} és \emph{háromszög}. Ezek közül kitöltésre effektív
 csak a háromszöget használhatjuk. Három típusát engedi a szabvány:
-\emph{háromszög}, \emph{háromszögszalag} (\inenglish{triangle strip}) és
-\emph{háromszög-legyező} (\inenglish{triangle fan}). Tehát az egyik és a
-számunkra legfontosabb megkötés az, hogy a megjeleníteni kívánt alakzatot
+\emph{független háromszögek}, \emph{háromszögszalag} (\inenglish{triangle
+strip}) és \emph{háromszög-legyező} (\inenglish{triangle fan}). Tehát az egyik
+és a számunkra legfontosabb megkötés az, hogy a megjeleníteni kívánt alakzatot
 háromszögekkel kell lefednünk.
 
   \begin{figure}
@@ -732,10 +734,10 @@ háromszögekkel kell lefednünk.
     forrás alapján.)}
   \end{figure}
 
-Bármilyen megjelenítéshez írni kell legalább két programot, ami a grafikus
+Bármilyen megjelenítéshez írni kell legalább két programot, ami a grafikai
 egységen fog lefutni. Az első program kódját adja meg az ún. \emph{vertex
 shader}, a másodikét pedig a \emph{fragment shader}. Ezeket a leírásokat a
-grafikus meghajtónak át kell adjuk, hogy az \emph{lefordíthassa}
+grafikai meghajtónak át kell adjuk, hogy az \emph{lefordíthassa}
 (\inenglish{shader compiling}) a kódokat, és a programokat \emph{összeköthesse}
 (\inenglish{programs linking}). Hibátlan fordítás és összekötés esetén
 visszakapunk egy \emph{programazonosítót}. Később erre az azonosítóra
@@ -749,28 +751,31 @@ változókat (\inenglish{varyings}) beállítani, amiket a később lefutó frag
 shader-ben felhasználhatunk. Ahhoz, hogy a program lefusson a GPU oldalon,
 előbb még be kell állítanunk néhány dolgot a CPU oldalon. Egyrészt össze kell
 állítani egy puffert (tömböt) a csúcspontokhoz tartozó adatokkal, ezt
-\emph{vertex attribútumtömbnek} nevezzük. A vertex shaderben az
-\func{attribute} kulcsszóval különböző bemeneti paramétereket határozhatunk
-meg. Ezeket be kell ,,kössük'' a CPU oldalon. Azaz a grafikus meghajtót
-értesítenünk kell róla, hogy milyen néven és milyen típusú adatot keressen a
-vertex programot leíró shader-kódban. Ezeknek az attribútumoknak a közös
-méretét \emph{lépéshossznak} (\inenglish{stride length}) nevezzük, és minden
-csúcsponthoz tartoznia kell egy ekkora méretű leírásnak az előbb említett
-tömbben. Nem kötelező azonban, hogy csak egy attribútum tömböt használjunk.
-Lehetőség van minden bemeneti attribútumhoz külön tömböt lefoglalni és bekötni.
-A feladathoz érdemes igazítani. Ha több csúcsponthoz is ugyanazokat az
-értékeket adnánk át, akkor érdemes az egy tömböt alkalmazó modellt használni.
-Ilyenkor azonban meg kell adnunk egy indextömböt is. Minden csúcsponthoz hozzá
-kell rendelni az attribútumtömb egy lépéshossznyi elemét. Az indextömb esetén
-is két lehetőség közül választhatunk. Egyrészt megadhatjuk az attribútumok
-bekötésekor. Másrészt egy egészen korai szakaszban készíthetünk egy viszonylag
-nagy (akár $65536$ elemű) indextömböt, és ezt feltölthetjük a GPU oldalra. Ha
-pedig a renderelés pillanatában\footnote{A renderelést a \func{glDrawElements}
-vagy a \func{glDrawArrays} függvények hívása jelenti.} nem adunk meg
-indextömböt, akkor sorra ebből a feltöltött pufferből veszi az indexeket. Ez az
-utóbbi megoldás akkor lehet hasznos, ha nagyon sok hasonló geometriai elemet
-(pl. trapézokat) szeretnénk ismétlődő attribútumokkal kirajzolni. Ilyenkor az
-indextömböt könnyedén generálhatjuk, és többször is felhasználhatjuk.
+\emph{vertex-attribútumtömbnek} (\inenglish{vertex attribute array}) nevezzük.
+A vertex shaderben az \func{attribute} kulcsszóval különböző bemeneti
+paramétereket határozhatunk meg. Ezeket be kell ,,kössük'' a CPU oldalon. Azaz
+a grafikai meghajtót értesítenünk kell róla, hogy milyen néven és milyen típusú
+adatot keressen a vertex programot leíró shader-kódban. A shader-kódban
+használt attribútumoknak a közös méretét \emph{lépéshossznak}
+(\inenglish{stride length}) nevezzük, és minden csúcsponthoz tartoznia kell egy
+ekkora méretű leírásnak az előbb említett tömbben. Nem kötelező azonban, hogy
+csak egy attribútum tömböt használjunk. Lehetőség van minden bemeneti
+attribútumhoz külön tömböt lefoglalni és bekötni. A feladathoz érdemes
+igazítani. Ha több csúcsponthoz is ugyanazokat az értékeket adnánk át, akkor
+érdemes az egy tömböt alkalmazó modellt használni. Ilyenkor azonban meg kell
+adnunk egy indextömböt is. Minden csúcsponthoz hozzá kell rendelni az
+attribútumtömb egy lépéshossznyi elemét. Az indextömb esetén is két lehetőség
+közül választhatunk. Egyrészt megadhatjuk a rendereléskor\footnote{A
+renderelést a \func{glDrawElements} vagy a \func{glDrawArrays} függvények
+hívása jelenti. Ezek közül a \func{glDrawElements} vár indextömböt.}. Másrészt
+készíthetünk egy viszonylag nagy (akár $65536$ elemű) indextömböt is, és ezt
+feltölthetjük a GPU oldalra. Ezt megtehetjük, amint van kapcsolatunk a grafikai
+meghajtóval. Ha pedig a renderelés pillanatában nem adunk meg indextömböt (a
+\func{glDrawElements} függvénynek), akkor sorra ebből a feltöltött tömbből
+veszi az indexeket. Ez az utóbbi megoldás akkor lehet hasznos, ha nagyon sok
+hasonló geometriai elemet (pl. trapézokat) szeretnénk ismétlődő attribútumokkal
+kirajzolni. Ilyenkor az indextömböt könnyedén generálhatjuk, és többször is
+felhasználhatjuk.
 
 Hasonlóan a vertex shaderhez, a \emph{fragment shader} esetében is be kell
 állítanunk a megfelelő értékeket. A shaderkódban használt \emph{textúrák}
