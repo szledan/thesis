@@ -737,9 +737,11 @@ háromszögekkel kell lefednünk.
 
 Bármilyen megjelenítéshez írni kell legalább két programot, ami a grafikai
 egységen fog lefutni. Az első program kódját adja meg az ún. \emph{vertex
-shader}, a másodikét pedig a \emph{fragment shader}. Ezeket a leírásokat a
-grafikai meghajtónak át kell adjuk, hogy az \emph{lefordíthassa}
-(\inenglish{shader compiling}) a kódokat, és a programokat \emph{összeköthesse}
+shader} (a \inenglish{shader} helyett használatos még az \emph{árnyaló}
+kifejezés, mi viszont a továbbiakban is shader-ként hivatkozunk rá), a
+másodikét pedig a \emph{fragment shader}. Ezeket a leírásokat a grafikai
+meghajtónak át kell adjuk, hogy az \emph{lefordíthassa} (\inenglish{shader
+compiling}) a kódokat, és a programokat \emph{összeköthesse}
 (\inenglish{programs linking}). Hibátlan fordítás és összekötés esetén
 visszakapunk egy \emph{programazonosítót}. Később erre az azonosítóra
 hivatkozva állíthatjuk be a végrehajtási modell \emph{állapotát} (pipeline
@@ -1204,38 +1206,39 @@ Erre láthatunk majd példát az eredményeket bemutató fejezetben
 
 Tehát az itt bemutatott \emph{felső} réteg vagyis a \func{Gepard} egy C++
 interfész, ami egy jól bevált Canvas API-ra támaszkodik, és teremt kapcsolatot
-a felhasználó és a következő ún. \emph{köztes} réteg között.
+a felhasználó és a következő, ún. \emph{köztes} réteg között.
 
     \subsection*{A köztes réteg, azaz a GepardEngine osztály}
 
 A köztes réteg már valamivel bonyolultabb. Egyrészt használja a grafikai
-függ\-vény\=könyv\-tár-spe\-ci\-fi\-kus alsóbb szintű réteget, előállítva a
+függ\-vény\-könyv\-tár-spe\-ci\-fi\-kus alsóbb szintű réteget, előállítva a
 kívánt képet. Másrészt tartalmazza, és megvalósítja a közös osztályokat. Az
 egész réteget összefogó osztály pedig a \func{GepardEngine}. Nézzük át
 részletesebben az itt megvalósított részeket.
 
-\Az+\emph{\ref{fig:structure_eps}. ábrán} már láthattuk, hogy ez a szint a
-jelen dolgozatot érintő négy főbb részből tevődik össze. Most csak hármat
-részletezünk itt. A negyedik résszel, azaz a Path alakzatleíró, -tároló és az ezt
-feldolgozó osztályokkal úgy is külön alfejezetekben foglalkozunk.
+\Az+\emph{\ref{fig:structure_eps}. ábrán} már láthattuk, hogy ez a szint -- a
+dolgozat szempontjából érdekes -- négy főbb részből tevődik össze. Most csak
+hármat részletezünk itt. A negyedik résszel, azaz az alakzatot (Path) leíró,
+tároló és ezt feldolgozó osztályokkal külön alfejezetben foglalkozunk.
 
 Az egyik funkcionalitás a rajzolás környezetének (\inenglish{drawing context},
 a továbbiakban kontextus, vagy
 context)\footnote{\Az+\emph{\ref{fig:structure_eps}. ábrán} ez az ,,Állapot
 kezelése'' rész.} biztosítása, bizonyos változások elmentése és helyreállítása.
-A kontextus tartalmazza a rajzolást leíró állapotokat. Az állapotok elmentésért
-a \func{save}, a visszaállításért pedig a \func{restore} API-függvények a
-felelősek. A függvények hívásának hatásai ezen a rétegen fejtődnek ki. A
-\func{save} egy verempufferbe teszi az aktuális kontextus bizonyos
-beállításait, ezek együttese a rajzolás állapota. A \func{restore} pedig
-kiveszi a soron következőt. Gyakorlatilag úgy kell értelmezni, hogy a verem
-tetején lévő kontextusbeállítások, vagyis állapot értékei az érvényesek, azaz
-ezeket kell használni. Fontos megjegyezni, hogy nem minden kontextusbeli elemet
-mentünk el, vagy állítunk vissza. Például a transzformációkat, a kivágás
+A kontextus tartalmazza a rajzolást befolyásoló állapotot (\inenglish{state})
+is. Az állapotok elmentéséért a \func{save}, a visszaállításért pedig a
+\func{restore} API-függvények a felelősek. A függvények hívásának hatásai ezen
+a rétegen fejtődnek ki. A \func{save} egy verempufferbe teszi az aktuális
+kontextus bizonyos beállításait, ezek együttese a rajzolás állapota. A
+\func{restore} pedig kiveszi a verem tetején lévő következőt, és eldobja (ha az
+nem az egyetlen elem a veremben). Gyakorlatilag úgy kell értelmezni, hogy a
+verem tetején lévő kontextusbeállítások, vagyis állapot értékei az érvényesek,
+azaz ezeket kell használni. Fontos megjegyezni, hogy nem minden kontextusbeli
+elemet mentünk el, vagy állítunk vissza. Például a transzformációkat, a kivágás
 területét (\inenglish{clipping region}) és a színezéssel kapcsolatos értékeket
 igen, de a \func{Path} által aktuálisan tartalmazott alakzatot már nem. Itt
 csak a legfontosabbakat soroltuk fel, de a Canvas API leírás
-\cite{Cabanier:14:HCC} második fejezetében megtalálható a teljes lista.
+második fejezetében megtalálható a teljes lista.
 
 A második rész a transzformációk. A Háttér fejezet Canvas API-t bemutató
 részében (\ref{sec:A_Canvas_előírás})  már tárgyaltuk a transzformációkat, itt
@@ -1243,38 +1246,43 @@ most csak röviden a megvalósításukat nézzük át.
 
 Minden állapot tartalmaz egy transzformációs mátrixot. Ezt a mátrixot a
 \func{Transform} osztály valósítja meg. A megvalósítani kívánt mátrix egy
-homogén sík koordinátás affin transzformációt tartalmaz. Aminek az alsó sora
-ismert ($0\enskip 0\enskip 1$), így csak a felső két sort kell eltárolni. Ez
-hat értéket jelent. Ebből a harmadik oszlopban találhatók a síkban eltolás
-vektorának értékei. A hat lebegőpontos értéken kívül még megvalósítottuk a
-leggyakrabban használt mátrix műveleteket, mint például a szorzás, inverz
-számítás, stb.
+homogén sík koordinátás affin transzformációt tartalmaz. A mátrix alsó sora
+ismert ($0\enskip 0\enskip 1$), és nem változik, így csak a felső két sort kell
+eltárolni. Ez hat értéket jelent. Ebből a harmadik oszlopban találhatók az
+\emph{eltolásvektornak} az értékei. A maradék négy koordináta -- az affin
+transzformáció leírásának megfelelően -- az \emph{izometrikus torzítások}
+együttes értékeit jelentik. A hat lebegőpontos érték tárolásán kívül még
+megvalósítottuk a leggyakrabban használt mátrix műveleteket, mint például a
+szorzás, inverz számítás, stb.
 
-Alakzatot rajzoló parancsok esetén a rajzolás pillanatában az aktuális
-kontextus által tartalmazott mátrixot kell alkalmazni. Ez a primitív alakzatok
-esetén könnyebb, hiszen az alakzat egyszerre definiálódik és rajzolódik ki.
-Tehát a megfelelő koordinátákat megszorozzuk a transzformációs mátrixszal. A
-\emph{Path} esetén figyelnünk kell arra, hogy az alakzat építése közben is
-lehetséges a transzformációs mátrix módosítása. Ami azt jelenti, hogy az addig
-épített alakzatra érvényesíteni kell a megváltoztatott mátrixot. Ugyanakkor az
-alakzatot tovább lehet építeni. Az eltranszformált részt úgy kell felfogni,
-mintha eredetileg is így eltranszformálva adták volna meg, vagyis
-tulajdonképpen könnyedén folytathatjuk az alakzat építését.
+Alakzatot rajzoló parancsok esetén a rajzolás pillanatában az aktuális állapot
+által tartalmazott mátrixot kell alkalmazni. Ez a primitív alakzatok esetén
+könnyebb, hiszen az alakzat egyszerre definiálódik és rajzolódik ki. Tehát a
+megfelelő koordinátákat megszorozzuk a transzformációs mátrixszal, és utána
+rendereljük. Viszont a \emph{Path} esetén figyelnünk kell arra, hogy az alakzat
+építése közben is lehetséges a transzformációs mátrix módosítása. Ami azt
+jelenti, hogy az addig épített alakzatra érvényesíteni kell a megváltoztatott
+mátrixot. Ugyanakkor az alakzatot tovább lehet építeni. Az eltranszformált
+részt úgy kell felfogni, mintha eredetileg is így eltranszformálva adták volna
+meg, vagyis tulajdonképpen könnyedén folytathatjuk az alakzat építését.
 
 Részben ehhez a réteghez kapcsolódik a kitöltött téglalap (\func{fillRect})
 rajzolása is. Ez ugyan szigorúan nem tartozik a szakdolgozatunk tárgyához,
-ugyanakkor mint a Path általános alakzatleírás egyik -- külön is definiált --
-primitív alakzataként azért érdemes pár szót ejteni róla. Elsőre erre az
-egyszerű alakzatra készült el a kirajzolás általános folyamata. Kezdve az API
-hívástól (\func{fillRect}) a felső rétegben. Majd haladva a köztes rétegen át a
-konkrét kirajzolásig GLES2-t használva. A téglalapot mint két egymáshoz
-illesztett derékszögű háromszöget értelmezzük. A négy sarokra mint vertex-ekre
-hívódik meg egy nagyon egyszerű \emph{program} a grafikus eszközön. Az alakzat
-egyszerűsége miatt mind a \emph{vertex}, mind pedig a \emph{fragment}
-programrészekhez tartozó ún. \emph{árnyaló} (\inenglish{shader}, a továbbiakban
-mi is shader-ként hivatkozunk ezekre) kódok viszonylag egyszerűek. Ezért
-könnyen felállítható a rajzolás folyamata. Amit később felhasználva, egyszerűbb
-beilleszteni a komplexebb alakzatok megjelenítését adó hívásokat.
+ugyanakkor a Path egyik -- külön is definiált -- primitív alakzataként
+(\func{rect}) azért érdemes pár szót ejteni róla. Elsőre erre az egyszerű
+alakzatra készült el a kirajzolás általános folyamata. Kezdve az API hívástól
+(\func{fillRect}) a felső rétegben. Majd haladva a köztes rétegen át a konkrét
+kirajzolásig GLES2-t használva. A téglalapot mint két egymáshoz illesztett
+derékszögű háromszöget értelmezzük. A négy sarokpontra mint vertex-ekre
+hívódnak meg
+egy nagyon egyszerű \emph{vertex shader program} (a \inenglish{shader} helyett
+használatos még az \emph{árnyaló} kifejezés, mi viszont a továbbiakban is
+shader-ként hivatkozunk rá), majd egy
+szintén egyszerű színkitöltő \emph{fragment shader program} a grafikai
+eszközön. Az alakzat egyszerűsége miatt mind a \emph{vertex}, mind pedig a
+\emph{fragment} programrészekhez tartozó shader kódok viszonylag egyszerűek.
+Ezért könnyen felállítható a rajzolás folyamata. Amit később felhasználva,
+egyszerűbb beilleszteni a komplexebb alakzatok megjelenítését adó hívásokat.
 
     \section[A Path osztály]{A Path osztály}
     \label{sec:A Path_osztály}
