@@ -1268,23 +1268,35 @@ mátrixot. Ugyanakkor az alakzatot tovább lehet építeni. Az eltranszformált
 részt úgy kell felfogni, mintha eredetileg is így eltranszformálva adták volna
 meg, vagyis tulajdonképpen könnyedén folytathatjuk az alakzat építését.
 
-Részben ehhez a réteghez kapcsolódik a kitöltött téglalap (\func{fillRect})
-rajzolása is. Ez ugyan szigorúan nem tartozik a szakdolgozatunk tárgyához,
-ugyanakkor a Path egyik -- külön is definiált -- primitív alakzataként
-(\func{rect}) azért érdemes pár szót ejteni róla. Elsőre erre az egyszerű
-alakzatra készült el a kirajzolás általános folyamata. Kezdve az API hívástól
-(\func{fillRect}) a felső rétegben. Majd haladva a köztes rétegen át a konkrét
-kirajzolásig GLES2-t használva. A téglalapot mint két egymáshoz illesztett
-derékszögű háromszöget értelmezzük. A négy sarokpontra mint vertex-ekre
-hívódnak meg
-egy nagyon egyszerű \emph{vertex shader program} (a \inenglish{shader} helyett
-használatos még az \emph{árnyaló} kifejezés, mi viszont a továbbiakban is
-shader-ként hivatkozunk rá), majd egy
-szintén egyszerű színkitöltő \emph{fragment shader program} a grafikai
-eszközön. Az alakzat egyszerűsége miatt mind a \emph{vertex}, mind pedig a
-\emph{fragment} programrészekhez tartozó shader kódok viszonylag egyszerűek.
-Ezért könnyen felállítható a rajzolás folyamata. Amit később felhasználva,
-egyszerűbb beilleszteni a komplexebb alakzatok megjelenítését adó hívásokat.
+A harmadik, itt kifejtett rész a kitöltött téglalap (\func{fillRect})
+rajzolása. A téglalap kitöltése nem tartozik szigorúan a dolgozatunk tárgyához,
+ugyanakkor több érv is szól amellett, hogy itt bemutassuk röviden. Egyrészt
+ennek az elemnek a renderelését valósítottuk meg elsőre. Ezt az alakzat
+egyszerűsége is indokolta. Így áttekinthetőbb módon valósíthattuk meg a
+renderelés teljes alapfolyamatát. Később elégséges volt ennek a bővítése.
+Másrészt azért itt fejtjük ki, mert az eddig megismert rétegek még közösek a
+dolgozatunk témáját adó Path-szal, valamint az alakzat egyszerűsége okán
+betekintést nyerhetünk a renderelés további állomásaira, bízva abban, hogy így
+a Path API részletes tárgyalásakor jobban érthetjük majd, hogy mit miért
+teszünk.
+
+Tehát a \func{fillRect(x, y, width, height)} a Canvas API révén egy Gepard API
+függvény. A hívása esetén a köztes rétegben alkalmazzuk rá az aktuális
+állapothoz tartozó transzformációt, majd az alsó réteghez tartozó
+\func{fillRect} függvénynek továbbítjuk a téglalapot leíró értékeket és a
+kitöltés színét (\func{fillStyle}). A mi esetünkben a GLES2-es modul az alsó
+réteg. A téglalapot mint két egymáshoz illesztett derékszögű háromszöget
+értelmezzük. Az alakzat egyszerűsége miatt mind a \emph{vertex}, mind pedig a
+\emph{fragment} shader kódok viszonylag egyszerűek. A vertex shader kifeszíti a
+két háromszöget az eredménytextúrára úgy, hogy minden vertex megkapja a
+kitöltés színét. Ezt a színt továbbítja a fragment shadernek, ami minden olyan
+raszterpontra lefut, aminek a közepe az érintett két háromszögbe esik. A
+fragment shader pedig minden raszterpontot a kapott színre beállít. Ezek után
+az eredmény textúra képét rámásoljuk a megfelelő helyre a végső
+eredménypufferbe. Ezzel effektív megjelent a téglalap. Egy ilyen téglalap nem
+más mint egy speciális trapéz. Minthogy a dolgozatunkban a bonyolultabb
+alakzatokat az $y$ koordinátával párhuzamos alapú trapézokra bontjuk, világos,
+hogy a kirajzolás folyamata nagy vonalakban ehhez hasonló.
 
     \section[A Path osztály]{A Path osztály}
     \label{sec:A Path_osztály}
