@@ -479,7 +479,7 @@ számunkra, hogy ,,tetszőlegesen bonyolult'' alakzatokat helyesen
 megjeleníthessünk. Össze kell kapcsolni a GLES2 szabta korlátokat\footnote {Pl.
 a GLES2 legfeljebb háromszögeket rajzol.} a Canvas elvárásaival. Ami azt
 jelenti, hogy fedjünk le háromszögekkel olyan -- akár önmetsző -- alakzatokat,
-amelyeket tetszőleges számú szakasz, Bézier-görbe és körcikk alkot, s
+amelyeket tetszőleges számú szakasz, Bézier-görbe és körív alkot, s
 mindezeket mérethelyesen jelenítésük is meg. Ehhez -- mint látni fogjuk -- több
 lépésbeli megközelítést (\inenglish{approximation}) alkalmazunk.
 
@@ -644,12 +644,12 @@ következők:
   Bézier-görbét jelent az utolsó pont és a megadott kontrollpontok és a végpont
   között,
   \item az \func{arcTo(x1, y1, x2, y2, radius)} megad egy \func{radius} sugarú
-  körcikket az utolsó pont és a megadott két koordináta által meghatározott
+  körívet az utolsó pont és a megadott két koordináta által meghatározott
   szögben úgy, hogy ha kell, akkor egy szakaszt is húz az utolsó elem végpontja
-  és a körcikk kezdőpontja között,
+  és a körív kezdőpontja között,
   \item az \func{arc(x, y, radius, startAngle, endAngle, counterclockwise)} az
-  argumentumoknak megfelelően meghatároz egy körcikket, szükség esetén itt is
-  összeköti az utolsó elem végpontját a körcikk kezdőpontjával,
+  argumentumoknak megfelelően meghatároz egy körívet, szükség esetén itt is
+  összeköti az utolsó elem végpontját a körív kezdőpontjával,
   \item \func{a rect(x, y, w, h)} pedig egy külön téglalapot, mint alakzatrészt
   ad a Path-hoz.
 \end{itemize}
@@ -658,7 +658,7 @@ A fenti függvényekkel tetszőlegesen bonyolult alakzatok adhatók meg. Ez elem
 egy listáját jelenti, ahol az elemek pontjait egyenes vagy speciális görbe
 vonal köti össze, esetleg az elem azt jelöli, hogy egy-egy alakzat zárt. A
 függvények paraméterei -- egy kivételével -- mind \emph{nem korlátozott
-lebegőpontos} (\func{unrestricted double}) típusok. A kivétel a körcikk
+lebegőpontos} (\func{unrestricted double}) típusok. A kivétel a körív
 körbejárásának irányát leíró logikai paraméter, a \func{counterclockwise}.
 
 A rajzoló rész függvényei pedig a következők\footnote{Cabanier et al.: i.
@@ -1025,15 +1025,15 @@ A dolgozatban tárgyalt módszerrel az alakzatokat trapézokkal fedjük le. Ezé
 szükséges a köríveket szakaszokkal közelíteni. A Bézier-görbéket a de
 Casteljau-eljárással gyorsan közelíthetjük szakaszokkal. A köríveket pedig
 gyorsan közelíthetjük Bézier-görbékkel. Néhány lépésben megállapítható, hogy
-egy adott sugarú körcikket hány darab harmadfokú Bézier-görbével fedhetünk le
+egy adott sugarú körívet hány darab harmadfokú Bézier-görbével fedhetünk le
 egy $\epsilon$ hibahatáron belül.
 
-Egy $\alpha$ szögű körcikk tökéletesen nem fedhető le
+Egy $\alpha$ szögű körív tökéletesen nem fedhető le
 Bézier-görbékkel\cite[Goldapp]{Goldapp:1991:approximation}. Azonban jól és
 gyorsan közelíthető harmadfokú Bézier-görbékkel.
 
 Az említett \cite[Goldapp]{Goldapp:1991:approximation} tanulmány bemutat egy
-lehetséges stratégiát a körcikkek közelítésére. Egy $\alpha$ szögű körcikk
+lehetséges stratégiát a körívek közelítésére. Egy $\alpha$ szögű körív
 esetén meghatározhatunk egy harmadfokú Bézier-görbét, és megadhatjuk a két
 görbe közti eltérését leíró $\epsilon_{\alpha,h}(t)$ függvényt\footnote{M.
 Goldapp: \emph{Approximation of circular arcs by cubic polynomials}, North
@@ -1058,23 +1058,23 @@ a $t=\frac{1}{2}$ értéknél adódik.\footnote{M. Goldapp: i. m., 230. o.}
                               \end{bmatrix}$}}
     \centering
     \includegraphics[width=.5\textwidth]{img/built/circle_eps}
-    \caption{\label{fig:circle} Körcikk (szaggatott vonal) és a hozzá
+    \caption{\label{fig:circle} Körív (szaggatott vonal) és a hozzá
     $\epsilon(t=\frac{1}{2})$, maximális eltérésben illeszkedő harmadfokú
     Bézier-görbe (sima vonal)}
   \end{figure}
 
-Vegyünk egy $\alpha$ szögű egységsugarú körcikket, ekkor a fenti módon leírt
+Vegyünk egy $\alpha$ szögű egységsugarú körívet, ekkor a fenti módon leírt
 Bézier-görbe kontrollpontjai a következők:
 \[\boldsymbol{p}_0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix},\quad
   \boldsymbol{p}_1 = \begin{bmatrix} 1 \\ h \end{bmatrix},\quad
   \boldsymbol{p}_2 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix} + h
         \begin{bmatrix} \sin\alpha \\ -\cos\alpha \end{bmatrix},\quad
   \boldsymbol{p}_3 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix}, \]
-ahol a $h$ egy szabad paraméter. Pontosabban $h$ függ a körcikk $r$ sugarától.
-Az is világos, hogy adott $\alpha$ szögnél nagyobb körcikk kellő pontosságú
+ahol a $h$ egy szabad paraméter. Pontosabban $h$ függ a körív $r$ sugarától.
+Az is világos, hogy adott $\alpha$ szögnél nagyobb körív kellő pontosságú
 megközelítéséhez nem elégséges egy darab harmadfokú Bézier-görbe.
 
-Legyen $h_1$ a $h$ egy speciális értéke az egységsugarú körcikk
+Legyen $h_1$ a $h$ egy speciális értéke az egységsugarú körív
 esetén\footnote{M. Goldapp: i. m., 230. o.}: $h_1 = \frac{4}{3}
 \tan{\frac{1}{4} \alpha}$. Ekkor
 \az{\cite[Goldapp]{Goldapp:1991:approximation}} tanulmányban
@@ -1082,9 +1082,9 @@ említett\footnote{M.  Goldapp: i. m., 231. o., (16)-os képlet.} képlet
 segítségével megkaphatjuk a maximális eltérés mértékét: \begin{equation}
 \label{eq:2} |\epsilon_{max} = \max_{{t\in[0, 1]}} \epsilon(t)| = \frac{4}{27}
 \frac{\sin^6{\frac{1}{4} \alpha}}{\cos^2{\frac{1}{4} \alpha}}. \end{equation}
-Ha a kapott $\epsilon_{max}$ nem kellően kicsi, akkor a körcikk felbontásával
+Ha a kapott $\epsilon_{max}$ nem kellően kicsi, akkor a körív felbontásával
 (pl. felezésével) csökkenthetjük az eltérések mértékét. A folyamatot egészen
-addig újra elvégezhetjük, amíg minden körcikk-darabnál nem lesz kellően kicsi
+addig újra elvégezhetjük, amíg minden körívdarabnál nem lesz kellően kicsi
 az eltérés. Ezután $h_1$ és a szögek ismeretében megkaphatjuk a Bézier-görbék
 kontrollpontjait.
 
@@ -1467,31 +1467,31 @@ Az \func{addBezierCurveToElement} függvény egy harmadfokú Bézier-görbe elem
 add a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak kell
 tekinteni.
 
-Az \func{addArcElement} függvény egy körcikk elemet ad az alakzatot leíró
+Az \func{addArcElement} függvény egy körív elemet ad az alakzatot leíró
 listához. Ha a lista üres, akkor kezdőpontnak a kör középpontját meghatározó
-koordinátát kell választani. Ha a körcikk elfajuló, azaz nulla a sugara, vagy a
+koordinátát kell választani. Ha a körív elfajuló, azaz nulla a sugara, vagy a
 kezdő- és végszöge azonos, akkor csak egy egyenes vonalat kell húzni a kezdő
 pontba, amit a kezdő szög határoz meg. Ha az utolsó elem koordinátája nem
-egyenlő a körcikk kezdő pontjával, akkor szintén egyenes vonalat kell húzni a
+egyenlő a körív kezdő pontjával, akkor szintén egyenes vonalat kell húzni a
 kezdő pontba, de értelemszerűen az alakzatot leíró elemet már a listába kell
-szúrni. A körcikk esetén még kisebb, a szögekkel kapcsolatos egyszerűsítéseket
+szúrni. A körív esetén még kisebb, a szögekkel kapcsolatos egyszerűsítéseket
 lehet alkalmazni.
 
-Az \func{addArcToElement} függvény elméletileg egy speciális körcikk elemet ad
+Az \func{addArcToElement} függvény elméletileg egy speciális körív elemet ad
 a listához, valójában azonban ehhez a függvényhez nem tartozik külön struktúra.
 Itt azért nem volt szükség külön struktúrára, mert ez a függvény által leírt
-elem megadható egy egyenes vonal és egy körcikk segítségével. Ezért ez a
+elem megadható egy egyenes vonal és egy körív segítségével. Ezért ez a
 függvény ezt a visszavezetést tartalmazza. Ehhez a függvényhez egy olyan
 alakzatelem tartozik, ami főleg a lekerekített alakzatok könnyebb
 meghatározását biztosítja. Például egy rádiusz érték következetes használatával
 könnyedén definiálhatunk egy, a sarkainál lekerekített téglalapot. Ha most ezt
 a téglalapot vesszük, akkor négy ilyen alakzatelemből felépíthetjük. Ugyanakkor
-a valóságban négy egyenes vonalból és négy körcikkből épül fel. Ennél az
+a valóságban négy egyenes vonalból és négy körívből épül fel. Ennél az
 elemnél tudjuk, hogy mindig benne van a használt pontok által meghatározott
-alakzatban, csupán a sarkoknál a megadott rádiusz(ok) hatására körcikkeket kell
+alakzatban, csupán a sarkoknál a megadott rádiusz(ok) hatására köríveket kell
 beszúrjunk. A visszavezetés azt kell eldöntse, hogy milyen szögtől milyen
-szögig terjed a körcikk, és az előző elem végpontjából hogyan kell vonalat
-húzni a lekerekítést adó körcikkhez.
+szögig terjed a körív, és az előző elem végpontjából hogyan kell vonalat
+húzni a lekerekítést adó körívhez.
 
     \subsection[A körvonal rajzolása]{A körvonal rajzolása}
 
@@ -1546,9 +1546,9 @@ meghatározott módon. Egy háromszög forma \emph{simán} (\inenglish{bevel})
 \emph{süvegesre} (\inenglish{miter}), vagy egy körcikk \emph{lekerekítettre}
 (\inenglish{round}) egészíti ki az összekapcsolás pontját.
 
-Tehát az egyenes vonalakat téglalappal helyettesítjük. A körcikk esetén úgy
+Tehát az egyenes vonalakat téglalappal helyettesítjük. A körív esetén úgy
 járunk el, hogy egy fél vonalvastagsággal kisebb és egy ugyanennyivel nagyobb
-körcikket a végeiknél összekötünk. Természetesen a szabványban leírt esetleges
+körívet a végeiknél összekötünk. Természetesen a szabványban leírt esetleges
 összekötő egyenes vonalat itt is hozzá kell adni, ha szükséges.
 
 A Bézier-görbék esete egy parányit bonyolultabb. Hiszen itt nem járhatunk el az
@@ -1698,27 +1698,27 @@ még lesz szó.
 
 A másik nem egyenes vonal a körív. Mint arról már volt szó, a köríveket
 Bézier-görbékkel közelítjük. \Aref{sec:arctobezier}. alfejezetben bemutatott
-matematikai módszert követve osztjuk a körcikket harmadfokú görbékre. A
-felosztás menete a következő. Miután alkalmaztuk a körcikkre az aktuális
-transzformációt, meg kell határozni a körcikk kezdő- és végpontját. Ha
-szükséges, akkor az utolsó végpont és a körcikk kezdőpontja közé egy szakaszt
+matematikai módszert követve osztjuk a körívet harmadfokú görbékre. A
+felosztás menete a következő. Miután alkalmaztuk a körívre az aktuális
+transzformációt, meg kell határozni a körív kezdő- és végpontját. Ha
+szükséges, akkor az utolsó végpont és a körív kezdőpontja közé egy szakaszt
 szúrunk be, biztosítva az alakzat folytonosságát. Az világos, hogy a
-transzformációk révén a körcikkünk akár egy ellipszis-cikk formájába is
+transzformációk révén a körívünk akár egy ellipszisív formájába is
 átmehet. Az ismertetett matematikai képletek ugyanakkor körre értelmezettek. A
 Bézier-görbék affin invarianciája miatt ez a megközelítést nem módosítja.
 Ugyanakkor a megközelítés mértékét befolyásoló sugár helyett az ellipszis két
 tengelye közül a nagyobbikat kell választanunk. A tolerancia érték és a kapott
 nagytengely aránya határozza meg az $\epsilon$ értéket. Ennél az értéknél kell
 kisebb legyen \aref{eq:2} képletben kapott $\epsilon_{max}$. Ez viszont a
-körcikk szögétől függ. Ha nem elég kicsi, akkor a szöget elfelezzük, és
+körív szögétől függ. Ha nem elég kicsi, akkor a szöget elfelezzük, és
 megvizsgáljuk újra a különbséget, ha továbbra sem elégséges, akkor addig
 ismételjük, amíg nem lesz igaz, hogy $\epsilon_{max} < \epsilon$. Ezzel pedig
-megkapjuk, hogy hány darabra kell osztanunk az eredeti körcikket. Ha $k$ részre
-osztjuk az $\alpha$ szögű körcikket, akkor egy darabkát megközelítő
+megkapjuk, hogy hány darabra kell osztanunk az eredeti körívet. Ha $k$ részre
+osztjuk az $\alpha$ szögű körívet, akkor egy darabkát megközelítő
 Bézier-görbe adatait a $h_1 = \frac{4}{3} \tan{\frac{1}{4} \beta}$ értékkel
 megadhatjuk, ahol $\beta = \frac{\alpha}{k}$. A görbéket pedig az előzőekben
-ismertetett függvény hívásával tovább bontjuk, így megkapjuk a körcikk (vagy
-ellipsziscikk) szakaszokból álló képét.
+ismertetett függvény hívásával tovább bontjuk, így megkapjuk a körív (vagy
+ellipszisív) szakaszokból álló képét.
 
   \begin{figure}
     \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
