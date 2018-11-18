@@ -443,7 +443,7 @@ kiadása több elkülönített részből állítja össze az API-t. Ezen részek
 úgynevezett \emph{Path}. Az említett 2015-ös előírás az 5., 8. és 11.
 fejezetekben részletezi a Path-szal szembeni elvárásokat. A Path egy olyan
 eszköz, aminek segítségével szabadon rakhatunk össze, építhetünk bonyolult
-\emph{alakzatokat} (\inenglish{path}) is. \Aref{sec:Háttér}. fejezetben
+\emph{alakzatokat} (\inenglish{path}) is. \Az+\refstruc{sec:Hatter+ban}
 részletesen kifejtjük a Path eszköz lehetőségeit és építési szabályait. Itt
 most csak annyira térünk ki, hogy alapvetően két nagyobb részből áll: az
 alakzat \emph{építéséből} és annak \emph{kirajzolásából}.
@@ -467,7 +467,7 @@ előírás elvárásait teljesíteni.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \chapter{Háttér}
-    \label{sec:Háttér}
+    \label{sec:Hatter}
 
 A dolgozathoz elengedhetetlen a követelmények, illetve a használt technológiák
 bemutatása, amelyek keretet szabnak a téma megvalósításának. Szót ejtünk
@@ -568,7 +568,7 @@ minden Path zárt alakzat kell legyen, így mindig kitölthető is. Ezért lett 
 második sor utolsó két V-nek definiált alakzata mégis kitöltött háromszög.
 
 Most pedig nézzük meg, hogy milyen konkrét eszközöket biztosít az előírás.
-Ebben a fejezetben nem térünk ki részletesen a teljes előírásra. A legfontosabb
+Ebben a szakaszban nem térünk ki részletesen a teljes előírásra. A legfontosabb
 rész a dolgozatunk témája a Path. Ugyanakkor a munkához szorosan kapcsolódott a
 környezet megvalósítása is. Ezért érintőlegesen beszélnünk kell a
 \emph{rajzolás környezetéről, kontextusáról} (\inenglish{drawing context}), a
@@ -614,7 +614,7 @@ A színekhez hasonlóan az alakzat körvonalának tulajdonságát leíró
 attribútumokat (pl. \func{lineWidth}) is szöveg formájában kell megadni. Itt
 viszont van egy kis játéktér, mert az ajánlás ugyan szöveget várna, de mivel
 itt számértékekről van szó, ezért elfogadhatunk majd ténylegesen szám típust
-is. Erről is lesz szó az alakzatépítés működését leíró fejezetben.
+is. Erről is lesz szó az alakzatépítés működését leíró szakaszban.
 
 A Canvas állapotaihoz mindig tartozik egy affin-transzformációt leíró hatelemű
 mátrix. Ezt a mátrixot módosíthatjuk a \emph{méretező} \func{scale(x, y)}, a
@@ -675,7 +675,7 @@ m., 11. fejezet.}:
   fókuszban van,
   \item a \func{clip()} az aktuális alakzat képével kivág a rajzolóvásznon,
   \item az \func{isPointInPath(x, y)} megállapítja az adott pontról, hogy az
-  alakzat rész-e.
+  alakzat része-e.
 \end{itemize}
 
 Arról már volt szó, hogy az alakzat önmetsző is lehet. Az önmetszés kérdése a
@@ -687,8 +687,8 @@ legelterjedtebb kitöltési stratégiát, szabályt. Ezek a \emph{paritás szab�
 (\inenglish{even-odd fill rule}) és a -- már említett -- \emph{nem-zérus szabály}
 (\inenglish{non-zero fill rule}). Mivel a 2D alakzatrajzolásban mindkettő igen
 elterjedt, ezért -- mint később látni fogjuk -- a Gepard API mindkettőt
-támogatja. A két szabályt a Pásztázó egyenesek (\ref{sec:Pásztázó_egyenesek}.)
-részben részletesen ismertetjük.
+támogatja. A két szabályt a Pásztázó egyenesek (\ref{sec:Pasztazo_egyenesek}.)
+alszakaszban részletesen ismertetjük.
 
 A itt ismertetett API elvárásokból (is) látszik, hogy a Canvas által
 biztosított alakzatrajzolás jó néhány nem triviális formát is lehetővé tesz.
@@ -848,14 +848,14 @@ való megjelenítéshez.
     \section[Matematikai háttér]{Matematikai háttér}
     \label{sec:Matematikai_háttér}
 
-Az előző két fejezetrészben láthattuk, hogy tetszőlegesen bonyolult (akár
-önmetsző) alakzatokat is ki kell tudjunk rajzolni, renderelni. Ehhez viszont
-maximum csak háromszögeket használhatunk. Ebben a részben azt a néhány fontosabb
+Az előző két szakaszban láthattuk, hogy tetszőlegesen bonyolult (akár önmetsző)
+alakzatokat is ki kell tudjunk rajzolni, renderelni. Ehhez viszont maximum csak
+háromszögeket használhatunk. Ebben a szakaszban azt a néhány fontosabb
 matematikai hátterű fogalmat, tulajdonságot vagy módszert mutatjuk be, amit az
 implementáció során felhasználtunk.
 
     \subsection*{Pásztázó egyenesek}
-    \label{sec:Pásztázó_egyenesek}
+    \label{sec:Pasztazo_egyenesek}
 
 A \emph{pásztázó egyenesek módszere} (\inenglish{scan-line algorithm}) egy
 grafikai algoritmus alakzatok kitöltésére, vagy pont tartalmazásának
@@ -941,7 +941,7 @@ sokszöget \emph{kontrollpoligonnak}, a $\boldsymbol{p}^j_i(t)$ pontokat
 a görbe \emph{rangjának}, vagy \emph{fokszámának} nevezzük.\end{defi}
 
   \begin{figure}
-  \psfrag{a}[b][B][0.9]{\emph{a.}}
+  \psfrag{a}[b][B][0.9]{\emph{(a)}}
   \psfrag{P0}[b][B][0.8]{\bf{$\boldsymbol{p}_{0}$}}
   \psfrag{P1}[b][B][0.8]{\bf{$\boldsymbol{p}_{1}$}}
   \psfrag{P2}[b][B][0.8]{\bf{$\boldsymbol{p}_{2}$}}
@@ -952,7 +952,7 @@ a görbe \emph{rangjának}, vagy \emph{fokszámának} nevezzük.\end{defi}
   \psfrag{P12}[b][B][0.8]{\bf{$\boldsymbol{p}_{1}^{2}$}}
   \psfrag{P21}[b][B][0.8]{\bf{$\boldsymbol{p}_{2}^{1}$}}
   \psfrag{P03}[b][B][0.8]{\bf{$\boldsymbol{p}_{0}^{3}$}}
-  \psfrag{b}[b][B][0.9]{\emph{b.}}
+  \psfrag{b}[b][B][0.9]{\emph{(b)}}
   \psfrag{Q0}[b][B][0.8]{\bf{$\boldsymbol{p}_{0}$}}
   \psfrag{Q1}[b][B][0.8]{\bf{$\boldsymbol{p}_{1}$}}
   \psfrag{Q2}[b][B][0.8]{\bf{$\boldsymbol{p}_{2}$}}
@@ -961,9 +961,9 @@ a görbe \emph{rangjának}, vagy \emph{fokszámának} nevezzük.\end{defi}
   \psfrag{Q11}[b][B][0.8]{\bf{$\boldsymbol{p}_{1}^{1}$}}
     \centering
     \includegraphics[width=.95\textwidth]{img/built/beziers_eps}
-    \caption{\label{fig:beziers} Bézier-görbék. Az \emph{a. ábra} harmadfokú, a
-    \emph{b. ábra} másodfokú görbe képét, kontrollpoligonját és de
-    Casteljau-pontjait mutatja}
+    \caption{\label{fig:beziers} Bézier-görbék. A harmadfokú (\emph{a}) és a
+    másodfokú (\emph{b}) görbe képe, kontrollpoligonja és de
+    Casteljau-pontjai}
   \end{figure}
 
 A definícióból következik néhány tulajdonság. Nézzük ezek közül a számunkra
@@ -1003,16 +1003,17 @@ konvex burkában való maradása miatt nem kell tartanunk attól, hogy a
 kontrollpontok változtatásakor a görbe hullámokat vetne, így biztosítva, hogy
 mindig tudhatjuk, hogy a görbe képe milyen korlátok közt helyezkedik el.
 
-A $t$ paraméterhez tartozó pont az $n$-edfokú Bézier-görbét két, ugyancsak
-$n$-edfokú görbére osztja\footnote{Kurusa -- Szemők: i. m. 47. o.}. A két görbe
-kontrollpontjai pedig az eredeti görbe de Casteljau-pontjai közül kerülnek ki.
-A fenti tulajdonságokat és a definícióban leírt indukciós elnevezést figyelembe
-véve a két $n$-edfokú görbe kontrollpontjai a következők:
-\begin{equation}\label{eq:1} \boldsymbol{B}_{0\mapsto t}^n(t):
-\boldsymbol{p}_0, \boldsymbol{p}_0^1, ..., \boldsymbol{p}_0^{n-1},
-\boldsymbol{p}_0^n; \qquad \boldsymbol{B}_{t\mapsto 1}^n(t):
-\boldsymbol{p}_0^n, \boldsymbol{p}_1^{n-1}, ..., \boldsymbol{p}_{n-1}^1,
-\boldsymbol{p}_n. \end{equation}
+A $t_0 \in (0,1)$ paraméterhez tartozó $\boldsymbol{p}^n_0(t_0)$ pont az
+$n$-edfokú Bézier-görbét két, ugyancsak $n$-edfokú Bézier-görbére
+osztja\footnote{Kurusa -- Szemők: i. m. 47. o.}. A két görbe kontrollpontjai
+pedig az eredeti görbe de Casteljau-pontjai közül kerülnek ki. A fenti
+tulajdonságokat és a definícióban leírt indukciós elnevezést figyelembe véve a
+két $n$-edfokú görbe kontrollpontjai a következők: \begin{equation}\label{eq:1}
+\boldsymbol{B}_{0\mapsto t_0}^n(t_0): \boldsymbol{p}_0, \boldsymbol{p}_0^1,
+..., \boldsymbol{p}_0^{n-1}, \boldsymbol{p}_0^n; \qquad
+\boldsymbol{B}_{t_0\mapsto 1}^n(t_0): \boldsymbol{p}_0^n,
+\boldsymbol{p}_1^{n-1}, ..., \boldsymbol{p}_{n-1}^1, \boldsymbol{p}_n.
+\end{equation}
 
 \Aref({eq:1}) felbontást később majd használni fogjuk. Világos, hogy a
 felbontást elégszer alkalmazva a görbe darabokon, végül a görbe darabok
@@ -1121,12 +1122,12 @@ között, és könnyebbé téve a Gepard használatát.
 
 Most nézzük meg részletesebben a fent említett három réteget. Természetesen az
 egyes rétegekhez kapcsolódó főbb részek, melyek tulajdonképpen a dolgozatunk
-témája, külön fejezetben lesznek tárgyalva. Tehát most csak a rétegek
+témája, külön szakaszokban lesznek tárgyalva. Tehát most csak a rétegek
 bemutatásához szükséges módon említjük meg ezeket.
 
     \subsection*{A felső réteg, azaz a Gepard interfész}
 
-A felső réteget, a \func{Gepard} osztályt \aref{sec:Háttér}. fejezetben
+A felső réteget, a \func{Gepard} osztályt \az+\refstruc{sec:Hatter+ban}
 tárgyalt Canvas API határozza meg. Természetesen  a Canvas alapvetően egy webes
 interfész. Ez azt is jelenti, hogy a \func{Gepard} nem teljesen úgy működik
 mint a Canvas a webes környezetben. A cél nem is az volt, hogy pontosan
@@ -1202,7 +1203,7 @@ részletesebben is kifejtve az API dokumentációjában. A zárójelpár nélkü
 az egyes adattagok. Ezekről is tartalmaz bővebb leírást a dokumentáció. A
 megvalósított API részek -- a gradiens színezést és a szaggatott vonallal
 rajzolást leszámítva -- teljes körű alakzatrajzolást biztosítanak számunkra.
-Erre láthatunk majd példát az eredményeket bemutató fejezetben
+Erre láthatunk majd példát az eredményeket bemutató szakaszban
 (\ref{sec:Eredmények}). Az ábrán nem tüntettük fel a többi -- a dolgozatot nem
 érintő API függvényt és adattagot.
 
@@ -1221,7 +1222,7 @@ részletesebben az itt megvalósított részeket.
 \Az+\emph{\ref{fig:structure_eps}. ábrán} már láthattuk, hogy ez a szint -- a
 dolgozat szempontjából érdekes -- négy főbb részből tevődik össze. Most csak
 hármat részletezünk itt. A negyedik résszel, azaz az alakzatot (Path) leíró,
-tároló és ezt feldolgozó osztályokkal külön alfejezetben foglalkozunk.
+tároló és ezt feldolgozó osztályokkal külön szakaszban foglalkozunk.
 
 Az egyik funkcionalitás a rajzolás környezetének (\inenglish{drawing context},
 a továbbiakban kontextus, vagy
@@ -1243,7 +1244,7 @@ csak a legfontosabbakat soroltuk fel, de a Canvas API leírás
 második fejezetében megtalálható a teljes lista.
 
 A második rész a transzformációk. A Háttér fejezet Canvas API-t bemutató
-részében (\ref{sec:A_Canvas_előírás})  már tárgyaltuk a transzformációkat, itt
+szakaszában (\ref{sec:A_Canvas_előírás}) már tárgyaltuk a transzformációkat, itt
 most csak röviden a megvalósításukat nézzük át.
 
 Minden állapot tartalmaz egy transzformációs mátrixot. Ezt a mátrixot a
@@ -1302,7 +1303,7 @@ hogy a kirajzolás folyamata nagy vonalakban ehhez hasonló.
     \label{sec:A_Path_osztály}
 
 A \func{Path} egy konténer osztály. A fő feladata, hogy az alakzatot és az
-ahhoz szorosan kapcsolódó tulajdonságokat tárolja. Ebben az alfejezetben ezt az
+ahhoz szorosan kapcsolódó tulajdonságokat tárolja. Ebben a szakaszban ezt az
 osztályt, illetve a hozzá szorosan kapcsolódó kisebb struktúrákat fogjuk
 bemutatni.
 
@@ -1511,7 +1512,7 @@ egy bonyolultabb alakzatot, amit ha kitöltünk, akkor az eredeti path körvonal
 képét kapjuk. Magyarán, az eredeti path-ból képezünk egy olyan újabb alakzatot,
 aminek a kitöltése az eredeti path körvonalát adja. Ezt az újabb alakzatot
 továbbra is a \func{Path} osztállyal határozzuk meg. Ezért is tartjuk
-indokoltnak, hogy ehhez az alfejezethez tartozóan beszéljünk róla.
+indokoltnak, hogy ehhez az szakaszhoz tartozóan beszéljünk róla.
 
 Tehát a körvonal kirajzolását indukáló hívás (\emph{stroke}) hatására először a
 visszavezetés történik meg. Az így kapott alakzat úgy áll elő, mint az eredeti
@@ -1598,14 +1599,14 @@ alakzattal pontosan úgy járunk el, mint egy egyszerű kitöltendő párjával.
 
   \section{Szakaszra bontás}
 
-A felépített alakzatot fel kell bontanunk, hogy kirajzolhassuk. A több
-lehetséges módszer közül mi a trapézokká alakítást választottuk. Ahhoz azonban,
-hogy az alakzatot lefedő trapézokat megadhassuk, előbb az alakzatot megközelítő
-szakaszokra bontjuk a path-t. Ezt a lépést valósítja meg a
-\func{SegmentApproximator} osztály. Az osztály -- mint arról nár volt szó --
-effektív a \emph{köztes réteghez} tartozik. Hiszen ezt a modellt bármelyik
-rajzoló egység használhatja. Ugyanakkor jelenleg csak a GLES2-es rajzoló egység
-használja.
+A felépített alakzatot fel kell bontanunk, hogy szépen, élsimított módon
+kirajzolhassuk. A több lehetséges módszer közül mi a trapézokká alakítást
+választottuk. Ahhoz azonban, hogy az alakzatot lefedő trapézokat megadhassuk,
+előbb az alakzatot megközelítő szakaszokra bontjuk a path-t. Ezt a lépést
+valósítja meg a \func{SegmentApproximator} osztály. Az osztály -- mint arról
+már volt szó -- effektív a \emph{köztes réteghez} tartozik. Hiszen ezt a
+modellt bármelyik rajzoló egység használhatja. Ugyanakkor jelenleg csak a
+GLES2-es rajzoló egység használja.
 
 Az osztály API-t és a függvényeket részletesen nem tárgyaljuk. Inkább a
 megvalósításra, mint egészre koncentrálunk. Természetesen bizonyos fontosabb
@@ -1627,23 +1628,8 @@ Nézzük meg részletesebben ezeket a lépéseket.
 
 A path bejárása effektív a \func{TrapezoidTessellator} osztályban történik,
 ugyanakkor ez mind a \func{SegmentApproximator} osztály hívásait és a
-szakaszokat tároló struktúráit érinti. Az alakzat bejárásakor érvényesíteni
-kell az aktuális állapothoz tartozó transzformációt. Ezt a legészszerűbb ebben
-a lépésben megtenni. Hiszen később a metszések révén sokkal több pontot kellene
-bejárni ugyanezért. A transzformációk érvényesítése után az egyes elemek
-szerint meghívjuk a \func{SegmentApproximator} megfelelő függvényét. Az egyenes
-vonal esetén ez egy megfelelő szakasz beszúrását jelenti. Ekkor a szakaszokat
-megfelelő módon tároló \func{SegmentTree}\footnote{Ez egy \func{std::map<const
-int, SegmentList*>} struktúra.} struktúrában két új bejegyzés jön létre.
-Először a szakasz kezdő- és végkoordináták $y$ értékének megfelelően két új
-üres \func{SegmentList} lista jön létre, ha még nincs ilyen az adott $y$
-bármelyikére. Ezután a kisebbik $y$-hoz tartozó listába kerül egy új
-\func{Segment} struktúra, ami leírja az adott szakasz értékeit és irányát. A
-következő hasonló szakasz beszúrása esetén hasonlóan kell eljárni. Világos,
-hogy így egy szakaszokat (\func{Segment}) tartalmazó listák egy $y$-ok szerint
-rendezett listáját, leképezését kapjuk. Ekkor még a szakaszok se nem
-rendezettek, és nem vizsgáltak a metszéspontok sem.
-
+szakaszokat tároló struktúrát érinti. Az alakzat bejárásakor érvényesíteni
+kell az aktuális állapothoz tartozó transzformációt.
   \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
     \begin{center}
       \includedataflowkivagas{345pt}{400pt}{525pt}{590pt}{}
@@ -1652,9 +1638,25 @@ rendezettek, és nem vizsgáltak a metszéspontok sem.
     visszavezetések \\ (Részlet \az+\emph{\ref{appendix:dataflow}.
     folyamatábrából}.)}
   \end{wrapfigure}
+Ezt a legészszerűbb ebben a lépésben megtenni. Hiszen később a metszések révén
+sokkal több pontot kellene bejárni ugyanezért. A transzformációk érvényesítése
+után az egyes elemek szerint meghívjuk a \func{SegmentApproximator} megfelelő
+függvényét. Az egyenes vonal esetén ez egy megfelelő szakasz beszúrását
+jelenti. Ekkor a szakaszokat megfelelő módon tároló
+\func{SegmentTree}\footnote{Ez egy \func{std::map<const int, SegmentList*>}
+típus.} struktúrában két új bejegyzés jön létre. Először a szakasz kezdő- és
+végkoordináták $y$ értékének megfelelően két új üres \func{SegmentList} láncolt
+lista ($L_0, L_1$) jön létre, ha még nincs ilyen az adott $y$ bármelyikére.
+Ezután a kisebbik $y$-hoz tartozó listába ($L_0$) kerül egy új \func{Segment}
+struktúra ($S_0$), ami leírja az adott szakasz értékeit és irányát. A következő
+hasonló szakasz beszúrása esetén hasonlóan kell eljárni. Világos, hogy így egy
+szakaszokat (\func{Segment}, $S_i$) tartalmazó listák (\func{SegmentList},
+$L_j$) egy $y$-ok szerint rendezett listáját, leképezését (\func{SegmentTree})
+kapjuk. Ekkor még a szakaszok se nem rendezettek, és nem vizsgáltak a
+metszéspontok sem.
 
 Ha nem egy egyenes vonalat kell beszúrni, hanem egy bonyolultabb görbe vonalat,
-akkor kerülnek képbe \aref{sec:Háttér}. fejezetben tárgyalt matematikai
+akkor kerülnek képbe \az+\refstruc{sec:Hatter+ban} tárgyalt matematikai
 visszavezetések.
 
 Egy Bézier-görbe esetében ez a következőket jelenti. A görbét az
@@ -1662,55 +1664,60 @@ Egy Bézier-görbe esetében ez a következőket jelenti. A görbét az
 kritériumnak megfelelő görbedarabokat szakaszokként a struktúrához adni. Az
 algoritmus logikája azonos mindkét rangú Bézier-görbénél.
 
-A metódus a görbefelosztás mentén rekurzív. De ezt bizonyos mélységig egy $16$
-görbe leírásának megfelelő méretű veremmel szimuláljuk. A görbék felbontását
-\aref{eq:1} képletnek megfelelően mindig a $t=\frac{1}{2}$ pontban hajtjuk
-végre. Nézzük meg az egyes lépéseket.
+A metódus a görbefelosztás mentén rekurzív. De ezt bizonyos mélységig
+szimuláljuk egy 16 görbe leírásának megfelelő méretű veremmel. A görbék
+felbontását \aref({eq:1}) képletnek megfelelően mindig a görbét felező
+$\boldsymbol{p}^n_0(t=\frac{1}{2})$ pontban hajtjuk végre. Nézzük meg az egyes
+lépéseket.
   \begin{enumerate}
-    \item Lefoglalunk egy $16$ görbének elegendő puffert (\emph{verem}).
+    \item Lefoglalunk egy 16 görbének elegendő puffert (\emph{verem}).
     \item A kapott görbét a verembe tesszük.
-    \item Kivesszük a legfelső görbedarabot, és megvizsgáljuk, hogy leírható-e
-    szakaszként.
+    \item Megvizsgáljuk, hogy üres-e a verem.
     \begin{description}[topsep=0ex]
-      \item[Ha igen] A görbedarabot a végpontjait összekötő szakaszként
-      beszúrjuk a \func{SegmentTree} struktúrába, és folytatjuk a $3$-as
-      ponttal.
-      \item[Különben] A görbét a $t=\frac{1}{2}$ pontban kettévágjuk, és
-      a két görbedarabot a verembe tesszük.
+      \item[Ha igen] Megállunk.
+    \end{description}
+    \item Kivesszük a legfelső görbedarabot, és megvizsgáljuk, hogy leírható-e
+    szakaszként (azaz, nem kell tovább felbontani).
+    \begin{description}[topsep=0ex]
+      \item[Ha igen] A görbedarabot, mint (végpontokat összekötő) szakaszt
+      beszúrjuk a \func{SegmentTree} struktúrába, és folytatjuk a 3-as ponttal.
+      \item[Különben] A görbedarabot a $\boldsymbol{p}^n_0(t=\frac{1}{2})$
+      pontjában kettévágjuk, és a két görbedarabot a verembe tesszük.
     \end{description}
     \item Megvizsgáljuk, hogy betelt-e a verem.
     \begin{description}[topsep=0ex,noitemsep]
-      \item[Ha igen] A görbedarabbal újrakezdjük az $1$-es pontban. (Rekurzív
-      rész. Ritkán hívódik.\footnote{A dolgozatban később ismertetésre
-      kerülő Ghostscript Tiger.svg renderelésekor mindössze egyszer
-      hívodik meg.})
-      \item[Különben] Folytatjuk a $3$-as ponttal.
+      \item[Ha igen] A legfelső görbedarabot kivesszük, és azzal újrakezdjük az
+      1-es pontban. (Rekurzív rész. Ritkán hívódik.\footnote{A dolgozatban
+      később ismertetésre kerülő Ghostscript Tiger.svg renderelésekor mindössze
+      egyszer hívodik meg.})
     \end{description}
+    \item Folytatjuk a 3-as pontban.
   \end{enumerate}
 
 A felbontás mértékét két tényező befolyásolja. Az egyik egy \emph{tolerancia
 érték}. Azt fejezi ki, hogy mi az az érték, ami alatti különbséget már nem
-tekintjük mérvadónak. Ez az érték jelenleg $1$, ami egy raszterpont méretének
-felel meg. A másik tényező az \emph{élsimítás} (\inenglish{anti-aliasing})
-mértékét kifejező szám. Ez a szám jelenleg $16$, ami azt jelenti, hogy a
-raszterpontok méretéhez képest egy tizenhatoddal kisebb értéket tekintünk
-raszterpontnak, és ezt \emph{alpixelnek} (\inenglish{subpixel}) hívjuk. Erre a
-felbontásra azért van szükség, hogy információnk legyen arról, hogy az alakzat
-nagyjából hány százalékát takarja ki a valódi raszterpontnak. Ha egy félig
-kitakart raszterpontot nem gyújtunk ki teljesen, hanem csak fél intenzitással,
-akkor a kapott alakzat élei kevésbé lesznek ,,szálkásak''. A használt
-színcsatornák méretei egy-egy bájt ($8$ bit). Ami azt jelenti, hogy az
-intenzitás mértéke 256 különböző értéket vehet fel. Ez egy $16\times16$-os
-felbontást tesz lehetővé, vagyis ez indokolja az élsimítás mértékét.
-Természetesen ennél kisebb érték is választható, és persze nagyobb is, bár ez
-utóbbinak nem sok értelme van a jelenlegi színcsatorna-méretek tükrében.
+tekintjük mérvadónak. Ez az érték jelenleg $\rho=1$, ami egy raszterpont
+méretének felel meg. A másik tényező az \emph{élsimítás}
+(\inenglish{anti-aliasing}) mértékét kifejező szám. Ez a szám jelenleg
+$\sigma=16$, ami azt jelenti, hogy a raszterpontok méretéhez képest egy
+tizenhatoddal kisebb értéket tekintünk képpontnak, és ezt \emph{szubpixelnek}
+(\inenglish{subpixel}) hívjuk. Erre a felbontásra azért van szükség, hogy
+információnk legyen arról, hogy az alakzat nagyjából hány százalékát takarja ki
+a valódi raszterpontnak. Ha egy félig kitakart raszterpontot nem gyújtunk ki
+teljesen, hanem csak fél intenzitással, akkor a kapott alakzat élei kevésbé
+lesznek ,,szálkásak''. A használt színcsatornák méretei egy-egy bájt ($8$ bit).
+Ami azt jelenti, hogy az intenzitás mértéke 256 különböző értéket vehet fel. Ez
+egy $16\times16$-os felbontást tesz lehetővé, vagyis ez indokolja az élsimítás
+mértékét. Természetesen ennél kisebb érték is választható, és persze nagyobb
+is, bár ez utóbbinak nem sok értelme van a jelenlegi színcsatorna-méretek
+tükrében.
 
 Az élsimítás és a tolerancia mértéke nem csak a felbontásokra van hatással. Az
 egymást metsző szakaszok esetében is figyelembe kell venni. Erről majd később
 még lesz szó.
 
 A másik nem egyenes vonal a körív. Mint arról már volt szó, a köríveket
-Bézier-görbékkel közelítjük. \Aref{sec:arctobezier}. alfejezetben bemutatott
+Bézier-görbékkel közelítjük. \Az+\refstruc{sec:arctobezier+ben} bemutatott
 matematikai módszert követve osztjuk a körívet harmadfokú görbékre. A
 felosztás menete a következő. Miután alkalmaztuk a körívre az aktuális
 transzformációt, meg kell határozni a körív kezdő- és végpontját. Ha
@@ -1722,7 +1729,7 @@ Bézier-görbék affin invarianciája miatt ez a megközelítést nem módosítj
 Ugyanakkor a megközelítés mértékét befolyásoló sugár helyett az ellipszis két
 tengelye közül a nagyobbikat kell választanunk. A tolerancia érték és a kapott
 nagytengely aránya határozza meg az $\epsilon$ értéket. Ennél az értéknél kell
-kisebb legyen \aref{eq:2} képletben kapott $\epsilon_{max}$. Ez viszont a
+kisebb legyen \aref({eq:2}) képletben kapott $\epsilon_{max}$. Ez viszont a
 körív szögétől függ. Ha nem elég kicsi, akkor a szöget elfelezzük, és
 megvizsgáljuk újra a különbséget, ha továbbra sem elégséges, akkor addig
 ismételjük, amíg nem lesz igaz, hogy $\epsilon_{max} < \epsilon$. Ezzel pedig
@@ -1746,57 +1753,61 @@ ellipszisív) szakaszokból álló képét.
     kell bontani}
   \end{figure}
 
-Az alakzat elemeinek a felbontása után a szakaszokat kell felbontanunk. Egyrészt
-minden szakaszt felbontunk ha szükséges a különböző $L_i$ listákhoz tartozó
-$y_i$ értékek mentén (lásd \az+\emph{\ref{fig:sunmoon}. ábrát}). Másrészt a szakaszok
-egymást metsző pontjait kell megtaláljuk (lásd szintén \az+\emph{\ref{fig:sunmoon}.
-ábrát}).
+Az alakzat görbe elemeinek a szakasszá bontása után a szakaszokat kell tovább
+darabolnunk. Egyrészt minden szakaszt felbontunk ha szükséges a különböző $L_j$
+listákhoz tartozó $y_j$ értékek mentén (lásd \az+\emph{\ref{fig:sunmoon}.
+ábrát}). Vagyis, ha az adott $y_j$ egyenes metszi az adott $S_i$ szakaszt,
+akkor a szakaszt a metszéspontban elvágjuk. Másrészt a szakaszok egymást metsző
+pontjait kell megtaláljuk (lásd szintén \az+\emph{\ref{fig:sunmoon}. ábrát}).
 
 A szakaszok felbontásához bejárjuk az $y$ koordináta mentén létrehozott
 listákat. Kezdve a két legkisebb $y_0$ (ahol a lista legyen az $L_0$) és $y_1$
-($L_1$) értéknél. A legkisebb $y_0$-hoz tartozó $L_0$ (\func{SegmenList})
+($L_1$) értéknél. A legkisebb $y_0$-hoz tartozó $L_0$ (\func{SegmentList})
 elemein végigmegyünk. Ezek az elemek szakaszok (\func{Segment}), és igaz rájuk,
-hogy vagy a következő legkisebb $y_1$ vagy egy további $y_i$ ($y_i > y_1$)
+hogy vagy a következő legkisebb $y_1$ vagy egy további $y_j$ ($y_j > y_1$)
 értékig nyúlnak. Ha az $L_0$ listában egy $y_1$-en túllógó elemhez érünk, azt
 kettévágjuk az $y_1$ mentén. Az előző elemmel egybevágó két új elemet úgy
 állítjuk elő, hogy az eredeti elemet $y_1$-ig rövidítjük, majd a maradék
-résznek megfelelően egy új elemet szúrunk az $L_1$ listába. Az aktuális lista
+résznek megfelelően egy új szakaszt szúrunk az $L_1$ listába. Az aktuális lista
 (a példában $L_0$) elemeinek bejárásakor vizsgáljuk, hogy metszik-e egymást. Ha
-találunk metszéspontot, akkor annak $y_m$ értékéhez beszúrunk egy újabb listát,
-majd az egész folyamatot újra kezdjük az aktuális listán ($L_0$).
+találunk metszéspontot, akkor annak $y_m$ értékéhez beszúrunk egy újabb listát
+($L_m$), majd az egész folyamatot újra kezdjük az aktuális listán ($L_0$).
 
 Szabnunk kellett egy alsó határt a felbontás pontosságának. Erre azért volt
 szükség, hogy a listák bizonyos $y$ környékén ne sűrűsödjenek be. Vagyis
 egyfajta megálljt kell parancsolnunk egy bizonyos érték alatt. Ez az érték
-természetszerűleg adódik a már említett élsimítás és felbontási faktorok
+természetszerűleg adódik a már említett élsimítás és tolerancia faktor
 mértékéből. Az élsimítás szempontjából sem értékelhető közelségű $y$ értékeket
 egy előre kiválasztott kerekítési szabállyal azonosnak tekintjük.
 
 Legyen $y_t$ érték, amihez tartozhat lista. A következő érték amihez tartozhat
-lista az az $y_b = y_t + m$, ahol $m$ egyenlő a fentebb definiált
-\emph{alpixel} magasságával, és igaz, hogy $y_t~\equiv~0~\pmod{m}$. Hasonlóan
-értelmezzük a szomszédos $x_l$ és $x_r$ értékeket is úgy, hogy szintén igaz,
-hogy $x_r - x_l = m$ és $x_l~\equiv~0~\pmod{m}$. Magyarán, ez egy alpixelek
-által meghatározott rácsot jelent úgy, hogy a rács egyik pontja egybevág a $(0,
-0)$ ponttal. Világos, hogy a fenti megkötések észszerűek. Ugyanakkor sok
-metszéspontra lesz igaz, hogy nem esik majd rács vízszintes vonalaira. Az ilyen
-metszéspontokat el kell tolnunk a legközelebb eső kisebb $x_l$ és $y_t$ pontba.
-Vagyis, ha egy metszéspont egy alpixel belsejébe esik, akkor azt elmozgatjuk az
-alpixel bal felső sarkába. Az elmozgatás révén az ebbe a pontba futó szakaszok
-leírását is módosítani kell, valamint az innen kifutó szakaszokat is ezen új
-értékek mentén kell meghatározni. Bár ez geometriai torzulást jelent ugyan,
-viszont a torzulás mértéke a valódi raszterponton belüli, vagyis annyira kicsi,
-hogy tulajdonképpen észrevehetetlen.
+lista az az $y_b = y_t \pm \frac{1}{\sigma}$, ahol $\sigma$ egyenlő
+\emph{élsimítás} mértékével (alapból 16), az $\frac{1}{\sigma}$ jelentése a
+fentebb definiált \emph{szubpixel} magassága, és igaz, hogy
+$y_t~\equiv~0~\pmod{\frac{1}{\sigma}}$. Hasonlóan értelmezzük a szomszédos
+$x_l$ és $x_r$ értékeket is úgy, hogy szintén igaz, hogy $x_r - x_l =
+\pm\frac{1}{\sigma}$ és $x_l~\equiv~0~\pmod{\frac{1}{\sigma}}$. Magyarán, ez
+egy szubpixelek által meghatározott rácsot jelent úgy, hogy a rács egyik pontja
+egybevág a $(0, 0)$ ponttal. Világos, hogy a fenti megkötések észszerűek.
+Ugyanakkor sok metszéspontra lesz igaz, hogy nem esik majd rács vízszintes
+vonalaira. Az ilyen metszéspontokat el kell tolnunk a legközelebb eső, kisebb
+rácspontba ($x_l, y_t$). Vagyis, ha egy metszéspont egy szubpixel belsejébe esik,
+akkor azt elmozgatjuk az szubpixel bal felső sarkába. Az elmozgatás révén az
+ebbe a pontba futó szakaszok leírását is módosítani kell, valamint az innen
+kifutó szakaszokat is ezen új értékek mentén kell meghatározni. Bár ez
+geometriai torzulást jelent ugyan, viszont a torzulás mértéke a valódi
+raszterponton belüli, vagyis annyira kicsi, hogy tulajdonképpen
+észrevehetetlen.
 
 Eddig kevés szó esett a szakaszokat tároló adatszerkezetről. Nézzük meg ezt is
-részletesebben. Arról már volt szó, hogy a szakaszokat lista, a listákat pedig
-a \func{SegmentTree} struktúra tárolja. A jelen megvalósítás nem a
+részletesebben. Arról már volt szó, hogy a szakaszokat listák, a listákat pedig
+a \func{SegmentTree} szerkezet tárolja. A jelen megvalósítás nem a
 legoptimálisabb adatszerkezet. A dolgozat szempontjából a pontos és helyes
 működés elsődleges cél volt. A könnyebb hibakereséshez első körben nem
 bonyolítottuk, illetve optimalizáltuk ki a tároló adatszerkezetet. A listákat
 tároló \func{SegmentTree} egy \func{std::map<const int, SegmentList*>}
-adatszerkezet. Ahol a \emph{kulcs} az előbb említett alpixel rács $y$ értékei
-egészre kerekítve (\func{trunc}). Az \func{std::map} mögött egy piros-fekete fa
+adatszerkezet. Ahol a \emph{kulcs} az előbb említett szubpixel rács $y$
+tengely menti egész értékei. Az \func{std::map} mögött egy piros-fekete fa
 implementáció található\footnote{
 {\footnotesize\url{https://en.cppreference.com/w/cpp/container/map}}}. Az
 \emph{érték} mezőben pedig egy láncolt lista memóriacímét tároljuk. Ez a
@@ -1825,7 +1836,8 @@ a szakaszok rendezettek a következőképpen:
     \item az azonos $(x, y)$ pontból kiinduló szakaszok keresztszorzata
     szerint növekvő sorrendben rendezettek; azaz rendezettek, ha a
     keresztszorzat nem negatív,
-    \item ha a keresztszorzat zérus, akkor megtartjuk a beszúrás sorrendjét.
+    \item ha a keresztszorzat zérus, akkor megtartjuk a beszúrás sorrendjét
+    (szigorúan növekvő egyedi azonosítók révén, lásd később).
   \end{enumerate}
 
 Az $y$ értékek mentén felosztott és a fentiekben előírt módon rendezett
@@ -1833,7 +1845,7 @@ szakaszokat már könnyedén trapézokká alakíthatjuk.
 
   \section{Trapézzá alakítás}
 
-Az előző fejezetben bemutattuk, hogy hogyan kapjuk meg az alakzatunk
+Az előző szakaszban bemutattuk, hogy hogyan kapjuk meg az alakzatunk
 szakaszokból megközelített képét. Azt is láthattuk, hogy nem csak az alakzatot
 bontottuk fel szakaszokra, hanem magukat a szakaszokat is felosztottuk az $y$
 értékek mentén. Ennek a felosztásnak a célja az volt, hogy a szakaszokat
@@ -1878,10 +1890,11 @@ történik. Ha ellentétes irányultságúak, és nem esnek egybe, akkor trapéz
 belőlük; ha egybeesnek (továbbra is ellentétes irányultsággal), akkor elvetjük
 őket. Ha azonos irányultságúak, akkor marad továbbra is az első szakasz a
 trapéz bal szára, és feljegyezzük egy változóba, hogy két azonos irányultságú
-szakaszon vagyunk túl. Ezt mindaddig folytatjuk, amíg ez az érték nem csökken
-zérusra. Ekkor az utolsó szakasz lesz a trapéz jobb szára. Az elkészült trapézt
-egy listába tesszük. Majd haladunk tovább a következő szakaszra, mintha az
-lenne az első, és így elölről kezdjük az említett eljárást.
+szakaszon vagyunk túl. Ezt mindaddig folytatjuk, amíg az említett változó
+értéke nem lesz zérus. Ekkor az utolsó szakasz lesz a trapéz jobb szára. Az
+elkészült trapézt egy listába tesszük. Majd haladunk tovább a következő
+szakaszra, mintha az lenne az első, és így elölről kezdjük az említett
+eljárást.
 
   \begin{figure}
     \centering \includegraphics[width=.9\textwidth, viewport=0pt 60pt 300pt
@@ -1937,13 +1950,13 @@ már nem lehetséges, viszont ennek a szűrése túl mutat ezen a viszonylag
 egyszerű algoritmuson.
 
 A szakaszra bontás, trapézzá alakítás és összevonás után birtokunkban van egy
-trapézlista, ami lefedi az eredeti alakzatot. A következő lépés a grafikus
-meghajtó felkészítése, beállítása és a trapézokból készített háromszögek
+trapézlista, ami lefedi az eredeti alakzatot. A következő lépés a grafikai
+meghajtó felkészítése, beállítása, és a trapézokból készített háromszögek
 adatinak feltöltése, hogy végül kirenderelhessük az alakzatot.
 
   \section{Rajzolás GLES2-vel}
 
-Az OpenGL~ES~2.0 működését \aref{sec:GLES2:API}. alfejezetben már bemutattuk. Volt
+Az OpenGL~ES~2.0 működését \az+\refstruc{sec:GLES2:API+ban} már bemutattuk. Volt
 arról szó, hogy milyen lépéseket kell megtennünk, és milyen lehetőségeink
 vannak. Itt most a trapézok rendereléséhez szükséges beállításokat, és a
 renderelést magát végző shader programokat mutatjuk be. Illetve szót ejtünk az
@@ -1958,7 +1971,7 @@ ablakozást végző operációs rendszer, valamint magát a renderelést végző
 között. Ha minden egyes beágyazott rendszeren a speciális programnak magának
 kellene a kapcsolatot biztosítania, az igen bonyolult és nehezen támogatható
 programot eredményezne. Ezért is alakult ki néhány olyan interfész, ami réteget
-képez az eszköz, az eszközön futó operációs rendszer és az GLES2 API-t használó
+képez az eszköz, az eszközön futó operációs rendszer és a GLES2 API-t használó
 program között. Az egyik ilyen elterjedt interfész az \emph{EGL}\footnote{Az
 EGL szintén a Khronos Group által felügyelt platformfüggetlen API. \\ Forrás:
 {\footnotesize\url{https://www.khronos.org/egl}}.}. Az EGL segítségével
@@ -1976,37 +1989,42 @@ függvénnyel kezdjük.
 
 Ez a függvény feltölti a grafikus egységre a GLES2 beállításait és a bekötött
 adatokat, illetve elindítja\footnote{Azt, hogy ténylegesen az adott függvénynél
-indul-e el a renderelés, a GLES2 szabvány nem garantálja. Azt a grafikus
-meghajtó gyártójára bízza.} a renderelést. A függvény három paramétert vár. Az
+indul-e el a renderelés, a GLES2 szabvány nem garantálja. Azt a grafikai
+meghajtó gyártójára bízza.} a renderelést. A függvény négy paramétert vár. Az
 első, hogy a kirajzolandó elemeket hogyan kell értelmezni. A mi estünkben az
 elemek független háromszögek csúcspontjai. Ezt a \func{GL\_TRIANGLES}
 típusnévvel határozzuk meg. A második paraméter határozza meg az érintett
 elemek számát. Ez háromszögenként három (vertex) elemet jelent, vagyis
-trapézonként hatot. Az utolsó paraméter adja meg a GLES2 API-nak, hogy kisebb
+trapézonként hatot. A harmadik paraméter adja meg a GLES2 API-nak, hogy kisebb
 (\func{GL\_UNSIGNED\_BYTE}) vagy nagyobb (\func{GL\_UNSIGNED\_SHORT}) méretű
 indextömböt használunk-e. A trapézok lehetséges magas száma miatt mi rendre a
-nagyobb méretűt választjuk majd.
+nagyobb méretűt választjuk majd. Az utolsó paraméterben adhatjuk át az
+\emph{indextömböt}, ami megadja hogy melyik attribútumtömbbeli elemet (lépéshossznyi
+memória részt) kell az egyes vertexekhez rendelni. Ha nem adunk meg
+indextömböt, azaz a paraméterértéket \func{nullptr}-re állítjuk, akkor
+az előre definiált indextömbből veszi az értékeket.
 
-Sok esetben az indextömböt a renderelés előtt állítjuk be. Ugyanakkor lehetőség
-van egy általános indextömb korai feltöltésére is. Mivel mi mindig a nagyobb
-tömbméretet választjuk, és a trapézokat -- még ha elfajulók is -- mindig azonos
-módon bontjuk két háromszögre, ezért a program indulásakor -- az előbb említett
-iniciatív részben már beállíthatjuk. Az indextömb első hat elem a következő:
-$0, 1, 2, 2, 1, 3$. Ezek rendre egy-egy trapéz sarokindexei is: bal felső
-($0$), bal alsó ($1$), jobb felső ($2$) és jobb alsó ($3$). Az indextömb
-következő hat indexét pedig úgy generáljuk, hogy minden számhoz négyet
-hozzáadunk. Majd a következő hatot is, és így tovább egy maximum $65536$
-elemből álló tömbméretig. Ezt a tömböt feltöltjük a GPU memóriába, és
-megjelöljük mint az általános indextömb. Az említett indexszámok jelentése
-pedig értelemszerűen az egymást követő trapézokat lefedő két háromszög
-csúcspontjait rendeli az adott trapéz sarkaihoz. Egy trapéz sarkához pedig
-mindig tartozik valódi koordinátapár.
+Sok esetben az indextömböt a rendereléskor állítjuk be. Ugyanakkor lehetőség
+van egy általános (előre definiált) indextömb korai feltöltésére is. Mivel mi
+mindig a nagyobb tömbméretet választjuk, és a trapézokat -- még ha elfajulók is
+-- mindig azonos módon bontjuk két háromszögre, ezért a program indulásakor --
+az előbb említett iniciatív részben már beállíthatjuk az előre definiált
+indextömböt. Az indextömb első hat elem a következő: $0, 1, 2, 2, 1, 3$. Ezek
+rendre egy-egy trapéz sarokindexei is: bal felső ($0$), bal alsó ($1$), jobb
+felső ($2$) és jobb alsó ($3$). Az indextömb következő hat indexét pedig úgy
+generáljuk, hogy minden számhoz négyet hozzáadunk. Majd a következő hatot is,
+és így tovább egy maximum 65536 elemből álló tömbméretig. Ezt a tömböt
+feltöltjük a GPU memóriába, és megjelöljük mint az általános indextömb. Az
+említett indexszámok jelentése pedig értelemszerűen az egymást követő
+trapézokat lefedő két háromszög csúcspontjait rendeli az adott trapéz
+sarkaihoz. Egy trapéz sarkához pedig mindig tartozik valódi koordinátapár (az
+attribútumtömbben).
 
   \begin{figure}
     \centering
     \includegraphics[width=.9\textwidth, viewport=0pt 60pt 260pt
     150pt,clip]{img/built/sunmoonvertex_eps}
-    \caption{\label{fig:sunmoonvertex}. A renderelésre jelölt trapézokat lefedő
+    \caption{\label{fig:sunmoonvertex}A renderelésre jelölt trapézokat lefedő
     háromszögek $(\tau_0, \tau_1, ...)$. Egy trapézt leíró mindkét háromszög
     csúcspontjaihoz tartozik tömbindex: $(i_0, i_1, i_2)$ és $(i_2, i_1, i_3)$}
   \end{figure}
@@ -2019,9 +2037,9 @@ előzőleg felsorolt sarokindexekhez ezekből négy koordinátapárt tudunk
 $(x_{r,t}, y_{t})$ és $i_3$ $(x_{r,b}, y_{b})$. Egy trapéz kirajzolása két
 háromszög renderelését jelenti (lásd \az+\emph{\ref{fig:sunmoonvertex}. ábrát}). Egy
 háromszög renderelése három vertex (csúcspont) kiszámítását jelenti. Ezekre a
-vertexekre fog lefutni a már említett vertex shaderből készített program.
+vertexekre fog lefutni a vertex shaderből készített program.
 Minden vertexre külön-külön (de párhuzamosan) lefut a vertex program úgy, hogy
-a vertxehez speciálisan kap a program bemeneti adatokat. Egy vertexhez azonban
+az adott vertexhez speciálisan kap a program bemeneti adatokat. Egy vertexhez azonban
 nem csak egy koordinátapár tartozik. Ennek az okára majd még visszatérünk.
 Minden vertexhez át kell adnunk a teljes trapézt leíró hat értéket, és a
 trapézon belüli sarokindexet. A bal felső sarok például a teljes trapézt leíró
@@ -2030,16 +2048,16 @@ teljes trapéz leírást és az $1$-es sarokindexet, és így tovább. Amennyibe
 simán a két háromszöget renderelnénk ki, nem volna szükség az összes adatra,
 elég volna a vertexhez tartozó koordinátát átadni. Viszont a mi esetünkben az
 élsimítást is a shader programokban számoljuk ki, ezért minden vertexnek tudnia
-kell, hogy milyen a trapézhoz, és annak melyik sarkához tartozik.
+kell, hogy milyen trapézhoz, és annak melyik sarkához tartozik.
 
-Ezeket az adatokat egy ún. \emph{vertex attribútum tömbbe} tesszük. Az első
-helyre letesszük a hat trapéz adatot, a $0$-ás indexet, és egy kis részt
+Ezeket az adatokat a már említett \emph{vertex attribútumtömbbe} tesszük. Az
+első helyre letesszük a hat trapéz adatot, a $0$-ás indexet, és egy kis részt
 kihagyunk. Majd letesszük ugyanannak a trapéznak az adatait, az $1$-es indexet,
 és szintén egy kis üres helyet kihagyunk. Majd ugyanígy járunk el a $2$-es és a
 $3$-as indexekkel is. Teljesen hasonló helyezhetjük el a tömbbe a második
 trapézt. A kis kihagyásokra azért van szükség, mert a GLES2 elvárja, hogy négy
-\func{float} méretére legyenek az adatok igazítva. Nekünk pedig effektív hét
-\func{float} típusú értékünk van.
+\func{GLfloat} ($4 \times 32 bit$) méretére legyenek az adatok igazítva. Nekünk pedig
+effektív hét \func{GLfloat} típusú értékünk van.
 
 Most nézzük meg részletesebben, hogy mi is történik az adatokkal a vertex
 shader-ben. Minden vertex egyrészt meghatározza a végső pontját, ami így
@@ -2053,7 +2071,7 @@ raszter közepe már nem része a háromszögnek. Így viszont pont az élsimít
 lehetősége veszik el, hiszen ebben az esetben ezekre a pontokra nem fut le a
 fragment program. Ezért a vertexek a kapott adatokból kiszámolják egy fél
 raszterpont méretével nagyobb háromszög szerinti pontjukat. Magyarán egy
-kicsivel meghízik az eredeti háromszög, így az összes érintett raszterpont
+kicsivel ,,meghízik'' az eredeti háromszög, így az összes érintett raszterpont
 bekerül. Lehetséges, hogy olyanok is bekerülnek, amiket az eredeti háromszög
 nem érint, ezek viszont úgyis nulla intenzitásúak lesznek.
 
@@ -2075,7 +2093,7 @@ változó formájában át kell adnunk a vertex shader-nek a vászon méretét. 
 mérettel pedig már le tudjuk normalizálni a vertex koordinátákat. Ebből
 fakadóan az is következik, hogyha olyan háromszögek jönnének létre, amik nem
 esnek a láthatósági ablakba, akkor azokat nem is fogja kirenderelni a GPU. A mi
-esetünkben az ilyen trapézokat már CPU oldalon leválogattuk, és eldobtuk.
+esetünkben a legtöbb ilyen trapézt már CPU oldalon leválogattuk, és eldobtuk.
 
 A vertex programok után az érintett fragmentekre fut le a fragment shader-ből
 előálló program. Az alakzat képét azonban nem direkt az eredménytömbbe
@@ -2101,7 +2119,7 @@ helyezkedik el, tehát részben áteresztő lesz. A maradék nyolc érték köz�
 a bal és jobb meredekség értéke, három-három érték pedig trapézzal kapcsolatos
 értékek: az alsó alap hossza, a trapéz magassága, a fragmenten belüli alsó bal
 és jobb $x$ értékek törtrészei, valamint a hasonló alsó és felső $y$ értékek
-tört részei. Minden fragmentre kiszámoljuk a helyét az alakzaton belül, majd ez
+törtrészei. Minden fragmentre kiszámoljuk a helyét az alakzaton belül, majd ez
 alapján meghatározzuk, hogy a lefedettség $y$ szerint mettől meddig tart.
 Ezután az élsimítás értékének (pl. a maximális $16$) megfelelő részre osztjuk
 horizontálisan a fragmentet. Ha a fragment aljától a tetejéig tart a
@@ -2115,7 +2133,7 @@ maximális értékre\footnote{Az \emph{alpha} csatorna mérete \emph{egy bájt},
 ugyanakkor a shader-ben ez egy $0.0$ és $1.0$ közti \func{float} típusú
 lebegőpontos érték.} állítjuk. Majd eldöntjük, hogy a fragmnet belső pont-e, és
 csak akkor számoljuk ki a fent említett iterációval az $1.0$-nál kisebb
-\emph{alpha} értéket, ha szélső fragmentről van szó.
+\emph{alpha} (áttetszőségi) értéket, ha szélső fragmentről van szó.
 
 Így az alakzat képét egy alpha textúra tartalmazza. Ezek után egy újabb vertex
 és fragment shader-párból álló programmal az alpha textúra segítségével egy
@@ -2129,18 +2147,18 @@ fragment shader pedig megkapja egyedi változóban az alpha textúra azonosító
 és a kitöltés \func{RGBA} színét, valamint interpolált értékként a fragmentnek
 megfelelő alpha textúrabeli koordinátát. A koordináta segítségével az alpha
 textúrából a fragmenthez tartozó kitöltési intenzitást lekéri, és a szín érték
-végső alpha (áttetszőségi) értékét felszorozza. Ezzel az alakzat színhelyes
+végső alpha értékét felszorozza. Ezzel az alakzat színhelyes
 képét minden fragmentre megkapjuk.
 
-Ezek után egy harmadik lépésben az előző vertex és fragment shader nagyon
-hasonlító módon a színes textúrát az eredmény tömb megfelelő helyére
-felmásoljuk. Ezzel gyakorlatilag a dolgozatunkban kitűzött célt elértük.
+Ezek után egy harmadik lépésben az előző lépéshez hasonló módon a színes
+textúrát az eredmény tömb megfelelő helyére felmásoljuk. Ezzel gyakorlatilag a
+dolgozatunkban kitűzött célt elértük.
 
 Még röviden érdemes átgondolni, hogy a jelenleg nem támogatott, de jövőbeli
 \emph{gradiens színezés}, vagy \emph{kivágás} (\inenglish{clipping}) az alpha
 textúrának köszönhetően a folyamatba beépíthető. Hiszen az alpha textúrát akár
 kivágási ablaknak is használhatjuk. Tehát egy gradiens textúrát is kivághatunk
-az alakzat kpével, ezzel az alakzat gradiens színezett képét megkapva.
+az alakzat képével, ezzel az alakzat gradiens színezett képét megkapva.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2152,7 +2170,7 @@ az alakzat kpével, ezzel az alakzat gradiens színezett képét megkapva.
 
 Nézzük meg röviden, hogy hogyan lehet használni a Gepardot. Illetve
 hasonlítsuk össze az elért eredményeket néhány ismertebb Canvas 2D Context
-szabványt támogató renderelő program eredményével.
+előírást támogató renderelő program eredményével.
 
     \section{Használat}
 
@@ -2187,7 +2205,7 @@ gyökérkönyvtárába:
     \end{itemize}
   }
 
-A Gepard használatát a Háttér (\ref{sec:Háttér}.) fejezetben leírt aprócska
+A Gepard használatát a Háttér (\ref{sec:Hatter}.) fejezetben leírt aprócska
 Canvas programrészleten mutatjuk be. Hozzunk létre egy
 {\small\texttt{pelda.cpp}} nevű fájlt a következő tartalommal:
 
@@ -2216,7 +2234,7 @@ Canvas programrészleten mutatjuk be. Hozzunk létre egy
 \\
 
 Jól látszik, hogy a Canvas-hez hasonlóan egy \emph{vászonra} (\func{surface})
-és egy \emph{kontextusra} (\func{ctx}) van szükségünk. Ezt biztosítja az
+és egy \emph{kontextusra} (\func{ctx}) van szükségünk. A vásznat biztosítja az
 \func{XSurface} osztály. Ez köti össze az operációs rendszer ablakozóját a
 Gepardban használt EGL-lel. Magyarán kapunk egy ablakot, amibe rajzolhatunk. A
 Gepard pedig maga a rajzoló kontextus. Innentől már minden hívás a Canvas-nek
@@ -2300,33 +2318,38 @@ Az élsimításból adódó különbségek okát abban látjuk, hogy a használt
 \emph{élsimító stratégiák} és \emph{finomsági faktorok} nem egyeznek. Azaz, a
 Gepard és az összehasonlításként használt renderelő API-k, más és más élsimító
 megközelítést használ(hat)nak. A Gepardban egy alap módszert használtunk
-(pásztázó egyenesek és subpixel-ek), a lehető legfinomabb faktorral (16).
+(pásztázó egyenesek és szubpixelek), a lehető legfinomabb faktorral (16).
 
-A \emph{strukturális hasonlóság} (SSIM\footnote{Zhou Wang et al.: \emph{{Image
-quality assessment: from error visibility to structural similarity}, in IEEE
-Transactions on Image Pro- cessing, 13. évf. (2004. April) 4. sz., 600–612. p.
-ISSN 1057-7149}}) kapcsán azt mondhatjuk, hogy a kitöltések helyesek, s így nem
-hiányzik alakzat a képről (lásd \az+\emph{\ref{fig:diff}. ábrát}). Ugyanakkor az
+A \emph{strukturális hasonlóság} (\inenglish{Structural Similarity} -- SSIM\cite{Zhou:2004}
+ %\footnote{Zhou Wang et al.: \emph{{Image
+ %quality assessment: from error visibility to structural similarity}, in IEEE
+ %Transactions on Image Pro- cessing, 13. évf. (2004. April) 4. sz., 600–612. p.
+ %ISSN 1057-7149}}
+) kapcsán azt mondhatjuk, hogy a kitöltések helyesek, s így nem hiányzik
+alakzat a képről (lásd \az+\emph{\ref{fig:diff}. ábrát}). Ugyanakkor az
 élsimítás okán tapasztalt eltérést is jól mutatja az említett ábrán a teljes
 eltérés képe. Az ábrán egy részletet kiemeltünk, itt a ,,szakáll'' három pont
 vastagságú körvonalának különbségmintázatát látjuk. A szélek különböznek, de a
 belső rész azonos.
 
 \Az+\emph{\ref{tab:ssim}. táblázatokon} számszerűsítve is láthatjuk a
-strukturális hasonlóságot, illetve a \emph{jel-zaj viszonyt} (Peak
-Signal-to-Noise Ratio -- PSNR\footnote{Zhou Wang et al.: i. m.}). A baloldali
-táblázat a Gepard és a Skia  közti SSIM értékeket mutatja színcsatornákra
+strukturális hasonlóságot, illetve a \emph{jel-zaj viszonyt} (\inenglish{Peak
+Signal-to-Noise Ratio} -- PSNR\cite{Zhou:2004}
+ %\footnote{Zhou Wang et al.: i. m.}
+). \Az+\emph{\ref{tab:ssim:bal}
+táblázat} a Gepard és a Skia  közti SSIM értékeket mutatja színcsatornákra
 lebontva\footnote{Az \emph{alpha} csatorna a képfájlokban azonosan zérus (0),
 ezért ezeket az értékeket nem tüntettük fel.}. A második oszlopban láthatjuk,
 hogy mindegyik színcsatorna esetén 0.02-nál kisebb az eltérés az azonosságot
 kifejező 1-nél.
 
   \begin{figure}
-    \captionof{table}{}
+    \captionof{table}{Metrikus hasonlóságok}
     \label{tab:ssim}
     \centering
  %   \begin{threeparttable}
     \minipage{0.3\textwidth}
+      \subcaption{\label{tab:ssim:bal}}
       \small
       \renewcommand*{\arraystretch}{1.2}
       \centering
@@ -2342,6 +2365,7 @@ kifejező 1-nél.
     \endminipage
     \hspace{0.05\textwidth}
     \minipage{0.6\textwidth}
+      \subcaption{\label{tab:ssim:jobb}}
       \small
       \renewcommand*{\arraystretch}{1.2}
       \centering
@@ -2360,29 +2384,31 @@ kifejező 1-nél.
     \endminipage
   \end{figure}
 
-A jobboldali táblázat hat-hat összehasonlítás\footnote{Az összehasonlításokat
-az \emph{ImageMagick Studio LLC} ({\footnotesize\url{https://imagemagick.org}})
-7.0.8-14-es verziójú \func{compare} programjával készítettük. Az
-összehasonlítások hívásmintája:\\ \texttt{\$ compare -metric SSIM|PSNR -compose
-src image1 image2 diff-image} } számszerűsített eredményét mutatja. Az első
-sorban láthatjuk a Gepard és három ismert renderelő\footnote{Skia (említett
-verzió), Webkit (említett verzió), Edge (verzió: 42.17134.1.0)} eredményei
-közti SSIM és PSNR értékeket. Itt is igaz, hogy a legnagyobb eltérés nem éri el
-a 0.02-ot. Illetve a jel-zaj viszony is hasonló értékeket mutat. A táblázat
-második sora a Skia és az előbbi három renderelő közötti méréseket tartalmazza.
-Így jobban érthetőek a SSIM és a PSNR értékek is. Látható, hogy a Skia
-eredménye önmagával hasonlítva az elméletileg várt $1$ és $\infty$ értékeket
-adja. A nem azonos képek közti SSIM és PSNR értékek egy kategóriába esnek.
-Vagyis a Gepardhoz mértek nem térnek el szignifikánsan a többiek közti
-értékektől. Ezzel számszerűleg is tisztáztuk a Gepard teljesítményét a
-pontosság terén. Érdemes még \az+\emph{\ref{fig:diff}. ábrára} rápillantani, ahol
-a baloldali képen a Skia és WebKit, a jobboldalin pedig a Gepard és Skia
-eredményképeinek eltérő képpontjait láthatjuk. Itt vizuálisan kaphatunk képet
-arról, hogy mit is értünk azon, hogy az eredményképeken az alakzatok széleit
-tartalmazó képpontok az érintettek az eltérésben.
+\Az+\emph{\ref{tab:ssim:jobb} táblázat} hat-hat összehasonlítás\footnote{Az
+összehasonlításokat az \emph{ImageMagick Studio LLC}
+({\footnotesize\url{https://imagemagick.org}}) 7.0.8-14-es verziójú
+\func{compare} programjával készítettük. Az összehasonlítások hívásmintája:\\
+\texttt{\$ compare -metric SSIM|PSNR -compose src image1 image2 diff-image} }
+számszerűsített eredményét mutatja. Az első sorban láthatjuk a Gepard és három
+ismert renderelő\footnote{Skia (említett verzió), Webkit (említett verzió),
+Edge (verzió: 42.17134.1.0)} eredményei közti SSIM és PSNR értékeket. Itt is
+igaz, hogy a legnagyobb eltérés nem éri el a 0.02-ot. Illetve a jel-zaj viszony
+is hasonló értékeket mutat. A táblázat második sora a Skia és az előbbi három
+renderelő közötti méréseket tartalmazza. Így jobban érthetőek a SSIM és a PSNR
+értékek is. Látható, hogy a Skia eredménye önmagával hasonlítva az elméletileg
+várt $1$ és $\infty$ értékeket adja. A nem azonos képek közti SSIM és PSNR
+értékek egy kategóriába esnek. Vagyis a Gepardhoz mértek nem térnek el
+szignifikánsan a többiek közti értékektől. Ezzel számszerűleg is tisztáztuk a
+Gepard teljesítményét a pontosság terén. Érdemes még \az+\emph{\ref{fig:diff}.
+ábrára} rápillantani, ahol a baloldali képen a Skia és WebKit, a jobboldalin
+pedig a Gepard és Skia eredményképeinek eltérő képpontjait láthatjuk. Itt
+vizuálisan kaphatunk képet arról, hogy mit is értünk azon, hogy az
+eredményképeken az alakzatok széleit tartalmazó képpontok az érintettek az
+eltérésben.
 
 Nézzük meg röviden a Ghostscript Tiger.svg kirajzolásához szükséges hívások és
-létrejött elemek számát. Ezeket az értékeket tartalmazza \az+\emph{\ref{tab:numbers}. táblázat}. Az első sorban a képet alkotó alakzatok
+létrejött elemek számát. Ezeket az értékeket tartalmazza
+\az+\emph{\ref{tab:numbers}. táblázat}. Az első sorban a képet alkotó alakzatok
 számát látjuk. Ebben a fájlban csak Path elemek találhatók, így minden elemet
 érintünk. A második sorban összesítve látjuk azon hívások számát, amik valódi
 elemet adnak a képhez. Vagyis a \func{moveTo} hívások hiányoznak. Ezzel ugyan
@@ -2390,21 +2416,22 @@ elveszíthetjük a meghatározáskor be nem zárt, de kitöltött alakzatokat. A
 ugyanis definíció szerint mindig zártak. Ezek száma ugyanakkor
 csekély\footnote{A Ghostscript Tiger.svg fájlban a a 240-ből 227 alakzatot
 explicit lezártak.}, illetve az ,,elvesztett'' elemek a további számokban úgyis
-megjelennek. A harmadik sorban a körvonalban érintett elemek száma található.
+megjelennek. A harmadik sor a körvonalban érintett elemek száma található.
 Ezeket az elemeket mint körvonalakat kell egy bonyolultabb Path formájában
-kitölteni. A negyedik sorb az explicit kitöltést indukáló hívások számát
-tartalmazza. Míg az ötödik sor mutatja a körvonal hívásokat. Az világos, hogy
-ezek is majd mind kitöltés hívásokra módosulnak. Így jutunk el a hatodik
-sorhoz, ahol jól látszik, hogy a 16-os élsimítási faktornak és a visszavezetett
-körvonalaknak köszönhetően milyen drasztikusan megugrik a Path elemek száma.
-Ezután a két utolsó sor a trapézok számát mutatja. Az utolsó előtti a csak
-horizontálisan összevont és beválogatott trapézokat mutatja. Az utolsóban pedig
-a vertikális összevonás utáni trapézok számát láthatjuk. Végül ezen trapézok
-lesznek kirajzolva az alpha-textúrába.
+kitölteni. A negyedik sorban az explicit kitöltést indukáló hívások számát
+tartalmazza. Míg az ötödik sor mutatja a körvonal kirajzolását indukáló
+hívásokat. Világos, hogy a visszavezetés után ezek is majd mind kitöltés
+hívásokra módosulnak. Így jutunk el a hatodik sorhoz, ahol jól látszik, hogy a
+16-os élsimítási faktornak és a visszavezetett körvonalaknak köszönhetően
+milyen drasztikusan megugrik a Path elemek száma. Ezután a két utolsó sor a
+trapézok számát mutatja. Az utolsó előtti sor a beválogatott és ugyanabban a
+lépésben horizontálisan össze is vont trapézokat mutatja. Az utolsóban pedig a
+vertikálisan is összevont trapézok számát láthatjuk. Végül ezek a trapézok
+lesznek kirajzolva az alpha textúrába.
 
   \begin{table}[!t]
-    \captionof{table}{}
-    \label{tab:numbers}
+    \captionof{table}{A G. Tiger.svg renderelésekor keletkezett
+    hívások és elemek számai} \label{tab:numbers}
     \renewcommand*{\arraystretch}{1.2}
     \small
     \centering
@@ -2414,20 +2441,19 @@ lesznek kirajzolva az alpha-textúrába.
       \hline \hline
       Alakzatok száma & 240\\
       Alakzatépítő függvényhívás & 2734\\
-      Ebből körvonal (\func{stroke}) hívás (is) & 524\\
+      Ebből körvonalkor érintett hívás (is) & 524\\
       \hline
       Kitöltő (\func{fill}) hívás & 226 \\
       Körvonal (\func{stroke}) hívás & 78 \\
       \hline
       Path elemek & 125864 \\
       Trapézok (horizontálisan összevonva) & 224722 \\
-      Vertikálisan összevont trapézok & 197999 \\
+      Vertikálisan összevont, kirenderelt trapézok & 197999 \\
       \hline
     \end{tabular}
   \end{table}
 
-\vspace{3cm} % TODO FIXME : REMOVE THISREMOVE THISREMOVE THISREMOVE THIS REMOVE  THISREMOVE THIS
-  \begin{figure}[!htb]
+  \begin{figure}[!b]
     \centering
     \begin{subfigure}[b]{0.4\textwidth}
       \centering
@@ -2458,7 +2484,7 @@ lesznek kirajzolva az alpha-textúrába.
       \caption{Gepard -- Skia}
     \end{subfigure}
     \caption{A \emph{Gepard} és a \emph{Skia (Chrome)} által renderelt
-    Ghostscript Tiger.svg eredmények különbsége. Az ábrán jól látható,
+    G. Tiger.svg eredmények különbsége. Az ábrán jól látható,
     hogy a különbségben a körvonal pontok az érintettek, a kitöltés
     azonos.}
     \label{fig:diff}
@@ -2472,15 +2498,16 @@ lesznek kirajzolva az alpha-textúrába.
     \chapter{Összefoglalás}
     %\addcontentsline{toc}{section}{Összefoglalás}
 
-Végeredményben azt mondhatjuk, hogy a dolgozatban kitűzött célunkat -- miszerint
-alkossunk meg egy Canvas 2D API-t használó OpenGL ES 2.0-án alapuló 2D
-alakzatrajzoló C++ nyelvű programot -- elértük. \Az+\emph{\ref{tab:functions}
-táblázatban} még feltüntettük a megvalósított, a rajzolás szempontjából
-elengedhetetlen funkcionalitások biztosító függvényeket. Illetve a táblázat
-második oszlopában a rajzolást effektív nem gátoló, de a Canvas 2D előírásban
-szereplő függvényeket is. Ezeknek a megvalósítása egy jövőbeli munka
-része. Mint ahogy az is, hogy a jelenleg helyes eredményt nyújtó renderelő
-egységeket \emph{futásidő} és \emph{memóriahasználat} szempontjából javítsuk.
+Végeredményben azt mondhatjuk, hogy a dolgozatban kitűzött célunkat --
+miszerint alkossunk meg egy Canvas 2D API-t használó OpenGL ES 2.0-án alapuló
+2D alakzatrajzoló C++ nyelvű programot -- elértük.
+\Az+\emph{\ref{tab:functions} táblázatban} még feltüntettük a megvalósított, a
+rajzolás szempontjából elengedhetetlen funkcionalitások biztosító függvényeket.
+Illetve a táblázat második oszlopában a rajzolást effektív nem gátoló, de a
+Canvas 2D előírásban szereplő függvényeket is. Ezeknek a megvalósítása egy
+jövőbeli munka része. Mint ahogy az is, hogy a jelenleg helyes eredményt nyújtó
+renderelő egységeket \emph{futásidő} és \emph{memóriahasználat} szempontjából
+javítsuk.
 
 Ezekről a javítási, gyorsítási lehetőségekről már a dolgozat főszövegében
 részletesebben is szóltunk. Itt csak az összefoglalást segítendő röviden
@@ -2488,10 +2515,9 @@ megemlítjük a javítási lehetőségeket, mint például a vászon \emph{csemp
 (\inenglish{tiling}), egyedi \emph{adatszerkezet} a felbontott elemek
 tárolására, és párhuzamosított bejárására.
 
-Tehát összefoglalásként elmondhatjuk, hogy a Gepard egy olyan 2D
-alakzatrajzoló API, ami megvalósítja a Canvas előírásit, és ugyanakkor
-GPU alapokon lehetőséget biztosít egy kicsi és gyors C++ alapú program
-megírásához.
+Tehát összefoglalásként elmondhatjuk, hogy a Gepard egy olyan C++-os 2D
+alakzatrajzoló API, ami megvalósítja a Canvas előírásit, létrehozva egy GPU
+renderelésre támaszkodó kompakt függvénykönyvtárat.
 
   \begin{table}[b]
     \captionof{table}{}
@@ -2525,7 +2551,7 @@ megírásához.
   \nocite{Foley:1990:CGP:83821}
   \nocite{Brinza:18:SVG}
   \nocite{Strachey2000}
-  \nocite{Zhou:2004}
+  %\nocite{Zhou:2004}
   %\nocite{Hughes:2013:CGP}
   %\notice{Munshi:2008:OEP:1481069}
   %\notice{Kurusa:1999:szamitogepes}
