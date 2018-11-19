@@ -6,6 +6,7 @@ include(Dependencies)
 set(EXTRA_FLAGS "-Wall -pedantic -std=c++11")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_FLAGS}")
+set(CODE_INCLUDE_OUTPUT_DIR ${PROJECT_BINARY_DIR}/code/${CODE_NAME}/include)
 
 add_dependencies(examples ${CODE_NAME})
 

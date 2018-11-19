@@ -11,3 +11,7 @@ add_latex_document (
     DEPENDS ${THESIS_DEPENDENCIES}
 )
 
+add_latex_document (
+    kotestabla.tex
+    TARGET_NAME frontpage
+)
