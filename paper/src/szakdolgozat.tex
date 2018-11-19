@@ -288,7 +288,7 @@
 
     \vspace{0.5cm}
 
-    {\Large\bf Informatikai Tanszékcsoport}
+    {\Large\bf Informatikai Intézet}
 
     \vspace*{3.8cm}
 
@@ -732,7 +732,7 @@ háromszögekkel kell lefednünk.
   \begin{figure}
     \includegraphics[scale=0.5]{img/built/gles2pipeline_eps}
     \caption{\label{fig:opengles_20_pipeline2} Az OpenGL ES 2.0 programozható
-    grafikus végrehajtási modellje. A \emph{vertex shader} és a \emph{fragment
+    grafikai végrehajtási modellje. A \emph{vertex shader} és a \emph{fragment
     shader} lépéseket programozhatjuk \\%
     (A {\footnotesize\url{https://www.khronos.org/api/opengles/2_X}}
     forrás alapján.)}
@@ -790,8 +790,8 @@ Hasonlóan a vertex shaderhez, a \emph{fragment shader} esetében is be kell
 shader-ben is használhatunk.} elnevezését szintén be kell kössük CPU oldalon.
 Az egyedi változókat fel kell tölteni a megfelelő értékkel. A fragment shader
 kódjából fordított program a csúcspontok által kifeszített háromszögek
-területére eső raszterpontokra fog lefutni. Ha lefut a program, az azt
-jelenti, hogy a raszterpont közepe egy ilyen csúcspont-hármas által meghatározott
+területére eső raszterpontokra fog lefutni. Ha lefut a program, az azt jelenti,
+hogy a raszterpont közepe egy ilyen csúcspont-hármas által meghatározott
 háromszögbe esik. A bemenő paraméterek értékei közül a változók
 (\inenglish{varyings}) interpolálva lesznek feltöltve. Ha a raszterpont
 valamelyik csúcspontra esik, akkor annak a csúcspontnak megfelelő értékeket
@@ -802,12 +802,12 @@ változókba.
 Ha a shader kódokat lefordítottuk, bekötöttük a megfelelő attribútumokat és
 egyéb értékeket, akkor még meg kell adnunk egy eredmény puffert is, ahová a
 renderelt képet várjuk. Ez egy úgynevezett \func{Frame Buffer} típusú tömb
-lesz. Ezek után valamelyik renderelést kiváltó függvény hatására a grafikus
+lesz. Ezek után valamelyik renderelést kiváltó függvény hatására a grafikai
 meghajtó összegyűjti a rajzoláshoz szükséges adatokat, és átmásolja a GPU
 oldalra. Majd elkezdi feldolgozni.
 
-Az eredményt nem azonnal kapjuk meg, a folyamat a grafikus meghajtótól függ.
-Ugyanakkor vannak bizonyos CPU oldali függvények, amik blokkoló hatásúak, azaz
+Az eredményt nem azonnal kapjuk meg, a folyamat a grafikai meghajtótól függ.
+Viszont vannak bizonyos CPU oldali függvények, amelyek blokkoló hatásúak, azaz
 bevárják az eredmény elkészültét. Ilyen például a \func{glReadPixels}. Ezzel
 függvénnyel olvashatunk ki az eredménytömbből. Tehát ahhoz, hogy valós adatot
 olvashassunk ki ebből a tömbből, garantálnunk kell, hogy abban a végső kép el
@@ -1989,7 +1989,7 @@ Az eddigi előrehaladó bemutatáshoz képest ezt a részt visszafelé bontjuk k
 Vagyis majdnem az utolsó hívással, a renderelést kiváltó \func{glDrawElements}
 függvénnyel kezdjük.
 
-Ez a függvény feltölti a grafikus egységre a GLES2 beállításait és a bekötött
+Ez a függvény feltölti a grafikai egységre a GLES2 beállításait és a bekötött
 adatokat, illetve elindítja\footnote{Azt, hogy ténylegesen az adott függvénynél
 indul-e el a renderelés, a GLES2 szabvány nem garantálja. Azt a grafikai
 meghajtó gyártójára bízza.} a renderelést. A függvény négy paramétert vár. Az

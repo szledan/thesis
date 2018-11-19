@@ -6,12 +6,16 @@ _no_cmd=""
 _cmd_ndx=0
 
 _rootDir=$PWD
-_srcDir="$2"
+if [ "$2" != "" ]; then
+  _rootDir=$2
+fi
+_srcDir=$_rootDir/paper/src
 _imgDir=$_srcDir/img
 _builtDir=$_imgDir/built
 _refDir=$_imgDir
 _diffDir=$_builtDir
 _diffPrefix=$_diffDir/diff
+_compareDir=$_rootDir/3rdparty/ImageMagick7/bin/
 
 _img=$_builtDir/tiger.png
 
@@ -25,7 +29,7 @@ _ssim=$_srcDir/res/ssim.txt
 _ssim_psnr=$_srcDir/res/ssim-psnr.txt
 
 function channel_table {
-  _result_ssim=$(compare -verbose -metric SSIM -compose src -lowlight-color white $_img $_ref_chrome ${_diffPrefix}.png 2>&1)
+  _result_ssim=$($_compareDir/compare -verbose -metric SSIM -compose src -lowlight-color white $_img $_ref_chrome ${_diffPrefix}.png 2>&1)
   for _c in red green blue all; do
     if [ "$_c" == "all" ] ; then echo "\\hline"; fi
     echo "$(echo $_result_ssim | grep -oP "($_c): [\d.]+" | sed "s/red:/vörös \&/; s/green:/zöld \&/; s/blue:/kék \&/; s/alpha:/alpha \&/; s/all:/összesen \&/") \\\\"
@@ -39,8 +43,8 @@ function compare_results {
   for _f in "${@:3}"; do
     _d=$_diffPrefix-$(basename $_i .png)-$(basename $_f)
     #echo $_d
-    _result_ssim=$(compare -verbose -metric SSIM -compose src -lowlight-color white $_i $_f $_d 2>&1)
-    _result_psnr="$(compare -verbose -metric PSNR -compose src -lowlight-color white $_i $_f $_d 2>&1)"
+    _result_ssim=$($_compareDir/compare -verbose -metric SSIM -compose src -lowlight-color white $_i $_f $_d 2>&1)
+    _result_psnr="$($_compareDir/compare -verbose -metric PSNR -compose src -lowlight-color white $_i $_f $_d 2>&1)"
     _a_ssim=()
     _a_psnr=()
     for _c in red green blue alpha all; do
@@ -60,7 +64,7 @@ let "_cmd_ndx++";
 echo -n "[$_cmd_ndx] Create over diff"
 if [[ "$_cmd_nmbr" == "$_cmd_ndx" || "$_cmd_nmbr" == "$_all_cmd" ]]; then
   echo -n "  run..."
-  compare -metric SSIM -compose over $_img $_ref_chrome ${_diffPrefix}over.png
+  $_compareDir/compare -metric SSIM -compose src -lowlight-color white $_img $_ref_chrome ${_diffPrefix}over.png
   echo "  done!";
 else
   echo "  off"

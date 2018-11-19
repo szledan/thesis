@@ -50,7 +50,7 @@ endforeach()
 # Compare 'tiger' images and create diffover.png
 add_custom_command(
     OUTPUT ${BUILT_IMG_DIR}/diffover.png
-    COMMAND ${PROJECT_SOURCE_DIR}/scripts/compare-images.sh ARGS 1 ${PROJECT_SOURCE_DIR}/paper/src
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/compare-images.sh ARGS 1 ${PROJECT_SOURCE_DIR}
     DEPENDS tiger.png ${BUILT_IMG_DIR}/tiger.png
 )
 add_custom_target(diffover.png ALL DEPENDS ${BUILT_IMG_DIR}/diffover.png)
@@ -59,7 +59,7 @@ list(APPEND THESIS_DEPENDENCIES diffover.png)
 # Compare 'tiger' images and calculate SSIM color values
 add_custom_command(
     OUTPUT ${SRC_ROOT_DIR}/res/ssim.txt
-    COMMAND ${PROJECT_SOURCE_DIR}/scripts/compare-images.sh ARGS 2 ${PROJECT_SOURCE_DIR}/paper/src
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/compare-images.sh ARGS 2 ${PROJECT_SOURCE_DIR}
     DEPENDS tiger.png ${BUILT_IMG_DIR}/tiger.png
 )
 add_custom_target(ssim ALL DEPENDS ${SRC_ROOT_DIR}/res/ssim.txt)
@@ -68,7 +68,7 @@ list(APPEND THESIS_DEPENDENCIES ssim)
 # Compare 'tiger' images and calculate SSIM values
 add_custom_command(
     OUTPUT ${SRC_ROOT_DIR}/res/ssim-psnr.txt
-    COMMAND ${PROJECT_SOURCE_DIR}/scripts/compare-images.sh ARGS 3 ${PROJECT_SOURCE_DIR}/paper/src
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/compare-images.sh ARGS 3 ${PROJECT_SOURCE_DIR}
     DEPENDS tiger.png ${BUILT_IMG_DIR}/tiger.png
 )
 add_custom_target(ssim-psnr ALL DEPENDS ${SRC_ROOT_DIR}/res/ssim-psnr.txt)
