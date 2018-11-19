@@ -2,7 +2,7 @@ Bachelor's thesis
 =====
 
 ```
-Title: OpenGL-ES 2.0 alapú Path API
+Title: 2D path rendering using OpenGL ES 2.0
 Author: LEDÁN Szilárd
 Supervisor: KISS Ákos, PhD, assistant professor
 Department of Software Enginering, University of Szeged
