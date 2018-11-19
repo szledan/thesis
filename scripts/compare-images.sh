@@ -48,7 +48,7 @@ function compare_results {
       _a_psnr+=("$(echo $_result_psnr | grep -oP "($_c): \K([\d.]+|(inf))" | sed "s/inf/\$\\\infty\$/")")
     done
     _row_ssim="$_row_ssim & ${_a_ssim[4]}"
-    _row_ssim=$(echo $_row_ssim | sed "s/ 1 / \\\multicolumn\{1\}\{\|c\|\}\{1\} /")
+    _row_ssim=$(echo $_row_ssim | sed "s/ 1 / \\\multicolumn\{1\}\{c\|\}\{1\} /")
     _row_psnr="$_row_psnr & ${_a_psnr[4]}"
   done
   echo "$_row_ssim \\\\"

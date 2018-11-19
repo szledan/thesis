@@ -536,7 +536,7 @@ szabványban külön nem definiált forma, ellentétben a téglalappal (\emph{re
 \emph{fillRect}, \emph{strokeRect}).
 
   \begin{figure}[!htb]
-    \hspace{0.1\textwidth}
+    \hspace{0.05\textwidth}
     \minipage{0.5\textwidth}
       \centering
       \begin{lstlisting}[language=JavaScript, autogobble=true]
@@ -551,8 +551,9 @@ szabványban külön nem definiált forma, ellentétben a téglalappal (\emph{re
         ctx.stroke();  // first two columns
       \end{lstlisting}
     \endminipage
-    \hfill
-    \minipage{0.5\textwidth}
+    %\hfill
+    \minipage{0.44\textwidth}
+      \centering
       \includegraphics[width=.5\textwidth]{img/built/triangle}
     \endminipage
     \caption{\label{fig:triangles} Bezárt és nyitva hagyott
@@ -707,7 +708,7 @@ függvénykönyvtár. Kisebb, hordozható eszközök esetén sokszor nincs szük
 ekkora komplexitásra. Részben ezért is vezették be az ,,asztali'' OpenGL
 megrostálása és egyszerűsítése révén az ES API verziókat. Az ES verziók közül a
 2.0-ás lett a legelterjedtebb\footnote{The Khronos Group: \emph{OpenGL ES
-Overview}, 2018,
+Overview}, 2018,\\
 {\footnotesize\url{https://www.khronos.org/opengles/}}\label{fn:GLES2}}. A
 viszonylag szigorú megkötések és a kevés számú függvény ellenére jól
 használható. Ettől a verziótól már lehetővé vált a \emph{programozható grafikai
@@ -1010,9 +1011,9 @@ pedig az eredeti görbe de Casteljau-pontjai közül kerülnek ki. A fenti
 tulajdonságokat és a definícióban leírt indukciós elnevezést figyelembe véve a
 két $n$-edfokú görbe kontrollpontjai a következők: \begin{equation}\label{eq:1}
 \boldsymbol{B}_{0\mapsto t_0}^n(t_0): \boldsymbol{p}_0, \boldsymbol{p}_0^1,
-..., \boldsymbol{p}_0^{n-1}, \boldsymbol{p}_0^n; \qquad
+\dots, \boldsymbol{p}_0^{n-1}, \boldsymbol{p}_0^n; \qquad
 \boldsymbol{B}_{t_0\mapsto 1}^n(t_0): \boldsymbol{p}_0^n,
-\boldsymbol{p}_1^{n-1}, ..., \boldsymbol{p}_{n-1}^1, \boldsymbol{p}_n.
+\boldsymbol{p}_1^{n-1}, \dots, \boldsymbol{p}_{n-1}^1, \boldsymbol{p}_n.
 \end{equation}
 
 \Aref({eq:1}) felbontást később majd használni fogjuk. Világos, hogy a
@@ -1071,7 +1072,7 @@ Bézier-görbe kontrollpontjai a következők:
   \boldsymbol{p}_2 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix} + h
         \begin{bmatrix} \sin\alpha \\ -\cos\alpha \end{bmatrix},\quad
   \boldsymbol{p}_3 = \begin{bmatrix} \cos\alpha \\ \sin\alpha \end{bmatrix}, \]
-ahol a $h$ egy szabad paraméter. Pontosabban $h$ függ a körív $r$ sugarától.
+ahol a $h$ egy szabad paraméter. Pontosabban, $h$ függ a körív $r$ sugarától.
 Az is világos, hogy adott $\alpha$ szögnél nagyobb körív kellő pontosságú
 megközelítéséhez nem elégséges egy darab harmadfokú Bézier-görbe.
 
@@ -1415,9 +1416,9 @@ hozzáadó, illetve a már hozzáadott elemek bejárását és átalakítását 
 függvények.
 
 Az átalakításra azért van szükség, mert az alakzat építése közben lehetőség van
-transzformációk alkalmazására, amiket az alakzatnak követnie kell. Erre szolgál
-az \func{applayTransform} függvény. Gyakorlatilag a kapott affin
-transzformációval végigszorozza az addig felépített alakzat elemit
+transzformációk alkalmazására, amiket az alakzatnak követnie kell. Ezt
+az \func{applayTransform} függvénnyel tehetjük meg. Gyakorlatilag a kapott affin
+transzformációval végigszorozzuk az addig felépített alakzat elemeit
 meghatározó koordinátákat.
 
 A bejárás lehetőségét pedig a \func{firstElement} függvény biztosítja.
@@ -1464,12 +1465,12 @@ eltérhetnek, vagyis más eredményt kaphatunk a kezdő pontba húzott, vagy ott
 is zárt path esetén.
 
 Az \func{addQuadaraticCurveToElement} függvény egy másodfokú Bézier-görbe
-elemet add a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak
+elemet ad a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak
 kell tekinteni. Illetve egyszerűsítés az is, hogy ha a kontrollpont és a
 végpont azonos, akkor az alakzatelem egy egyenes vonalra egyszerűsödik.
 
 Az \func{addBezierCurveToElement} függvény egy harmadfokú Bézier-görbe elemet
-add a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak kell
+ad a listához. Ha a lista üres, akkor a görbe végpontját kezdő pontnak kell
 tekinteni.
 
 Az \func{addArcElement} függvény egy körív elemet ad az alakzatot leíró
@@ -1679,7 +1680,7 @@ lépéseket.
     \item Kivesszük a legfelső görbedarabot, és megvizsgáljuk, hogy leírható-e
     szakaszként (azaz, nem kell tovább felbontani).
     \begin{description}[topsep=0ex]
-      \item[Ha igen] A görbedarabot, mint (végpontokat összekötő) szakaszt
+      \item[Ha igen] A görbedarabot, mint -- végpontokat összekötő -- szakaszt
       beszúrjuk a \func{SegmentTree} struktúrába, és folytatjuk a 3-as ponttal.
       \item[Különben] A görbedarabot a $\boldsymbol{p}^n_0(t=\frac{1}{2})$
       pontjában kettévágjuk, és a két görbedarabot a verembe tesszük.
@@ -1712,11 +1713,11 @@ mértékét. Természetesen ennél kisebb érték is választható, és persze n
 is, bár ez utóbbinak nem sok értelme van a jelenlegi színcsatorna-méretek
 tükrében.
 
-Az élsimítás és a tolerancia mértéke nem csak a felbontásokra van hatással. Az
-egymást metsző szakaszok esetében is figyelembe kell venni. Erről majd később
-még lesz szó.
+Az élsimítás és a tolerancia mértéke nem csak a felbontásokra van hatással,
+hanem az egymást metsző szakaszok esetében is figyelembe kell venni. Erről majd
+később még lesz szó.
 
-A másik nem egyenes vonal a körív. Mint arról már volt szó, a köríveket
+Szintén nem egyenes vonal a körív. Mint arról már volt szó, a köríveket
 Bézier-görbékkel közelítjük. \Az+\refstruc{sec:arctobezier+ben} bemutatott
 matematikai módszert követve osztjuk a körívet harmadfokú görbékre. A
 felosztás menete a következő. Miután alkalmaztuk a körívre az aktuális
@@ -1729,14 +1730,14 @@ Bézier-görbék affin invarianciája miatt ez a megközelítést nem módosítj
 Ugyanakkor a megközelítés mértékét befolyásoló sugár helyett az ellipszis két
 tengelye közül a nagyobbikat kell választanunk. A tolerancia érték és a kapott
 nagytengely aránya határozza meg az $\epsilon$ értéket. Ennél az értéknél kell
-kisebb legyen \aref({eq:2}) képletben kapott $\epsilon_{max}$. Ez viszont a
-körív szögétől függ. Ha nem elég kicsi, akkor a szöget elfelezzük, és
+kisebb legyen \aref({eq:2}) képletben szereplő $\epsilon_{max}$. Ez viszont a
+körív szögétől függ. Ha nem elég kicsi ez a szög, akkor elfelezzük, és
 megvizsgáljuk újra a különbséget, ha továbbra sem elégséges, akkor addig
 ismételjük, amíg nem lesz igaz, hogy $\epsilon_{max} < \epsilon$. Ezzel pedig
 megkapjuk, hogy hány darabra kell osztanunk az eredeti körívet. Ha $k$ részre
 osztjuk az $\alpha$ szögű körívet, akkor egy darabkát megközelítő
 Bézier-görbe adatait a $h_1 = \frac{4}{3} \tan{\frac{1}{4} \beta}$ értékkel
-megadhatjuk, ahol $\beta = \frac{\alpha}{k}$. A görbéket pedig az előzőekben
+adhatjuk meg, ahol $\beta = \frac{\alpha}{k}$. A görbéket pedig az előzőekben
 ismertetett függvény hívásával tovább bontjuk, így megkapjuk a körív (vagy
 ellipszisív) szakaszokból álló képét.
 
@@ -1754,11 +1755,12 @@ ellipszisív) szakaszokból álló képét.
   \end{figure}
 
 Az alakzat görbe elemeinek a szakasszá bontása után a szakaszokat kell tovább
-darabolnunk. Egyrészt minden szakaszt felbontunk ha szükséges a különböző $L_j$
+darabolnunk. Ha szükséges, minden szakaszt felbontunk a különböző $L_j$
 listákhoz tartozó $y_j$ értékek mentén (lásd \az+\emph{\ref{fig:sunmoon}.
 ábrát}). Vagyis, ha az adott $y_j$ egyenes metszi az adott $S_i$ szakaszt,
-akkor a szakaszt a metszéspontban elvágjuk. Másrészt a szakaszok egymást metsző
-pontjait kell megtaláljuk (lásd szintén \az+\emph{\ref{fig:sunmoon}. ábrát}).
+akkor a szakaszt a metszéspontban elvágjuk. Valamint meg kell találjuk a
+szakaszok egymást metsző pontjait is (lásd szintén \az+\emph{\ref{fig:sunmoon}.
+ábrát}).
 
 A szakaszok felbontásához bejárjuk az $y$ koordináta mentén létrehozott
 listákat. Kezdve a két legkisebb $y_0$ (ahol a lista legyen az $L_0$) és $y_1$
@@ -1940,8 +1942,8 @@ csak a legszükségesebb koordinátaadatokat tárolja. Megjegyzi az egyes szakas
 eredeti meredekségét, illetve egy egyedi azonosítóval is ellátja a szakaszokat.
 Ezeket a másodlagos adatokat aztán a szakasz feldarabolásakor minden darabka
 megőrzi. Világos, hogy a trapézok függőleges egyesítésének lépésében pontosan
-ezeket az értékeket tudjuk felhasználni, hogy egy-egy szakaszról (még
-pontosabban trapézszárról) eldönthessük, hogy valaha egy geometriai elem részei
+ezeket az értékeket tudjuk felhasználni, hogy egy-egy szakaszról (talán
+pontosabban: trapézszárról) eldönthessük, hogy valaha egy geometriai elem részei
 voltak. Tehát ha az egyesítés csak a meredekség enyhe változása miatt nem
 lehetséges, akkor ezt feloldhatjuk, és egyben még az előzőleg eszközölt kis
 ,,csalást'' is kijavítjuk. Természetesen az könnyen előállhat, hogy a
@@ -2168,9 +2170,9 @@ az alakzat képével, ezzel az alakzat gradiens színezett képét megkapva.
     \chapter{Használat és eredmények}
     %\addcontentsline{toc}{section}{Használat és eredmények}
 
-Nézzük meg röviden, hogy hogyan lehet használni a Gepardot. Illetve
-hasonlítsuk össze az elért eredményeket néhány ismertebb Canvas 2D Context
-előírást támogató renderelő program eredményével.
+Nézzük meg röviden a Gepard használatát. Illetve hasonlítsuk össze az elért
+eredményeket néhány ismertebb Canvas 2D Context előírást támogató renderelő
+program eredményeivel.
 
     \section{Használat}
 
@@ -2347,35 +2349,36 @@ kifejező 1-nél.
     \captionof{table}{Metrikus hasonlóságok}
     \label{tab:ssim}
     \centering
- %   \begin{threeparttable}
-    \minipage{0.3\textwidth}
+    \minipage{0.35\textwidth}
+    \centering
       \subcaption{\label{tab:ssim:bal}}
       \small
       \renewcommand*{\arraystretch}{1.2}
       \centering
       \begin{tabular}{|c|S[round-mode=places, round-precision=3]|}
         \hline
-        Színcsatorna & \multicolumn{1}{|c|}{SSIM %\tnote{1}\,
-        érték}\\
+        Színcsatorna & SSIM \\
         \hline
         \hline
           \input{../../../paper/src/res/ssim.txt}
         \hline
       \end{tabular}
     \endminipage
-    \hspace{0.05\textwidth}
+    %\hspace{0.01\textwidth}
+    %\hfill
     \minipage{0.6\textwidth}
+    \centering
       \subcaption{\label{tab:ssim:jobb}}
       \small
       \renewcommand*{\arraystretch}{1.2}
       \centering
-      \begin{tabular}{|c|c|S[round-mode=places, round-precision=3]
+      \begin{tabular}{|c|c|S[round-mode=places,round-precision=3]
                           |S[round-mode=places,round-precision=3]
                           |S[round-mode=places,round-precision=3]|}
         \hline
-          & Metrika & \multicolumn{1}{|c|}{Skia}
-                    & \multicolumn{1}{|c|}{WebKit}
-                    & \multicolumn{1}{|c|}{Edge} \\
+          & Metrika & \multicolumn{1}{c|}{Skia}
+                    & \multicolumn{1}{c|}{WebKit}
+                    & \multicolumn{1}{c|}{Edge} \\
         \hline
         \hline
           \input{../../../paper/src/res/ssim-psnr.txt}
@@ -2397,14 +2400,13 @@ is hasonló értékeket mutat. A táblázat második sora a Skia és az előbbi 
 renderelő közötti méréseket tartalmazza. Így jobban érthetőek a SSIM és a PSNR
 értékek is. Látható, hogy a Skia eredménye önmagával hasonlítva az elméletileg
 várt $1$ és $\infty$ értékeket adja. A nem azonos képek közti SSIM és PSNR
-értékek egy kategóriába esnek. Vagyis a Gepardhoz mértek nem térnek el
-szignifikánsan a többiek közti értékektől. Ezzel számszerűleg is tisztáztuk a
-Gepard teljesítményét a pontosság terén. Érdemes még \az+\emph{\ref{fig:diff}.
-ábrára} rápillantani, ahol a baloldali képen a Skia és WebKit, a jobboldalin
-pedig a Gepard és Skia eredményképeinek eltérő képpontjait láthatjuk. Itt
-vizuálisan kaphatunk képet arról, hogy mit is értünk azon, hogy az
-eredményképeken az alakzatok széleit tartalmazó képpontok az érintettek az
-eltérésben.
+értékek egy kategóriába esnek. Vagyis a Gepardhoz mértek jellemzően nem térnek
+el a többiek közti értékektől. Ezzel számszerűleg is tisztáztuk a Gepard
+teljesítményét a pontosság terén. Érdemes még \az+\emph{\ref{fig:diff}. ábrára}
+rápillantani, ahol a baloldali képen a Skia és WebKit, a jobboldalin pedig a
+Gepard és Skia eredményképeinek eltérő képpontjait láthatjuk. Itt vizuálisan
+kaphatunk képet arról, hogy mit is értünk azon, hogy az eredményképeken az
+alakzatok széleit tartalmazó képpontok az érintettek az eltérésben.
 
 Nézzük meg röviden a Ghostscript Tiger.svg kirajzolásához szükséges hívások és
 létrejött elemek számát. Ezeket az értékeket tartalmazza
@@ -2647,7 +2649,17 @@ helyben olvasható könyvek között helyezik el.
     \chapter*{Köszönetnyilvánítás}
     \addcontentsline{toc}{section}{Köszönetnyilvánítás}
 
-Ezúton szeretnék köszönetet mondani \textbf{X. Y-nak} ezért és ezért \ldots
+Szeretnék köszönetet mondani témavezetőmnek, \textbf{Dr. Kiss
+Ákos} egyetemi adjunktusnak segítőkész támogatásáért, hasznos
+tanácsaiért és az alapos szakmai ellenőrzésért.
+
+Szintén szeretném megköszönni \textbf{Gál Péter}nek, \textbf{Herczeg
+Zoltán}nak és \textbf{Kosztyó Kristóf}nak a közös konzultációink
+alkalmából nyújtott észrevételeiket, tanácsaikat és baráti biztatásaikat.
+
+A dolgozat megszületésének szempontjából elengedhetetlen, hogy
+tiszta szívből köszönetet mondjak szüleimnek, \textbf{Vajda Évá}nak
+és \textbf{Ledán Sándor}nak.
 
 
 \end{document}
