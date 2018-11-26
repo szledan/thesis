@@ -1,5 +1,0 @@
-\multirow{2}{*}{Gepard} & SSIM & 0.987978 & 0.992597 & 0.989039 \\
-   & PSNR [dB] & 30.7147 & 31.8493 & 31.0413 \\
-\hline
-\multirow{2}{*}{Skia} & SSIM & \multicolumn{1}{c|}{1} & 0.995361 & 0.997174 \\
-   & PSNR [dB] & $\infty$ & 36.8934 & 37.7722 \\
