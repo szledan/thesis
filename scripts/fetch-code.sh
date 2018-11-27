@@ -4,7 +4,7 @@
 . ./scripts/arg-parser.sh
 
 # Set default values.
-repository="git@github.com:szledan/gepard.git"
+repository="https://github.com/szledan/gepard.git"
 gitTag=thesis
 helpMsg="usage "`basename $0`" --repo=<git-repository> --tag=<tag>"
 
