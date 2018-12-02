@@ -1,26 +1,5 @@
 #!/bin/bash
 
-_gray_list="$(gs -o - -sDEVICE=inkcov build/paper/src/szakdolgozat.pdf | grep -Pzo "Page\K [0-9]+\n(?= 0.00000  0.00000  0.00000)")"
-_color_list="$(gs -o - -sDEVICE=inkcov build/paper/src/szakdolgozat.pdf | grep -Pzo "Page\K [0-9]+\n(?! 0.00000  0.00000  0.00000)")"
-
-_gray_pdfs=""
-for _i in $_gray_list; do
-  _gray_pdf="build/gray_p$(printf "%04d" $_i).pdf"
-  _gray_pdfs="$_gray_pdfs $_gray_pdf"
-  pdfseparate -f $_i  -l $_i build/paper/src/szakdolgozat.pdf $_gray_pdf
-  echo $_i;
-done
-gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=build/paper/src/print_gray_pages.pdf -dBATCH $_gray_pdfs
-
-_color_pdfs=""
-for _i in $_color_list; do
-  _color_pdf="build/color_p$(printf "%04d" $_i).pdf"
-  _color_pdfs="$_color_pdfs $_color_pdf"
-  pdfseparate -f $_i  -l $_i build/paper/src/szakdolgozat.pdf $_color_pdf
-  echo $_i;
-done
-gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=build/paper/src/print_color_pages.pdf -dBATCH $_color_pdfs
-
 # Include argument parser.
 . ./scripts/arg-parser.sh
 
@@ -29,45 +8,95 @@ inDir=./build/paper/src
 outDir=$inDir
 inFile=szakdolgozat.pdf
 outFile=grayscaled-$inFile
-helpMsg="usage: "`basename $0`" input.pdf [out.pdf]"
 
 # Check help flags.
-if [[ $(getFlag "--help -h --usage" $@) ]] ; then
-  echo $helpMsg;
+if [[ "$#" == "0" ]] || [[ $(getFlag "--help -h --usage") ]] ; then
+  echo "usage: "`basename $0`" [options] input.pdf [out.pdf=$outDir/$outFile]"
+  echo ""
+  echo "Options:"
+  echo "  -c, --convert-gray        Convert input file to grayscaled output file"
+  echo "  -cp, --color-pages        Get list of colored pages"
+  echo "  -gp, --gray-pages         Get list of grayscaled pages"
+  echo "  -p, --to-printer [SEP=,]  List of pages is printer friendly with SEP char"
   exit 0;
 fi
 
+# Parse flags.
+_c_isOn=$(getFlag "--convert-gray -c")
+_cp_isOn=$(getFlag "--color-pages -cp")
+_gp_isOn=$(getFlag "--gray-pages -gp")
+_sep_char=$(getFlagValue "--to-printer -p" ",")
+_p_isOn=$?
 # Get working directories.
-inFile=$(getValue $1 "./$inDir/$inFile")
-outFile=$(getValue $2 "./$outDir/$outFile")
+inFile=$(getValue "./$inDir/$inFile")
+outFile=$(getValue "./$outDir/$outFile")
 
 # Check dependencies.
-if ! which gs > /dev/null ; then
+if ! which gs > /dev/null; then
   echo "need to be installed: 'sudo apt install gs'"
   exit 1
 fi
 
-# Convert colored pdf to grayscaled one.
-gs \
-  -sOutputFile=$outFile \
-  -sDEVICE=pdfwrite \
-  -sColorConversionStrategy=Gray \
-  -dProcessColorModel=/DeviceGray \
-  -dCompatibilityLevel=1.4 \
-  -dNOPAUSE \
-  -dBATCH \
-  $inFile
+# Convert page numbers to printer friendly list
+function printable_list()
+{
+  local _gray_arr=($1)
+  local _ln=${_gray_arr[@]:0:1}
+  local _gray_list="$_ln"
+  local _mode=2
 
-errorCode=$?
+  for _ln in ${_gray_arr[@]}; do
+    _gray_arr=(${_gray_arr[@]:1})
+    _cn=${_gray_arr[0]}
+    if [[ ! $_cn ]]; then _mode=3; fi
+    if [[ "$_mode" != "3" ]] && (($_ln + 1 == $_cn)); then
+      _mode=1
+    else
+      _ch1=$3
+      _ch2=$2
+      _n=$_ln
+      case $_mode in
+      0) ;&
+      2) _n="";_ch1="";;
+      3) _ch2="";;
+      esac
+      _gray_list="$_gray_list$_ch1$_n$_ch2$_cn"
+      _mode=0
+    fi
+    _ln=$_cn
+  done
+  echo "$_gray_list"
+}
 
-if [ "$errorCode" != "0" ] ; then
-  echo "Error! (Code=$errorCode)"
-else
-  echo "Done!"
+# Print grayscaled OR colored pages.
+if [[ $_gp_isOn ]] ||  [[ $_cp_isOn ]]; then
+  _group="?="
+  if [[ $_cp_isOn ]]; then _group="?!"; fi
+  _list="$(gs -o - -sDEVICE=inkcov $inFile | grep -Pzo "Page\K [0-9]+\n($_group 0.00000  0.00000  0.00000)")"
+  if [ "$_p_isOn" != "0" ]; then
+    _list=$(printable_list "$_list" $_sep_char "-")
+  fi
+  echo $_list
 fi
 
-exit $errorCode
+# Convert colored pdf to grayscaled one.
+if [[ $_c_isOn ]]; then
+  gs \
+    -sOutputFile=$outFile \
+    -sDEVICE=pdfwrite \
+    -sColorConversionStrategy=Gray \
+    -dProcessColorModel=/DeviceGray \
+    -dCompatibilityLevel=1.4 \
+    -dNOPAUSE \
+    -dBATCH \
+    $inFile
 
-# gs -o - -sDEVICE=inkcov build/paper/src/szakdolgozat.pdf |grep -Pzo "Page\K [0-9]+\n(?! 0.00000  0.00000  0.00000)"
-# pdfseparate -f 8  -l 8 build/paper/src/szakdolgozat.pdf ez.pd
-# pdfjam -o az.pdf ez.pdf ez.pdf ez.pdf
+  errorCode=$?
+
+  if [ "$errorCode" != "0" ] ; then
+    echo "Error! (Code=$errorCode)"
+  else
+    echo "Done!"
+  fi
+  exit $errorCode
+fi
