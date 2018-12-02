@@ -456,8 +456,8 @@ GLES2) API. Valamint azt is szeretnénk az olvasó elé tárni, hogy hogyan alko
 ezek között egy köztes réteget a Gepard, és annak is a Path-t rajzoló,
 renderelő része.
 
-Első körben nem volt cél a ,,leggyorsabban futó'' és ,,legkisebb méretű''
-Path-t rajzoló API elkészítése. Célunk, egy lehetséges megvalósítás
+Első körben nem volt cél a ,,leggyorsabban futó'' és a ,,legkisebb méretű''
+Path-t rajzoló függvénykönyvtár elkészítése. Célunk, egy lehetséges megvalósítás
 megtalálása, és ez alapján egy olyan eszköz megalkotása, amely képes a Canvas
 előírás elvárásait teljesíteni.
 
@@ -480,7 +480,7 @@ megjeleníthessünk. Össze kell kapcsolni a GLES2 szabta korlátokat\footnote {
 a GLES2 legfeljebb háromszögeket rajzol.} a Canvas elvárásaival. Ami azt
 jelenti, hogy fedjünk le háromszögekkel olyan -- akár önmetsző -- alakzatokat,
 amelyeket tetszőleges számú szakasz, Bézier-görbe és körív alkot, s
-mindezeket mérethelyesen jelenítésük is meg. Ehhez -- mint látni fogjuk -- több
+mindezeket mérethelyesen jelenítsük is meg. Ehhez -- mint látni fogjuk -- több
 lépésbeli megközelítést (\inenglish{approximation}) alkalmazunk.
 
     \section[A Canvas 2D Context API]{A W3C Canvas 2D Context API}
@@ -562,7 +562,7 @@ szabványban külön nem definiált forma, ellentétben a téglalappal (\emph{re
 
 A fenti ábrán (\emph{\ref{fig:triangles}}) látható egy kis példakód,
 illetve ennek hat különböző eredménye. Az első sorban olyan alakzatokat látunk,
-ahol a \func{closePath} parancsot meghívtuk (hármoszög), a másodikban pedig nem
+ahol a \func{closePath} parancsot meghívtuk (háromszög), a másodikban pedig nem
 (V alak). Az első oszlopban a \func{fill}-t, a harmadikban pedig a
 \func{stroke}-ot nem hívtuk meg. Az előírás ugyanakkor rendelkezik arról, hogy
 minden Path zárt alakzat kell legyen, így mindig kitölthető is. Ezért lett a
@@ -758,7 +758,7 @@ shader-ben felhasználhatunk. Ahhoz, hogy a program lefusson a GPU oldalon,
 előbb még be kell állítanunk néhány dolgot a CPU oldalon. Egyrészt össze kell
 állítani egy puffert (tömböt) a csúcspontokhoz tartozó adatokkal, ezt
 \emph{vertex-attribútumtömbnek} (\inenglish{vertex attribute array}) nevezzük.
-A vertex shaderben az \func{attribute} kulcsszóval különböző bemeneti
+A vertex shader-ben az \func{attribute} kulcsszóval különböző bemeneti
 paramétereket határozhatunk meg. Ezeket be kell ,,kössük'' a CPU oldalon. Azaz
 a grafikai meghajtót értesítenünk kell róla, hogy milyen néven és milyen típusú
 adatot keressen a vertex programot leíró shader-kódban. A shader-kódban
@@ -774,7 +774,7 @@ attribútumtömb egy lépéshossznyi elemét. Az indextömb esetén is két lehe
 közül választhatunk. Egyrészt megadhatjuk a rendereléskor\footnote{A
 renderelést a \func{glDrawElements} vagy a \func{glDrawArrays} függvények
 hívása jelenti. Ezek közül a \func{glDrawElements} vár indextömböt.}. Másrészt
-készíthetünk egy viszonylag nagy (akár $65536$ elemű) indextömböt is, és ezt
+készíthetünk egy viszonylag nagy (akár 65536 elemű) indextömböt is, és ezt
 feltölthetjük a GPU oldalra. Ezt megtehetjük, amint van kapcsolatunk a grafikai
 meghajtóval. Ha pedig a renderelés pillanatában nem adunk meg indextömböt (a
 \func{glDrawElements} függvénynek), akkor sorra ebből a feltöltött tömbből
@@ -783,8 +783,8 @@ hasonló geometriai elemet (pl. trapézokat) szeretnénk ismétlődő attribútu
 kirajzolni. Ilyenkor az indextömböt könnyedén generálhatjuk, és többször is
 felhasználhatjuk.
 
-Hasonlóan a vertex shaderhez, a \emph{fragment shader} esetében is be kell
-állítanunk a megfelelő értékeket. A shaderkódban használt \emph{textúrák}
+Hasonlóan a vertex shader-hez, a \emph{fragment shader} esetében is be kell
+állítanunk a megfelelő értékeket. A shader-kódban használt \emph{textúrák}
 (\inenglish{textures}) vagy \emph{egyedi változók}
 (\inenglish{uniform})\footnote{Természetesen \func{uniform} értékeket a vertex
 shader-ben is használhatunk.} elnevezését szintén be kell kössük CPU oldalon.
@@ -821,7 +821,7 @@ valamilyen csatornatípussal (\func{GL\_ALPHA}, \func{GL\_RGBA} stb.) és a
 csatornánkénti értékek méretével (pl. \func{GL\_UNSIGNED\_BYTE}). Nagy
 vonalakban ezekkel értelmezhető egy a GPU-n lefoglalt memória leírása. Ilyen
 textúrákba renderelhetünk, vagy ezekből olvashatunk ki adatokat. Természetesen,
-hogy hívatkozni tudjunk a textúrákra a shader kódokban, ahhoz azokat is be kell
+hogy hivatkozni tudjunk a textúrákra a shader kódokban, ahhoz azokat is be kell
 ,,kössük'' még a renderelés előtt. Illetve ha forrás textúráról van szó, akkor
 szükséges CPU oldali tömböt is rendelnünk hozzá. Ezek az adatokat is majd a
 renderelést kiváltó függvény hívásakor töltődnek fel a GPU memóriájába.
@@ -830,10 +830,10 @@ Ahhoz, hogy minél hatékonyabban kihasználjuk a CPU oldaltól függetlenül
 renderelő GPU nyújtotta lehetőséget, annál több adatot kell egyszerre, vagyis
 csokorban (\inenglish{batching}) átadnunk. Ezért pl. trapézok egy sorozatát nem
 egyenként érdemes kirenderelni, hanem az adatokat összerakni -- a már említett
-attribútum tömbökbe --, és egyszerre kirendereltetni a lehető legtöbbet.
+attribútum tömbökbe --, és egyszerre kirajzolni a lehető legtöbbet.
 Elképzelhető, hogy olyan sok elemet kell kirenderelni, hogy a tömbök méretére
 vonatkozóan felső korlátba ütközünk. Ez a felső korlát jellemzően vagy az
-index- vagy az attribútumtömb maximális $65536$-os mérete. Ilyenkor ismételt
+index- vagy az attribútumtömb maximális 65536-os mérete. Ilyenkor ismételt
 lépésben kell rajzolni. Ekkor azonban a kétszer érintett raszterpontok értéke
 nem várt módon elromolhat. Ezt befolyásolhatjuk az ún. \emph{összhatásmóddal}
 (\inenglish{blending mode}). A jól megválasztott összhatásmód\footnote{A
@@ -1291,7 +1291,7 @@ réteg. A téglalapot mint két egymáshoz illesztett derékszögű háromszöge
 értelmezzük. Az alakzat egyszerűsége miatt mind a \emph{vertex}, mind pedig a
 \emph{fragment} shader kódok viszonylag egyszerűek. A vertex shader kifeszíti a
 két háromszöget az eredménytextúrára úgy, hogy minden vertex megkapja a
-kitöltés színét. Ezt a színt továbbítja a fragment shadernek, ami minden olyan
+kitöltés színét. Ezt a színt továbbítja a fragment shader-nek, ami minden olyan
 raszterpontra lefut, aminek a közepe az érintett két háromszögbe esik. A
 fragment shader pedig minden raszterpontot a kapott színre beállít. Ezek után
 az eredmény textúra képét rámásoljuk a megfelelő helyre a végső
@@ -1346,7 +1346,7 @@ alakzatelemre igaz, hogy vagy az utolsó, vagy követi egy újabb elem. A
 \func{next} adattag adja meg a láncolt listában a következő alakzatelem
 memóriacímét. Amennyiben ez \func{NULL}, az azt jelenti, hogy az adott elem az
 utolsó struktúrája az alakzatnak. Minden struktúrának meg kell tudnia mondania
-magáról, hogy a speciálisak közül melyik, tehát: \func{MoveTo}, \func{LineeTo}
+magáról, hogy a speciálisak közül melyik, tehát: \func{MoveTo}, \func{LineTo}
 stb. Ezt adja meg a \func{type} adattag. Erre akkor van szükség, hogyha ősként
 hivatkozunk egy elemre, de tudni szeretnénk a típusát.
 
@@ -1417,7 +1417,7 @@ függvények.
 
 Az átalakításra azért van szükség, mert az alakzat építése közben lehetőség van
 transzformációk alkalmazására, amiket az alakzatnak követnie kell. Ezt
-az \func{applayTransform} függvénnyel tehetjük meg. Gyakorlatilag a kapott affin
+az \func{applyTransform} függvénnyel tehetjük meg. Gyakorlatilag a kapott affin
 transzformációval végigszorozzuk az addig felépített alakzat elemeit
 meghatározó koordinátákat.
 
@@ -1548,7 +1548,7 @@ illeszkedő \emph{félkör} (\inenglish{round}) lesz, különben \emph{csonk}
 (\inenglish{butt}) formán hagyjuk. Ezeknek a kiegészítő formáknak az
 irányultságát határozzák meg az adott pontban ismert vektorok.
 
-Két vonal csatlakozásakor úgy kell eljárni, hogy a hézagokat érteleszerűen
+Két vonal csatlakozásakor úgy kell eljárni, hogy a hézagokat értelemszerűen
 töltsük fel. Egy háromszög forma \emph{simán} (\inenglish{bevel})
 összekapcsolja a két elem végét. Ha pedig szükséges, akkor egy újabb háromszög
 \emph{süvegesre} (\inenglish{miter}), vagy egy körcikk \emph{lekerekítettre}
@@ -2039,7 +2039,7 @@ előzőleg felsorolt sarokindexekhez ezekből négy koordinátapárt tudunk
 $(x_{r,t}, y_{t})$ és $i_3$ $(x_{r,b}, y_{b})$. Egy trapéz kirajzolása két
 háromszög renderelését jelenti (lásd \az+\emph{\ref{fig:sunmoonvertex}. ábrát}). Egy
 háromszög renderelése három vertex (csúcspont) kiszámítását jelenti. Ezekre a
-vertexekre fog lefutni a vertex shaderből készített program.
+vertexekre fog lefutni a vertex shader-ből készített program.
 Minden vertexre külön-külön (de párhuzamosan) lefut a vertex program úgy, hogy
 az adott vertexhez speciálisan kap a program bemeneti adatokat. Egy vertexhez azonban
 nem csak egy koordinátapár tartozik. Ennek az okára majd még visszatérünk.
@@ -2077,7 +2077,7 @@ kicsivel ,,meghízik'' az eredeti háromszög, így az összes érintett raszter
 bekerül. Lehetséges, hogy olyanok is bekerülnek, amiket az eredeti háromszög
 nem érint, ezek viszont úgyis nulla intenzitásúak lesznek.
 
-Miután meghatározta a vertex program az aktuális vertex kibővitett pontját,
+Miután meghatározta a vertex program az aktuális vertex kibővített pontját,
 utána még a fragment shader-nek szükséges értékeket is kiszámol, illetve
 beállít. Az értékeket a shader-ek között megosztást biztosító változókba
 (\inenglish{varyings}) tesz. Ilyen érték a vertex új koordinátája. Ez
@@ -2125,7 +2125,7 @@ törtrészei. Minden fragmentre kiszámoljuk a helyét az alakzaton belül, majd
 alapján meghatározzuk, hogy a lefedettség $y$ szerint mettől meddig tart.
 Ezután az élsimítás értékének (pl. a maximális $16$) megfelelő részre osztjuk
 horizontálisan a fragmentet. Ha a fragment aljától a tetejéig tart a
-lefedetség, akkor az összes ($16$ darab) osztott részt érintjük, és az azokhoz
+lefedettség, akkor az összes ($16$ darab) osztott részt érintjük, és az azokhoz
 tartozó részeket összegezzük. Különben csak a lefedésben érintett sávokat
 összegezzük. A sávok esetében pedig az átadott meredekségeknek és a trapéz
 sarokpontjainak köszönhetően el tudjuk dönteni, hogy a sáv teljesen fedett az
@@ -2133,7 +2133,7 @@ $x$ értékek szerint, vagy csak egy része. Természetesen a belső pontok
 gyakoribbak lesznek, így a fragment intenzitását a shader elején az $1.0$
 maximális értékre\footnote{Az \emph{alpha} csatorna mérete \emph{egy bájt},
 ugyanakkor a shader-ben ez egy $0.0$ és $1.0$ közti \func{float} típusú
-lebegőpontos érték.} állítjuk. Majd eldöntjük, hogy a fragmnet belső pont-e, és
+lebegőpontos érték.} állítjuk. Majd eldöntjük, hogy a fragment belső pont-e, és
 csak akkor számoljuk ki a fent említett iterációval az $1.0$-nál kisebb
 \emph{alpha} (áttetszőségi) értéket, ha szélső fragmentről van szó.
 
@@ -2270,7 +2270,7 @@ ami egy SVG fájlt a Gepard segítségével kirenderel. A már említett
     \label{sec:Eredmények}
 
 Nézzük meg a kitűzött célokhoz képest az elért eredményeket. Az eredményeket a
-Ghostscript Tiger.svg példán keresztül vizsgáljuk és muatjuk be. Ennek a
+Ghostscript Tiger.svg példán keresztül vizsgáljuk és mutatjuk be. Ennek a
 renderelése teljes. Ami azt jelenti, hogy \emph{minden} elemet
 \emph{mérethelyesen} megjelenítünk. A kitöltés esetén a \emph{színhelyesség} is
 igaz, ugyanakkor a széleknél vannak eltérő pontok. Ennek okaira még kitérünk.
@@ -2317,7 +2317,7 @@ nagyított alsó képeken részben az élsimításból adódó különbségeket 
   \end{figure}
 
 Az élsimításból adódó különbségek okát abban látjuk, hogy a használt
-\emph{élsimító stratégiák} és \emph{finomsági faktorok} nem egyeznek. Azaz, a
+\emph{élsimító stratégiák} és \emph{finomsági faktorok} nem egyeznek meg. Azaz, a
 Gepard és az összehasonlításként használt renderelő API-k, más és más élsimító
 megközelítést használ(hat)nak. A Gepardban egy alap módszert használtunk
 (pásztázó egyenesek és szubpixelek), a lehető legfinomabb faktorral (16).
@@ -2395,7 +2395,7 @@ kifejező 1-nél.
 számszerűsített eredményét mutatja. Az első sorban láthatjuk a Gepard és három
 ismert renderelő\footnote{Skia (említett verzió), Webkit (említett verzió),
 Edge (verzió: 42.17134.1.0)} eredményei közti SSIM és PSNR értékeket. Itt is
-igaz, hogy a legnagyobb eltérés nem éri el a 0.02-ot. Illetve a jel-zaj viszony
+igaz, hogy a legnagyobb eltérés nem éri el a 0.01-ot. Illetve a jel-zaj viszony
 is hasonló értékeket mutat. A táblázat második sora a Skia és az előbbi három
 renderelő közötti méréseket tartalmazza. Így jobban érthetőek a SSIM és a PSNR
 értékek is. Látható, hogy a Skia eredménye önmagával hasonlítva az elméletileg
@@ -2418,9 +2418,9 @@ elveszíthetjük a meghatározáskor be nem zárt, de kitöltött alakzatokat. A
 ugyanis definíció szerint mindig zártak. Ezek száma ugyanakkor
 csekély\footnote{A Ghostscript Tiger.svg fájlban a a 240-ből 227 alakzatot
 explicit lezártak.}, illetve az ,,elvesztett'' elemek a további számokban úgyis
-megjelennek. A harmadik sor a körvonalban érintett elemek száma található.
+megjelennek. A harmadik sorban a körvonalban érintett elemek száma található.
 Ezeket az elemeket mint körvonalakat kell egy bonyolultabb Path formájában
-kitölteni. A negyedik sorban az explicit kitöltést indukáló hívások számát
+kitölteni. A negyedik sor az explicit kitöltést indukáló hívások számát
 tartalmazza. Míg az ötödik sor mutatja a körvonal kirajzolását indukáló
 hívásokat. Világos, hogy a visszavezetés után ezek is majd mind kitöltés
 hívásokra módosulnak. Így jutunk el a hatodik sorhoz, ahol jól látszik, hogy a
