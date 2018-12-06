@@ -360,7 +360,9 @@
     %A tartalomjegyzékben mégis szerepeltetni kell, mint szakasz(section) szerepeljen:
     \addcontentsline{toc}{section}{Feladatkiírás}
 
-A témavezető által megfogalmazott feladatkiírás. Önálló oldalon szerepel.
+C++-os környezetben használható 2D alakzatrajzoló (Path) függvénykönyvtár
+készítése. Interfészként egy ismertebb API választása, és az alakzatrajzoláshoz
+egyszerű GPU alapú renderelő API használata.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -428,19 +430,21 @@ megjelenítő\footnote{A számítógépes grafikában egy modell megjelenítés�
 folyamatot \emph{renderelésnek} (\inenglishfn{rendering}), a renderelést végző
 programrészt pedig \emph{motornak} (\inenglishfn{engine}) hívunk.} (a
 továbbiakban renderelő) függvénykönyvtárat. Ilyen például a Skia, a Cairo, az
-OpenGL, és ilyen kíván lenni a \emph{Gepard} is. A cél, hogy létrehozzunk egy
-\emph{C++11}-es nyelven írt és több grafikai renderelő API-t (OpenGL~ES~2.0,
-Vulkan) támogató függvénykönyvtárat.
+OpenGL, és ilyen kíván lenni a \emph{Gepard}\footnote{
+{\footnotesize\url{https://github.com/GepardGraphics/gepard/}}} is, ami a
+\emph{GL2D}\cite{Herczeg:2014:GL2D} renderelő továbbélése. A cél, hogy
+létrehozzunk egy \emph{C++11}-es nyelven írt és több grafikai renderelő API-t
+(OpenGL~ES~2.0, Vulkan) támogató függvénykönyvtárat.
 
 A tervek szerint idővel a Gepard több interfésszel is rendelkezik. Így alkot
 majd egy komplex grafikai alkalmazásprogramozási felületet
 (\inenglish{Application Programming Interface}, a továbbiakban API). Az elsőnek
 választott ilyen ismertebb interfész amit támogatni kíván az a \emph{W3C} által
-készített \emph{Canvas 2D Context}~\cite{Cabanier:14:HCC} előírás.
+készített \emph{Canvas 2D Context}~\cite{Cabanier:14:HCC} specifikáció.
 
-A \emph{Canvas 2D Context} (a továbbiakban \emph{Canvas}) előírás 2015-ös
+A \emph{Canvas 2D Context} (a továbbiakban \emph{Canvas}) specifikáció 2015-ös
 kiadása több elkülönített részből állítja össze az API-t. Ezen részek egyike az
-úgynevezett \emph{Path}. Az említett 2015-ös előírás az 5., 8. és 11.
+úgynevezett \emph{Path}. Az említett 2015-ös specifikáció az 5., 8. és 11.
 fejezetekben részletezi a Path-szal szembeni elvárásokat. A Path egy olyan
 eszköz, aminek segítségével szabadon rakhatunk össze, építhetünk bonyolult
 \emph{alakzatokat} (\inenglish{path}) is. \Az+\refstruc{sec:Hatter+ban}
@@ -459,7 +463,7 @@ renderelő része.
 Első körben nem volt cél a ,,leggyorsabban futó'' és a ,,legkisebb méretű''
 Path-t rajzoló függvénykönyvtár elkészítése. Célunk, egy lehetséges megvalósítás
 megtalálása, és ez alapján egy olyan eszköz megalkotása, amely képes a Canvas
-előírás elvárásait teljesíteni.
+specifikáció elvárásait teljesíteni.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -473,23 +477,23 @@ A dolgozathoz elengedhetetlen a követelmények, illetve a használt technológi
 bemutatása, amelyek keretet szabnak a téma megvalósításának. Szót ejtünk
 magáról a Canvas 2D Context API\footnote{Az \emph{alkalmazásprogramozási
 felület/interfész} (\inenglish{Application Programming Interface}) kifejezésre
-mint \emph{API} hivatkozunk.} előírásról, a GLES2 szabvány nyújtotta
+mint \emph{API} hivatkozunk.} specifikációról, a GLES2 szabvány nyújtotta
 lehetőségekről és azokról a matematikai módszerekről, amelyek biztosítják
 számunkra, hogy ,,tetszőlegesen bonyolult'' alakzatokat helyesen
 megjeleníthessünk. Össze kell kapcsolni a GLES2 szabta korlátokat\footnote {Pl.
 a GLES2 legfeljebb háromszögeket rajzol.} a Canvas elvárásaival. Ami azt
-jelenti, hogy fedjünk le háromszögekkel olyan -- akár önmetsző -- alakzatokat,
+jelenti, hogyan fedjünk le háromszögekkel olyan -- akár önmetsző -- alakzatokat,
 amelyeket tetszőleges számú szakasz, Bézier-görbe és körív alkot, s
 mindezeket mérethelyesen jelenítsük is meg. Ehhez -- mint látni fogjuk -- több
 lépésbeli megközelítést (\inenglish{approximation}) alkalmazunk.
 
     \section[A Canvas 2D Context API]{A W3C Canvas 2D Context API}
-    \label{sec:A_Canvas_előírás}
+    \label{sec:A_Canvas_API}
 
 A Canvas API egy közel tíz éves, kiforrott technológia\footnote {A W3C HTML5
 szabvány, és az azon belüli Canvas \emph{első} vázlata 2008-as:\\
-{\footnotesize\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}}}. Az
-előírás leír egy felbontásfüggő rajzolóvásznat, amelyet jellemzően
+{\footnotesize\url{https://www.w3.org/TR/2008/WD-html5-20080122/\#the-2d}}}. A
+specifikáció leír egy felbontásfüggő rajzolóvásznat, amelyet jellemzően
 \emph{Canvas}-nek nevezünk. A Canvas definíció szerint nem más, mint egy adott
 \emph{szélességgel} és \emph{magassággal} meghatározott rajzterület, amire
 különböző grafikai elemeket rakhatunk fel. Ilyenek lehetnek képek, szövegek és
@@ -500,7 +504,7 @@ Canvas-hez tartozó \emph{context} gyűjti, és bizonyos parancsok
 sorrendben. Végül mindig egy \emph{kép} (\inenglish{image}) vagy még
 pontosabban egy \emph{bit-térkép} (\inenglish{bitmap}) készül.
 
-Az előíráson belül definiált Path API egy jól elkülönülő alakzatszerkesztő
+A specifikáción belül definiált Path API egy jól elkülönülő alakzatszerkesztő
 módszer (vagy eljárás). A lényege, hogy bizonyos alap eszközökkel definiálunk egy
 bonyolultabb formát. Ezt a folyamatot hívjuk \emph{alakzatépítésnek}
 (\inenglish{shape/path building}). Az építés után különböző parancsokkal
@@ -509,7 +513,7 @@ körvonalként (\emph{stroke}), de lehetőségünk van az adott alakzattal kivá
 (\emph{clip}) is a rajzvásznon már meglévő képből.
 
 A Canvas előír néhány megkötést. Ezekről látni fogjuk, hogy természetes
-korlátok. Hiszen józan ésszel felfogható, hogy egy egyenes szakaszból definiált
+korlátok. Hiszen józan ésszel belátható, hogy egy egyenes szakaszból definiált
 alakzatra értelmetlen a \emph{kitöltés} (\func{fill}) parancsot meghívni.
 Hasonlóan nem mond semmit a nulla vastagságú vonal a \emph{körvonal rajzolása}
 (\func{stroke}) parancs esetén. Érdekes belegondolni abba is, hogy mi legyen
@@ -564,21 +568,21 @@ A fenti ábrán (\emph{\ref{fig:triangles}}) látható egy kis példakód,
 illetve ennek hat különböző eredménye. Az első sorban olyan alakzatokat látunk,
 ahol a \func{closePath} parancsot meghívtuk (háromszög), a másodikban pedig nem
 (V alak). Az első oszlopban a \func{fill}-t, a harmadikban pedig a
-\func{stroke}-ot nem hívtuk meg. Az előírás ugyanakkor rendelkezik arról, hogy
+\func{stroke}-ot nem hívtuk meg. A specifikáció ugyanakkor rendelkezik arról, hogy
 minden Path zárt alakzat kell legyen, így mindig kitölthető is. Ezért lett a
 második sor utolsó két V-nek definiált alakzata mégis kitöltött háromszög.
 
-Most pedig nézzük meg, hogy milyen konkrét eszközöket biztosít az előírás.
-Ebben a szakaszban nem térünk ki részletesen a teljes előírásra. A legfontosabb
+Most pedig nézzük meg, hogy milyen konkrét eszközöket biztosít a specifikáció.
+Ebben a szakaszban nem térünk ki részletesen a teljes specifikációra. A legfontosabb
 rész a dolgozatunk témája a Path. Ugyanakkor a munkához szorosan kapcsolódott a
 környezet megvalósítása is. Ezért érintőlegesen beszélnünk kell a
 \emph{rajzolás környezetéről, kontextusáról} (\inenglish{drawing context}), a
 színek és vonaltulajdonságok beállításáról, valamint a transzformációkról. Ezek
-után térünk rá az előírás Path-t definiáló részére.
+után térünk rá a specifikáció Path-t definiáló részére.
 
 A rajzolás környezete, vagyis a \emph{context} tartalmazza, hogy milyen
 színekkel fogunk rajzolni, milyen betűtípussal és mérettel, de ez tartalmazza
-az aktuális transzformációt, és itt van elméletileg letárolva az aktuálisan
+az aktuális transzformációt, és itt van letárolva az aktuálisan
 felépített alakzat (\inenglish{path}) is. A context-nek mindig van egy aktuális
 állapota (\inenglish{state}). A Canvas rendelkezik arról, hogy az aktuális
 állapotot egy verembe elmenthessük és visszaállíthassuk. Ez a tulajdonsága a
@@ -683,7 +687,7 @@ Arról már volt szó, hogy az alakzat önmetsző is lehet. Az önmetszés kérd
 kitöltéskor válik fontossá. A kérdés az, hogy az alakzat által határolt
 részekből és az önmetszés alkalmával létrejövő lyukakból pontosan melyeket kell
 kitölteni. A Canvas API csak egy, a nem-zérus kitöltési szabályt írja elő.
-Viszont a legtöbb -- az előírást megvalósító -- renderelő API támogatja a két
+Viszont a legtöbb -- a specifikációt megvalósító -- renderelő API támogatja a két
 legelterjedtebb kitöltési stratégiát, szabályt. Ezek a \emph{paritás szabály}
 (\inenglish{even-odd fill rule}) és a -- már említett -- \emph{nem-zérus szabály}
 (\inenglish{non-zero fill rule}). Mivel a 2D alakzatrajzolásban mindkettő igen
@@ -1118,7 +1122,7 @@ Ezeket a modulokat -- vagyis az ún. Backend-eket -- jelen pillanatban
 a Gepard egy adott grafikai API-ra speciálisan lefordított függvénykönyvtár
 lesz. Ugyanakkor a köztes (az Engine) és az alsó réteg (valamelyik Backend)
 tervezéskori pontos szétválasztásának köszönhetően a jövőben ez akár futás
-időben is megtörténhet. Javítva ezzel is az átjárhatóságot a grafikai meghajtók
+időben is megtörténhet, javítva ezzel is az átjárhatóságot a grafikai meghajtók
 között, és könnyebbé téve a Gepard használatát.
 
 Most nézzük meg részletesebben a fent említett három réteget. Természetesen az
@@ -1132,7 +1136,7 @@ A felső réteget, a \func{Gepard} osztályt \az+\refstruc{sec:Hatter+ban}
 tárgyalt Canvas API határozza meg. Természetesen  a Canvas alapvetően egy webes
 interfész. Ez azt is jelenti, hogy a \func{Gepard} nem teljesen úgy működik
 mint a Canvas a webes környezetben. A cél nem is az volt, hogy pontosan
-lemásoljuk. A cél egy a C++ környezetben könnyen használható -- a webes
+lemásoljuk. A cél az, hogy egy a C++ környezetben könnyen használható -- a webes
 szcénában már jól kipróbált -- programozói kezelőfelületet adjunk. Érdemes
 röviden átnézni ezt a felületet.
 
@@ -1140,7 +1144,7 @@ A Canvas API két csoportra osztható. Az egyik a hívható függvények, a más
 beállítható adattagok csoportja. Tehát a Gepard interfész is többnyire ezt a
 felosztást és működést próbálja meg követni. A hívható függvények tekintetében
 egyszerűbb a helyzet. Hiszen az API által leírt függvények szemantikája nagyon
-hasonló a C++ által elvártakhoz. A C++ környezet ugyan kissé megkötőbb. Például
+hasonló a C++ által elvártakhoz. A C++ környezet ugyan kissé megkötőbb, például
 szövegként (\inenglish{string}) átadott számértéket nem fogad el a szigorú
 típusosság miatt. Ez azonban nem tekinthető durva megkötésnek, hiszen egyrészt
 elemző-értelmező függvényekkel (\inenglish{parser functions}) az átváltások
@@ -1171,19 +1175,18 @@ esetleg egy függvényszerű leírás vagy egy másik adattag értéke. Azáltal
 az \func{Attribute} osztályt bevezettük, lehetőség nyílt az adattagok kényelmes
 értékadásának.
 
-Nézzük meg röviden ezt az osztályt is. Tehát egyrészt,
-mint már az előbb említettük, az értékadás sokféleségét biztosítani
-kell. Ugyanakkor nem csak az értékadás lehet többféle, hanem az adattagok
-,,típusa'' is. Vagyis az említett \func{fillStyle}-hoz képest más típusú adatot
-tároló módon is kell tudjon működni az \func{Attribute} osztály. Az
-értékadás sokféleségét a \emph{paraméteres} és az \emph{ad hoc polimorfizmus}
-\footnote{A kifejezést az azonos nevű de különböző típusú és számú
-argumentummal rendelkező függvényekre \textsc{Christopher Strachey} honosította
-meg. Forrás: Christopher Strachey: \emph{Fundamental Concepts in Programming
-Languages}, in Higher-Order and Symbolic Computation, Kluwer Academic
-Publishers, 2000, 13, 11–49.} biztosítja. A bonyolultabb értékadásokat (pl.
-függvény leírás) pedig egy a példányosításkor bekötött elemző-értelmező
-függvény végzi.
+Nézzük meg röviden ezt az osztályt is. Tehát egyrészt, mint már az előbb
+említettük, az értékadás sokféleségét biztosítani kell. Ugyanakkor nem csak az
+értékadás lehet többféle, hanem az adattagok ,,típusa'' is. Vagyis az említett
+\func{fillStyle}-hoz képest más típusú adatot tároló módon is kell tudjon
+működni az \func{Attribute} osztály. Az értékadás sokféleségét a
+\emph{paraméteres} és az \emph{ad hoc polimorfizmus\footnote{A kifejezést az
+azonos nevű de különböző típusú és számú argumentummal rendelkező függvényekre
+\textsc{Christopher Strachey} honosította meg. Forrás: Christopher Strachey:
+\emph{Fundamental Concepts in Programming Languages}, in Higher-Order and
+Symbolic Computation, Kluwer Academic Publishers, 2000, 13, 11–49.}}
+biztosítja. A bonyolultabb értékadásokat (pl. függvény leírás) pedig egy a
+példányosításkor bekötött elemző-értelmező függvény végzi.
   \begin{wrapfigure}{\melyikoldalra}{0.4\textwidth}
     \begin{center}
       \includedataflowkivagas{0pt}{210pt}{160pt}{590pt}{}
@@ -1245,7 +1248,7 @@ csak a legfontosabbakat soroltuk fel, de a Canvas API leírás
 második fejezetében megtalálható a teljes lista.
 
 A második rész a transzformációk. A Háttér fejezet Canvas API-t bemutató
-szakaszában (\ref{sec:A_Canvas_előírás}) már tárgyaltuk a transzformációkat, itt
+szakaszában (\ref{sec:A_Canvas_API}) már tárgyaltuk a transzformációkat, itt
 most csak röviden a megvalósításukat nézzük át.
 
 Minden állapot tartalmaz egy transzformációs mátrixot. Ezt a mátrixot a
@@ -1295,7 +1298,7 @@ kitöltés színét. Ezt a színt továbbítja a fragment shader-nek, ami minden
 raszterpontra lefut, aminek a közepe az érintett két háromszögbe esik. A
 fragment shader pedig minden raszterpontot a kapott színre beállít. Ezek után
 az eredmény textúra képét rámásoljuk a megfelelő helyre a végső
-eredménypufferbe. Ezzel effektív megjelent a téglalap. Egy ilyen téglalap nem
+eredménypufferbe. Ezzel megjelent a téglalap. Egy ilyen téglalap nem
 más mint egy speciális trapéz. Minthogy a dolgozatunkban a bonyolultabb
 alakzatokat az $y$ koordinátával párhuzamos alapú trapézokra bontjuk, világos,
 hogy a kirajzolás folyamata nagy vonalakban ehhez hasonló.
@@ -1433,7 +1436,7 @@ bizonyos feltételeket megvizsgálnak, és a szabványhoz igazodva alkalmaznak
 néhány egyszerűsítést.
 
 Az \func{addMoveToElement} függvény adja hozzá a képzeletbeli toll áthelyezését
-leíró \func{MoveToElement} struktúrát. Az előírás szerint minden alakzat egy
+leíró \func{MoveToElement} struktúrát. A specifikáció szerint minden alakzat egy
 ilyen elemmel kell kezdődjön. Ezért ez a függvény megvizsgálja, hogy az
 alakzatot leíró elemek listája üres-e. Ha üres, akkor a megadott koordinátával
 létrehoz egy ilyen elemet, beteszi a listába, és a listát leíró speciális
@@ -1579,7 +1582,7 @@ négyszögekből fog állni. Sajnos bizonyos elfajuló esetekben ez vagy nagyon 
 darabkát jelent, vagy nem is egyértelmű, hogy hogyan kellene eljárjon az
 algoritmus. Szerencsénkre, azért ezek az esetek felismerhetőek, és mint
 speciális esetek egyike kezelhetőek. Az elfajuló esetek egy bizonyos
-megközelítés mellett egy problémaként foghatóak fel. Így egy módszerrel
+megközelítés mellett egy problémaként foghatóak fel, így egy módszerrel
 orvosolhatóak is. A legkirívóbb ilyen elfajuló eset (ami eklatáns példája a
 többinek) az, amikor a harmadfokú görbe a közepénél ,,megtörik'' (a többi eset
 ennek közeli állapotában előálló kis hurkok). Ilyenkor egy egészen kis
@@ -2058,8 +2061,8 @@ kihagyunk. Majd letesszük ugyanannak a trapéznak az adatait, az $1$-es indexet
 és szintén egy kis üres helyet kihagyunk. Majd ugyanígy járunk el a $2$-es és a
 $3$-as indexekkel is. Teljesen hasonló helyezhetjük el a tömbbe a második
 trapézt. A kis kihagyásokra azért van szükség, mert a GLES2 elvárja, hogy négy
-\func{GLfloat} ($4 \times 32 bit$) méretére legyenek az adatok igazítva. Nekünk pedig
-effektív hét \func{GLfloat} típusú értékünk van.
+\func{GLfloat} ($4 \times 32 bit$) méretére legyenek az adatok igazítva,
+nekünk viszont hét \func{GLfloat} típusú értékünk van.
 
 Most nézzük meg részletesebben, hogy mi is történik az adatokkal a vertex
 shader-ben. Minden vertex egyrészt meghatározza a végső pontját, ami így
@@ -2171,7 +2174,7 @@ az alakzat képével, ezzel az alakzat gradiens színezett képét megkapva.
     %\addcontentsline{toc}{section}{Használat és eredmények}
 
 Nézzük meg röviden a Gepard használatát. Illetve hasonlítsuk össze az elért
-eredményeket néhány ismertebb Canvas 2D Context előírást támogató renderelő
+eredményeket néhány ismertebb Canvas 2D Context specifikációt támogató renderelő
 program eredményeivel.
 
     \section{Használat}
@@ -2270,10 +2273,11 @@ ami egy SVG fájlt a Gepard segítségével kirenderel. A már említett
     \label{sec:Eredmények}
 
 Nézzük meg a kitűzött célokhoz képest az elért eredményeket. Az eredményeket a
-Ghostscript Tiger.svg példán keresztül vizsgáljuk és mutatjuk be. Ennek a
-renderelése teljes. Ami azt jelenti, hogy \emph{minden} elemet
+Ghostscript Tiger.svg példán keresztül vizsgáljuk és mutatjuk
+be. Ennek a renderelése teljes. Ami azt jelenti, hogy \emph{minden} elemet
 \emph{mérethelyesen} megjelenítünk. A kitöltés esetén a \emph{színhelyesség} is
-igaz, ugyanakkor a széleknél vannak eltérő pontok. Ennek okaira még kitérünk.
+igaz, ugyanakkor -- más renderelők eredményeivel összevetve -- a széleknél
+vannak eltérő pontok. Ennek okaira még kitérünk.
 
 \Az+\emph{\ref{fig:tiger-eyes}. ábrán} három-három nagyított képet láthatunk
 oszlopokként rendre a \emph{Gepard}, a \emph{Skia} (Chrome -- verzió:
@@ -2432,7 +2436,7 @@ vertikálisan is összevont trapézok számát láthatjuk. Végül ezek a trapé
 lesznek kirajzolva az alpha textúrába.
 
   \begin{table}[!t]
-    \captionof{table}{A G. Tiger.svg renderelésekor keletkezett
+    \captionof{table}{A Ghostscript Tiger.svg rajzolásakor keletkezett
     hívások és elemek számai} \label{tab:numbers}
     \renewcommand*{\arraystretch}{1.2}
     \small
@@ -2486,7 +2490,7 @@ lesznek kirajzolva az alpha textúrába.
       \caption{Gepard -- Skia}
     \end{subfigure}
     \caption{A \emph{Gepard} és a \emph{Skia (Chrome)} által renderelt
-    G. Tiger.svg eredmények különbsége. Az ábrán jól látható,
+    Ghostscript Tiger.svg eredmények különbsége. Az ábrán jól látható,
     hogy a különbségben a körvonal pontok az érintettek, a kitöltés
     azonos.}
     \label{fig:diff}
@@ -2506,7 +2510,7 @@ miszerint alkossunk meg egy Canvas 2D API-t használó OpenGL ES 2.0-án alapul�
 \Az+\emph{\ref{tab:functions} táblázatban} még feltüntettük a megvalósított, a
 rajzolás szempontjából elengedhetetlen funkcionalitások biztosító függvényeket.
 Illetve a táblázat második oszlopában a rajzolást effektív nem gátoló, de a
-Canvas 2D előírásban szereplő függvényeket is. Ezeknek a megvalósítása egy
+Canvas 2D specifikációban szereplő függvényeket is. Ezeknek a megvalósítása egy
 jövőbeli munka része. Mint ahogy az is, hogy a jelenleg helyes eredményt nyújtó
 renderelő egységeket \emph{futásidő} és \emph{memóriahasználat} szempontjából
 javítsuk.
@@ -2518,7 +2522,7 @@ megemlítjük a javítási lehetőségeket, mint például a vászon \emph{csemp
 tárolására, és párhuzamosított bejárására.
 
 Tehát összefoglalásként elmondhatjuk, hogy a Gepard egy olyan C++-os 2D
-alakzatrajzoló API, ami megvalósítja a Canvas előírásit, létrehozva egy GPU
+alakzatrajzoló API, ami megvalósítja a Canvas előírásait, létrehozva egy GPU
 renderelésre támaszkodó kompakt függvénykönyvtárat.
 
   \begin{table}[b]
